@@ -1,1 +1,1 @@
-export { PomodoroTimerTime } from './PomodoroTimerTime';
+export { PomodoroTimerLabel } from './PomodoroTimerLabel';

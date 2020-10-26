@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
 
-export function PomodoroTimerTime({ remainingTime }) {
+export function PomodoroTimerLabel({ remainingTime }) {
   let min = parseInt(remainingTime / 60);
   remainingTime = remainingTime % 60;
   let sec = parseInt(remainingTime);

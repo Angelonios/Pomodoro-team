@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Container, Grid, Paper, Button } from '@material-ui/core';
 import { CircularProgressBarWithLabel } from 'src/molecules';
 import PlayArrowTwoToneIcon from '@material-ui/icons/PlayArrowTwoTone';
 import PauseCircleFilledTwoToneIcon from '@material-ui/icons/PauseCircleFilledTwoTone';
 import FreeBreakfastTwoToneIcon from '@material-ui/icons/FreeBreakfastTwoTone';
 export function PomodoroTimer() {
+  const pomodoroTimes = {
+    pomodoro: 1500,
+    shortBreak: 300,
+    longBreak: 900,
+  };
+  const [remainingTime, setRemainingTime] = useState(pomodoroTimes.pomodoro);
+
+  useEffect(() => {
+    // stop countdown after reaching 0
+    if (!remainingTime) return;
+
+    const intervalId = setInterval(() => {
+      setRemainingTime(remainingTime - 1);
+    }, 1000);
+
+    // clear interval on re-render
+    return () => clearInterval(intervalId);
+  }, [remainingTime]);
+
+  console.log(remainingTime);
+
   return (
     <>
       <Container component="main" maxWidth="xl">
@@ -20,13 +41,9 @@ export function PomodoroTimer() {
               <Grid item xs={3}>
                 <CircularProgressBarWithLabel
                   variant={'static'}
-                  value={75}
-                  remainingTime={106}
-                  size={300}
+                  remainingTime={remainingTime}
+                  maxTime={pomodoroTimes.pomodoro}
                 />
-                {
-                  //TODO: Label
-                }
               </Grid>
               <Grid item>
                 <Grid
