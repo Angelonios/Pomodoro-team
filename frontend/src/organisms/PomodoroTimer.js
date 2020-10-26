@@ -1,12 +1,6 @@
 import React from 'react';
-import {
-  Box,
-  Container,
-  Grid,
-  Paper,
-  CircularProgress,
-  Button,
-} from '@material-ui/core';
+import { Box, Container, Grid, Paper, Button } from '@material-ui/core';
+import { CircularProgressBarWithLabel } from 'src/molecules';
 import PlayArrowTwoToneIcon from '@material-ui/icons/PlayArrowTwoTone';
 import PauseCircleFilledTwoToneIcon from '@material-ui/icons/PauseCircleFilledTwoTone';
 import FreeBreakfastTwoToneIcon from '@material-ui/icons/FreeBreakfastTwoTone';
@@ -24,7 +18,12 @@ export function PomodoroTimer() {
               justify="center"
             >
               <Grid item xs={3}>
-                <CircularProgress variant={'static'} value={75} size={300} />
+                <CircularProgressBarWithLabel
+                  variant={'static'}
+                  value={75}
+                  remainingTime={106}
+                  size={300}
+                />
                 {
                   //TODO: Label
                 }
