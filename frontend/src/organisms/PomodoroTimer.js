@@ -10,11 +10,14 @@ export function PomodoroTimer() {
     shortBreak: 300,
     longBreak: 900,
   };
-  const [remainingTime, setRemainingTime] = useState(pomodoroTimes.pomodoro);
+
+  const [pomodoroRunning, setPomodoroRunning] = useState(false);
+  const [maxTime, setMaxTime] = useState(pomodoroTimes.pomodoro);
+  const [remainingTime, setRemainingTime] = useState(maxTime);
 
   useEffect(() => {
-    // stop countdown after reaching 0
-    if (!remainingTime) return;
+    // stop countdown after reaching 0 or if pomodoro is paused
+    if (!remainingTime || !pomodoroRunning) return;
 
     const intervalId = setInterval(() => {
       setRemainingTime(remainingTime - 1);
@@ -22,7 +25,7 @@ export function PomodoroTimer() {
 
     // clear interval on re-render
     return () => clearInterval(intervalId);
-  }, [remainingTime]);
+  }, [remainingTime, pomodoroRunning]);
 
   return (
     <>
@@ -40,7 +43,7 @@ export function PomodoroTimer() {
                 <CircularProgressBarWithLabel
                   variant={'static'}
                   remainingTime={remainingTime}
-                  maxTime={pomodoroTimes.pomodoro}
+                  maxTime={maxTime}
                 />
               </Grid>
               <Grid item xl={4} lg={4} xs={12}>
@@ -57,7 +60,7 @@ export function PomodoroTimer() {
                       color="primary"
                       size="large"
                       onClick={() => {
-                        alert('clicked');
+                        setPomodoroRunning(true);
                       }}
                       startIcon={<PlayArrowTwoToneIcon />}
                     >
@@ -68,9 +71,8 @@ export function PomodoroTimer() {
                     <Button
                       variant="contained"
                       color="primary"
-                      disabled
                       onClick={() => {
-                        alert('clicked');
+                        setPomodoroRunning(false);
                       }}
                       startIcon={<PauseCircleFilledTwoToneIcon />}
                     >
