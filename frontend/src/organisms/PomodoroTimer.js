@@ -24,11 +24,9 @@ export function PomodoroTimer() {
     return () => clearInterval(intervalId);
   }, [remainingTime]);
 
-  console.log(remainingTime);
-
   return (
     <>
-      <Container component="main" maxWidth="xl">
+      <Container component="main">
         <Paper elevation={3}>
           <Box m={4}>
             <Grid
@@ -38,14 +36,14 @@ export function PomodoroTimer() {
               alignItems="center"
               justify="center"
             >
-              <Grid item xs={3}>
+              <Grid item xl={4} lg={4} xs={12} align="center">
                 <CircularProgressBarWithLabel
                   variant={'static'}
                   remainingTime={remainingTime}
                   maxTime={pomodoroTimes.pomodoro}
                 />
               </Grid>
-              <Grid item>
+              <Grid item xl={4} lg={4} xs={12}>
                 <Grid
                   container
                   direction="column"
