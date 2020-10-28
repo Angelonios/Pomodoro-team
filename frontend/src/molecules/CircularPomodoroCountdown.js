@@ -5,9 +5,9 @@ import { usePomodoroState } from 'src/utils/PomodoroContext';
 import { Box, CircularProgress } from '@material-ui/core';
 import { PomodoroTimerLabel } from 'src/atoms';
 
-export function CircularPomodoroCountdown({ maxTime }) {
+export function CircularPomodoroCountdown() {
   const state = usePomodoroState();
-  let progressValue = (state / maxTime) * 100;
+  let progressValue = (state.remainingSeconds / state.maxSeconds) * 100;
   return (
     <Box position="relative" display="inline-flex">
       <CircularProgress variant="static" value={progressValue} size={300} />
@@ -21,7 +21,7 @@ export function CircularPomodoroCountdown({ maxTime }) {
         alignItems="center"
         justifyContent="center"
       >
-        <PomodoroTimerLabel remainingTime={state} />
+        <PomodoroTimerLabel remainingTime={state.remainingSeconds} />
       </Box>
     </Box>
   );

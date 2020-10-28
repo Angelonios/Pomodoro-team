@@ -2,9 +2,6 @@ import React from 'react';
 import { Box, Container, Grid, Paper, Button } from '@material-ui/core';
 import { CircularPomodoroCountdown } from 'src/molecules';
 import { PomodoroTimerButton } from 'src/atoms';
-import PlayArrowTwoToneIcon from '@material-ui/icons/PlayArrowTwoTone';
-import PauseCircleFilledTwoToneIcon from '@material-ui/icons/PauseCircleFilledTwoTone';
-import FreeBreakfastTwoToneIcon from '@material-ui/icons/FreeBreakfastTwoTone';
 
 import { PomodoroProvider } from 'src/utils/PomodoroContext';
 
@@ -22,7 +19,7 @@ export function PomodoroTimer() {
               justify="center"
             >
               <Grid item xl={4} lg={4} xs={12} align="center">
-                <CircularPomodoroCountdown maxTime={1500} />
+                <CircularPomodoroCountdown />
               </Grid>
               <Grid item xl={4} lg={4} xs={12}>
                 <Grid
@@ -33,33 +30,7 @@ export function PomodoroTimer() {
                   spacing={2}
                 >
                   <Grid item>
-                    <PomodoroTimerButton
-                      startIcon={<PlayArrowTwoToneIcon />}
-                      text="Begin work"
-                      size="large"
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => {}}
-                      startIcon={<PauseCircleFilledTwoToneIcon />}
-                    >
-                      Pause
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => {
-                        alert('clicked');
-                      }}
-                      startIcon={<FreeBreakfastTwoToneIcon />}
-                    >
-                      Break
-                    </Button>
+                    <PomodoroTimerButton />
                   </Grid>
                 </Grid>
               </Grid>
