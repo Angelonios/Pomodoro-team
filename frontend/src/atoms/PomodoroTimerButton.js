@@ -12,7 +12,7 @@ export function PomodoroTimerButton({ text, size, startIcon }) {
       variant="contained"
       color="primary"
       size={size}
-      onClick={() => dispatch(true)}
+      onClick={() => dispatch()}
     >
       {text}
     </Button>

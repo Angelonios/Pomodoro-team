@@ -1,4 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import {
+  getPomodoroComponent,
+  getComponentTypeOrderLength,
+} from './pomodoroCycle';
 //
 //  💡 New improved logic 27. 10. 👇
 //  ===============================
@@ -26,27 +30,6 @@ import React, { useState, useEffect } from 'react';
 //  - Move pomodoro countdown timer logic to utils
 //
 
-const pomodoroCycle = {
-  components: {
-    pomodoro: {
-      seconds: 1500,
-      label: 'Pomodoro',
-      positionInCycle: [1, 3, 5, 7],
-    },
-    shortBreak: {
-      seconds: 300,
-      label: 'Short break',
-      positionInCycle: [2, 4, 6],
-    },
-    longBreak: {
-      seconds: 900,
-      label: 'Long break',
-      positionInCycle: [8],
-    },
-  },
-  totalPositions: 8,
-};
-
 const PomodoroStateContext = React.createContext();
 const PomodoroDispatchContext = React.createContext();
 
@@ -57,24 +40,57 @@ function pomodoroReducer(state, props) {
 export function PomodoroProvider({ children }) {
   const [finalTime, setFinalTime] = useState();
   const [pomodoroRunning, setPomodoroRunning] = useState(false);
+  const [
+    currentPositionInpomodoroCycle,
+    setCurrentPositionInpomodoroCycle,
+  ] = useState(0);
+
+  const memoizedPomodoroComponent = useMemo(
+    () => getPomodoroComponent(currentPositionInpomodoroCycle),
+    [currentPositionInpomodoroCycle],
+  );
 
   const [remainingSeconds, setRemainingSeconds] = React.useReducer(
     pomodoroReducer,
-    {},
+    memoizedPomodoroComponent.seconds,
   );
+
+  const switchPomodoroRunningState = () => {
+    pomodoroRunning === false
+      ? setPomodoroRunning(true)
+      : setPomodoroRunning(false);
+  };
 
   //If pomodoroRunning is changed and set to true, then set FinalTime
   useEffect(() => {
-    if (!pomodoroRunning) return;
-    console.log('effect');
-    if (remainingSeconds < pomodoroCycle.components.pomodoro.seconds) {
-      setFinalTime(parseInt(Date.now() / 1000 + remainingSeconds));
-    } else {
-      setFinalTime(
-        parseInt(Date.now() / 1000 + pomodoroCycle.components.pomodoro.seconds),
-      );
+    if (!pomodoroRunning) {
+      return;
     }
-  }, [pomodoroRunning]);
+    setFinalTime(
+      parseInt(Date.now() / 1000 + memoizedPomodoroComponent.seconds),
+    );
+
+    return function cleanup() {
+      if (
+        currentPositionInpomodoroCycle + 1 ===
+        getComponentTypeOrderLength()
+      ) {
+        setCurrentPositionInpomodoroCycle(0);
+      } else {
+        setCurrentPositionInpomodoroCycle(currentPositionInpomodoroCycle + 1);
+      }
+      console.log(
+        'Setting next timer. Current index is: ' +
+          currentPositionInpomodoroCycle +
+          ' and pomodoro component is ' +
+          memoizedPomodoroComponent.label,
+      );
+    };
+  }, [
+    pomodoroRunning,
+    memoizedPomodoroComponent,
+    currentPositionInpomodoroCycle,
+  ]);
 
   //Timer to refresh
   useEffect(() => {
@@ -89,7 +105,7 @@ export function PomodoroProvider({ children }) {
     console.log('PomodoroProvider: ' + remainingSeconds),
     (
       <PomodoroStateContext.Provider value={remainingSeconds}>
-        <PomodoroDispatchContext.Provider value={setPomodoroRunning}>
+        <PomodoroDispatchContext.Provider value={switchPomodoroRunningState}>
           {children}
         </PomodoroDispatchContext.Provider>
       </PomodoroStateContext.Provider>
