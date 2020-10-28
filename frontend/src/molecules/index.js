@@ -1,1 +1,1 @@
-export { CircularProgressBarWithLabel } from './CircularProgressBarWithLabel';
+export { CircularPomodoroCountdown } from './CircularPomodoroCountdown';
