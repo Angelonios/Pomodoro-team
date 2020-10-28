@@ -56,12 +56,10 @@ export function PomodoroProvider({ children }) {
   );
 
   const switchPomodoroRunningState = () => {
-    pomodoroRunning === false
-      ? setPomodoroRunning(true)
-      : setPomodoroRunning(false);
+    pomodoroRunning ? setPomodoroRunning(false) : setPomodoroRunning(true);
   };
 
-  //If pomodoroRunning is changed and set to true, then set FinalTime
+  //If pomodoroRunning is set to true
   useEffect(() => {
     if (!pomodoroRunning) {
       return;
@@ -71,24 +69,37 @@ export function PomodoroProvider({ children }) {
     );
 
     return function cleanup() {
-      if (
-        currentPositionInpomodoroCycle + 1 ===
-        getComponentTypeOrderLength()
-      ) {
-        setCurrentPositionInpomodoroCycle(0);
-      } else {
-        setCurrentPositionInpomodoroCycle(currentPositionInpomodoroCycle + 1);
-      }
-      console.log(
-        'Setting next timer. Current index is: ' +
-          currentPositionInpomodoroCycle +
-          ' and pomodoro component is ' +
-          memoizedPomodoroComponent.label,
-      );
+      currentPositionInpomodoroCycle + 1 === getComponentTypeOrderLength()
+        ? setCurrentPositionInpomodoroCycle(0)
+        : setCurrentPositionInpomodoroCycle(currentPositionInpomodoroCycle + 1);
     };
   }, [
     pomodoroRunning,
     memoizedPomodoroComponent,
+    currentPositionInpomodoroCycle,
+  ]);
+
+  //If pomodoroRunning is set to false
+  useEffect(() => {
+    if (pomodoroRunning) {
+      return;
+    }
+    setFinalTime(
+      parseInt(Date.now() / 1000 + memoizedPomodoroComponent.seconds),
+    );
+    setRemainingSeconds({ finalTime: finalTime });
+    console.log(
+      'Setting next timer. Current index is: ' +
+        currentPositionInpomodoroCycle +
+        ' and pomodoro component is ' +
+        memoizedPomodoroComponent.label +
+        '. Memoized seconds:' +
+        memoizedPomodoroComponent.seconds,
+    );
+  }, [
+    pomodoroRunning,
+    memoizedPomodoroComponent,
+    finalTime,
     currentPositionInpomodoroCycle,
   ]);
 
@@ -104,7 +115,16 @@ export function PomodoroProvider({ children }) {
   return (
     console.log('PomodoroProvider: ' + remainingSeconds),
     (
-      <PomodoroStateContext.Provider value={remainingSeconds}>
+      <PomodoroStateContext.Provider
+        value={{
+          remainingSeconds: remainingSeconds,
+          pomodoroRunning: pomodoroRunning,
+          maxSeconds: memoizedPomodoroComponent.seconds,
+          buttonText: memoizedPomodoroComponent.buttonText,
+          label: memoizedPomodoroComponent.label,
+          type: memoizedPomodoroComponent.type,
+        }}
+      >
         <PomodoroDispatchContext.Provider value={switchPomodoroRunningState}>
           {children}
         </PomodoroDispatchContext.Provider>
