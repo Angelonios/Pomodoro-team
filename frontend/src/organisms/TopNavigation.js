@@ -23,7 +23,12 @@ export function TopNavigation() {
       <AppBar position="relative">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Team Pomodori
+            <a
+              href={route.home()}
+              style={{ textDecoration: 'none', color: 'white' }}
+            >
+              Team Pomodori
+            </a>
           </Typography>
           <Typography>
             Hello! Sign-in or{' '}

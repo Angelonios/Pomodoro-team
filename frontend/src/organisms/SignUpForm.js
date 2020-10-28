@@ -42,6 +42,21 @@ export function SignUpForm() {
 
   const [formData, updateFormData] = useState(initialFormData);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+    // ... submit to API or something
+  };
+
+  const handleChange = (e) => {
+    updateFormData({
+      ...formData,
+
+      // Trimming any whitespace
+      [e.target.name]: e.target.value.trim(),
+    });
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -54,25 +69,23 @@ export function SignUpForm() {
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-            <EmailField formData={formData} updateFormData={updateFormData} />
+            <EmailField handleChange={handleChange} />
             <PasswordField
-              formData={formData}
-              updateFormData={updateFormData}
+              handleChange={handleChange}
               id="password"
               name="password"
             >
               Password
             </PasswordField>
             <PasswordField
-              formData={formData}
-              updateFormData={updateFormData}
+              handleChange={handleChange}
               id="re-password"
               name="rePassword"
             >
               Re-enter password
             </PasswordField>
           </Grid>
-          <FormButton formData={formData}>Create your account</FormButton>
+          <FormButton submit={handleSubmit}>Create your account</FormButton>
           <FormLink />
         </form>
       </div>
