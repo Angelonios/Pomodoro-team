@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Grid, Paper, Button } from '@material-ui/core';
+import { Box, Container, Grid, Paper } from '@material-ui/core';
 import { CircularPomodoroCountdown } from 'src/molecules';
 import { PomodoroTimerButton } from 'src/atoms';
 

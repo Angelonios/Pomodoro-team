@@ -88,14 +88,6 @@ export function PomodoroProvider({ children }) {
       parseInt(Date.now() / 1000 + memoizedPomodoroComponent.seconds),
     );
     setRemainingSeconds({ finalTime: finalTime });
-    console.log(
-      'Setting next timer. Current index is: ' +
-        currentPositionInpomodoroCycle +
-        ' and pomodoro component is ' +
-        memoizedPomodoroComponent.label +
-        '. Memoized seconds:' +
-        memoizedPomodoroComponent.seconds,
-    );
   }, [
     pomodoroRunning,
     memoizedPomodoroComponent,
@@ -113,23 +105,20 @@ export function PomodoroProvider({ children }) {
   });
 
   return (
-    console.log('PomodoroProvider: ' + remainingSeconds),
-    (
-      <PomodoroStateContext.Provider
-        value={{
-          remainingSeconds: remainingSeconds,
-          pomodoroRunning: pomodoroRunning,
-          maxSeconds: memoizedPomodoroComponent.seconds,
-          buttonText: memoizedPomodoroComponent.buttonText,
-          label: memoizedPomodoroComponent.label,
-          type: memoizedPomodoroComponent.type,
-        }}
-      >
-        <PomodoroDispatchContext.Provider value={switchPomodoroRunningState}>
-          {children}
-        </PomodoroDispatchContext.Provider>
-      </PomodoroStateContext.Provider>
-    )
+    <PomodoroStateContext.Provider
+      value={{
+        remainingSeconds: remainingSeconds,
+        pomodoroRunning: pomodoroRunning,
+        maxSeconds: memoizedPomodoroComponent.seconds,
+        buttonText: memoizedPomodoroComponent.buttonText,
+        label: memoizedPomodoroComponent.label,
+        type: memoizedPomodoroComponent.type,
+      }}
+    >
+      <PomodoroDispatchContext.Provider value={switchPomodoroRunningState}>
+        {children}
+      </PomodoroDispatchContext.Provider>
+    </PomodoroStateContext.Provider>
   );
 }
 
