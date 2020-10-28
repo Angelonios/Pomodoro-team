@@ -8,14 +8,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function FormButton({ children, onSelect, formData }) {
+export function FormButton({ children, submit }) {
   const classes = useStyles();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-    // ... submit to API or something
-  };
 
   return (
     <Button
@@ -24,7 +18,7 @@ export function FormButton({ children, onSelect, formData }) {
       variant="contained"
       color="primary"
       className={classes.submit}
-      onClick={handleSubmit}
+      onClick={submit}
     >
       {children}
     </Button>
