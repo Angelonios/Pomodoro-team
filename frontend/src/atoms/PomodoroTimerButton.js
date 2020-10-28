@@ -7,7 +7,7 @@ import {
 
 import { Button } from '@material-ui/core';
 import PlayArrowTwoToneIcon from '@material-ui/icons/PlayArrowTwoTone';
-import PauseCircleFilledTwoToneIcon from '@material-ui/icons/PauseCircleFilledTwoTone';
+import FlagIcon from '@material-ui/icons/Flag';
 import FreeBreakfastTwoToneIcon from '@material-ui/icons/FreeBreakfastTwoTone';
 
 export function PomodoroTimerButton({ text, size }) {
@@ -15,17 +15,26 @@ export function PomodoroTimerButton({ text, size }) {
   const state = usePomodoroState();
 
   const getStartIcon = () => {
-    switch (state.type) {
-      case 1:
-        return <PlayArrowTwoToneIcon />;
-      case 2:
-        return <FreeBreakfastTwoToneIcon />;
-      case 3:
-        return <FreeBreakfastTwoToneIcon />;
-      default:
-        return <PlayArrowTwoToneIcon />;
+    if (state.pomodoroRunning) {
+      return <FlagIcon />;
+    } else {
+      switch (state.type) {
+        case 1:
+          return <PlayArrowTwoToneIcon />;
+        case 2:
+          return <FreeBreakfastTwoToneIcon />;
+        case 3:
+          return <FreeBreakfastTwoToneIcon />;
+        default:
+          return <PlayArrowTwoToneIcon />;
+      }
     }
   };
+
+  let buttonText = '';
+  state.pomodoroRunning
+    ? (buttonText = 'Finish')
+    : (buttonText = state.buttonText);
 
   return (
     <Button
@@ -35,7 +44,7 @@ export function PomodoroTimerButton({ text, size }) {
       size={size}
       onClick={() => dispatch()}
     >
-      {state.buttonText}
+      {buttonText}
     </Button>
   );
 }
