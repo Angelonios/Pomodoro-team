@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { AppBar, Toolbar, Typography, Button } from '@material-ui/core/';
+import { AppBar, Toolbar, Typography } from '@material-ui/core/';
 import { route } from 'src/Routes';
 import { makeStyles } from '@material-ui/core/styles';
+import { NavLink } from 'src/atoms';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,18 +24,18 @@ export function TopNavigation() {
       <AppBar position="relative">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            <a
-              href={route.home()}
+            <NavLink
+              to={route.home()}
               style={{ textDecoration: 'none', color: 'white' }}
             >
               Team Pomodori
-            </a>
+            </NavLink>
           </Typography>
           <Typography>
             Hello! Sign-in or{' '}
-            <a href={route.signUp()} style={{ textDecoration: 'none' }}>
+            <NavLink to={route.signUp()} style={{ textDecoration: 'none' }}>
               <b style={{ color: 'white' }}>create account</b>
-            </a>
+            </NavLink>
           </Typography>
         </Toolbar>
       </AppBar>
