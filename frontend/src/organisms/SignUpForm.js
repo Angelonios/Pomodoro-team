@@ -47,9 +47,9 @@ export function SignUpForm() {
           <Grid container spacing={2}>
             <EmailField />
             <PasswordField id="password">Password</PasswordField>
-            <PasswordField id="re-password">Repeat password</PasswordField>
+            <PasswordField id="re-password">Re-enter password</PasswordField>
           </Grid>
-          <FormButton />
+          <FormButton>Create your account</FormButton>
           <FormLink />
         </form>
       </div>

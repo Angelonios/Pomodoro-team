@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function FormButton() {
+export function FormButton({ children }) {
   const classes = useStyles();
 
   return (
@@ -21,7 +21,7 @@ export function FormButton() {
       color="primary"
       className={classes.submit}
     >
-      Sign Up
+      {children}
     </Button>
   );
 }
