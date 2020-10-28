@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
@@ -33,6 +34,14 @@ const useStyles = makeStyles((theme) => ({
 export function SignUpForm() {
   const classes = useStyles();
 
+  const initialFormData = Object.freeze({
+    email: '',
+    password: '',
+    rePassword: '',
+  });
+
+  const [formData, updateFormData] = useState(initialFormData);
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -45,11 +54,25 @@ export function SignUpForm() {
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-            <EmailField />
-            <PasswordField id="password">Password</PasswordField>
-            <PasswordField id="re-password">Re-enter password</PasswordField>
+            <EmailField formData={formData} updateFormData={updateFormData} />
+            <PasswordField
+              formData={formData}
+              updateFormData={updateFormData}
+              id="password"
+              name="password"
+            >
+              Password
+            </PasswordField>
+            <PasswordField
+              formData={formData}
+              updateFormData={updateFormData}
+              id="re-password"
+              name="rePassword"
+            >
+              Re-enter password
+            </PasswordField>
           </Grid>
-          <FormButton>Create your account</FormButton>
+          <FormButton formData={formData}>Create your account</FormButton>
           <FormLink />
         </form>
       </div>
