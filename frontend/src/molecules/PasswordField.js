@@ -2,7 +2,7 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 
-export function PasswordField({ children }) {
+export function PasswordField({ id, children }) {
   return (
     <Grid item xs={12}>
       <TextField
@@ -12,7 +12,7 @@ export function PasswordField({ children }) {
         name="password"
         label={children}
         type="password"
-        id={children}
+        id={id}
         autoComplete="current-password"
       />
     </Grid>
