@@ -39,65 +39,43 @@ export function SignUpForm() {
     password: '',
     rePassword: '',
   });
-  const initialFormErrors = Object.freeze({
-    emailError: false,
-    passwordError: false,
-    rePasswordError: false,
-  });
 
   const [formData, updateFormData] = useState(initialFormData);
-  const [formErrors, updateFormErrors] = useState(initialFormErrors);
-  var errors = Object({
-    email: '',
-    password: '',
-    rePassword: '',
-  });
+  const [emailError, updateEmailError] = useState(false);
+  const [emailErrorText, updateEmailErrorText] = useState('');
+  const [passwordError, updatePasswordError] = useState(false);
+  const [passwordErrorText, updatePasswordErrorText] = useState('');
+  const [rePasswordError, updateRePasswordError] = useState(false);
+  const [rePasswordErrorText, updateRePasswordErrorText] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // ... submit to API or something
-    if (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(formData.email)) {
-      updateFormErrors({
-        ...formErrors,
-        emailError: false,
-      });
-      errors.email = '';
+    if (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.([A-Za-z]){2,3}$/.test(formData.email)) {
+      updateEmailError(false);
+      updateEmailErrorText('');
     } else {
-      updateFormErrors({
-        ...formErrors,
-        emailError: true,
-      });
-      errors.email = 'Enter a valid email!';
+      updateEmailError(true);
+      updateEmailErrorText('Enter a valid email adress !');
     }
     if (formData.password.length >= 6) {
-      updateFormErrors({
-        ...formErrors,
-        passwordError: false,
-      });
-      errors.password = '';
+      updatePasswordError(false);
+      updatePasswordErrorText('');
     } else {
-      updateFormErrors({
-        ...formErrors,
-        passwordError: true,
-      });
-      errors.password = 'Password must be atleast 6 characters long!';
+      updatePasswordError(true);
+      updatePasswordErrorText(
+        'The password must be atleast 6 characters long !',
+      );
     }
-    if (formData.password === formData.rePassword) {
-      updateFormErrors({
-        ...formErrors,
-        rePasswordError: false,
-      });
-      errors.rePassword = '';
+    if (formData.rePassword === formData.password) {
+      updateRePasswordError(false);
+      updateRePasswordErrorText('');
     } else {
-      updateFormErrors({
-        ...formErrors,
-        rePasswordError: true,
-      });
-      errors.rePassword = 'Passwords do not match!';
+      updateRePasswordError(true);
+      updateRePasswordErrorText('The passwords do not match !');
     }
+
     console.log(formData);
-    console.log(formErrors);
-    console.log(errors);
   };
 
   const handleChange = (e) => {
@@ -123,13 +101,13 @@ export function SignUpForm() {
             <EmailField
               formData={formData}
               handleChange={handleChange}
-              formErrors={formErrors.emailError}
-              helperText={errors.email}
+              formErrors={emailError}
+              helperText={emailErrorText}
             />
             <PasswordField
               handleChange={handleChange}
-              formErrors={formErrors.passwordError}
-              helperText={errors.password}
+              formErrors={passwordError}
+              helperText={passwordErrorText}
               id="password"
               name="password"
             >
@@ -137,9 +115,9 @@ export function SignUpForm() {
             </PasswordField>
             <PasswordField
               handleChange={handleChange}
-              formErrors={formErrors.rePasswordError}
-              helperText={errors.rePassword}
-              id="re-password"
+              formErrors={rePasswordError}
+              helperText={rePasswordErrorText}
+              id="rePassword"
               name="rePassword"
             >
               Re-enter password
