@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
@@ -10,6 +10,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Copyright, EmailField, PasswordField, FormLink } from '../molecules';
 import { FormButton } from '../atoms';
+import { useHistory } from 'react-router-dom';
+import { route } from 'src/Routes';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -31,7 +33,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function SignUpForm() {
+export function SignUpForm({
+  emailError,
+  updateEmailError,
+  passwordError,
+  updatePasswordError,
+  rePasswordError,
+  updateRePasswordError,
+}) {
   const classes = useStyles();
 
   const initialFormData = Object.freeze({
@@ -40,42 +49,65 @@ export function SignUpForm() {
     rePassword: '',
   });
 
+  /*
+    Zde to bude chtít asi vymyslet lepší řešení, bohužel se mi nic lepšího
+    npeodařilo. Open for improvement.
+  */
   const [formData, updateFormData] = useState(initialFormData);
-  const [emailError, updateEmailError] = useState(false);
   const [emailErrorText, updateEmailErrorText] = useState('');
-  const [passwordError, updatePasswordError] = useState(false);
   const [passwordErrorText, updatePasswordErrorText] = useState('');
-  const [rePasswordError, updateRePasswordError] = useState(false);
   const [rePasswordErrorText, updateRePasswordErrorText] = useState('');
+
+  const history = useHistory();
+  const isMounted = useRef(false);
+  const routeChange = (route) => {
+    let path = route;
+    history.push(path);
+  };
+
+  useEffect(() => {
+    if (isMounted.current) {
+      if (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.([A-Za-z]){2,3}$/.test(formData.email)) {
+        updateEmailError(false);
+        updateEmailErrorText('');
+      } else {
+        updateEmailError(true);
+        updateEmailErrorText('Enter a valid email adress !');
+      }
+      if (formData.password.length >= 6) {
+        updatePasswordError(false);
+        updatePasswordErrorText('');
+      } else {
+        updatePasswordError(true);
+        updatePasswordErrorText(
+          'The password must be atleast 6 characters long !',
+        );
+      }
+      if (formData.rePassword === formData.password) {
+        updateRePasswordError(false);
+        updateRePasswordErrorText('');
+      } else {
+        updateRePasswordError(true);
+        updateRePasswordErrorText('The passwords do not match !');
+      }
+      /*
+      console.log(emailError);
+      console.log(passwordError);
+      console.log(rePasswordError);
+      */
+    } else {
+      isMounted.current = true;
+    }
+  }, [formData]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // ... submit to API or something
-    if (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.([A-Za-z]){2,3}$/.test(formData.email)) {
-      updateEmailError(false);
-      updateEmailErrorText('');
+    if (!(rePasswordError || passwordError || emailError)) {
+      return routeChange(route.home());
     } else {
-      updateEmailError(true);
-      updateEmailErrorText('Enter a valid email adress !');
+      return routeChange(route.signUp());
     }
-    if (formData.password.length >= 6) {
-      updatePasswordError(false);
-      updatePasswordErrorText('');
-    } else {
-      updatePasswordError(true);
-      updatePasswordErrorText(
-        'The password must be atleast 6 characters long !',
-      );
-    }
-    if (formData.rePassword === formData.password) {
-      updateRePasswordError(false);
-      updateRePasswordErrorText('');
-    } else {
-      updateRePasswordError(true);
-      updateRePasswordErrorText('The passwords do not match !');
-    }
-
-    console.log(formData);
   };
 
   const handleChange = (e) => {
