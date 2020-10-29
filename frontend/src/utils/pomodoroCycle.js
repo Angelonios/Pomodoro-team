@@ -1,5 +1,4 @@
-//NOT READY YET
-const pomodoroCycleParams = {
+const pomodoroCycleProps = {
   components: {
     pomodoro: {
       type: 1,
@@ -21,22 +20,23 @@ const pomodoroCycleParams = {
     },
   },
 };
-const componentTypeOrder = [
-  pomodoroCycleParams.components.pomodoro,
-  pomodoroCycleParams.components.shortBreak,
-  pomodoroCycleParams.components.pomodoro,
-  pomodoroCycleParams.components.shortBreak,
-  pomodoroCycleParams.components.pomodoro,
-  pomodoroCycleParams.components.shortBreak,
-  pomodoroCycleParams.components.pomodoro,
-  pomodoroCycleParams.components.longBreak,
+
+const componentsOrder = [
+  pomodoroCycleProps.components.pomodoro,
+  pomodoroCycleProps.components.shortBreak,
+  pomodoroCycleProps.components.pomodoro,
+  pomodoroCycleProps.components.shortBreak,
+  pomodoroCycleProps.components.pomodoro,
+  pomodoroCycleProps.components.shortBreak,
+  pomodoroCycleProps.components.pomodoro,
+  pomodoroCycleProps.components.longBreak,
 ];
 
 export const getPomodoroComponent = (index) => {
-  console.log(componentTypeOrder[index]);
-  return componentTypeOrder[index];
+  console.log(componentsOrder[index]);
+  return componentsOrder[index];
 };
 
 export const getComponentTypeOrderLength = () => {
-  return componentTypeOrder.length;
+  return componentsOrder.length;
 };
