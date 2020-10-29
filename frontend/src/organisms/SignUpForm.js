@@ -39,19 +39,70 @@ export function SignUpForm() {
     password: '',
     rePassword: '',
   });
+  const initialFormErrors = Object.freeze({
+    emailError: false,
+    passwordError: false,
+    rePasswordError: false,
+  });
 
   const [formData, updateFormData] = useState(initialFormData);
+  const [formErrors, updateFormErrors] = useState(initialFormErrors);
+  var errors = Object({
+    email: '',
+    password: '',
+    rePassword: '',
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
     // ... submit to API or something
+    if (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(formData.email)) {
+      updateFormErrors({
+        ...formErrors,
+        emailError: false,
+      });
+      errors.email = '';
+    } else {
+      updateFormErrors({
+        ...formErrors,
+        emailError: true,
+      });
+      errors.email = 'Enter a valid email!';
+    }
+    if (formData.password.length >= 6) {
+      updateFormErrors({
+        ...formErrors,
+        passwordError: false,
+      });
+      errors.password = '';
+    } else {
+      updateFormErrors({
+        ...formErrors,
+        passwordError: true,
+      });
+      errors.password = 'Password must be atleast 6 characters long!';
+    }
+    if (formData.password === formData.rePassword) {
+      updateFormErrors({
+        ...formErrors,
+        rePasswordError: false,
+      });
+      errors.rePassword = '';
+    } else {
+      updateFormErrors({
+        ...formErrors,
+        rePasswordError: true,
+      });
+      errors.rePassword = 'Passwords do not match!';
+    }
+    console.log(formData);
+    console.log(formErrors);
+    console.log(errors);
   };
 
   const handleChange = (e) => {
     updateFormData({
       ...formData,
-
       // Trimming any whitespace
       [e.target.name]: e.target.value.trim(),
     });
@@ -69,9 +120,16 @@ export function SignUpForm() {
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-            <EmailField handleChange={handleChange} />
+            <EmailField
+              formData={formData}
+              handleChange={handleChange}
+              formErrors={formErrors.emailError}
+              helperText={errors.email}
+            />
             <PasswordField
               handleChange={handleChange}
+              formErrors={formErrors.passwordError}
+              helperText={errors.password}
               id="password"
               name="password"
             >
@@ -79,6 +137,8 @@ export function SignUpForm() {
             </PasswordField>
             <PasswordField
               handleChange={handleChange}
+              formErrors={formErrors.rePasswordError}
+              helperText={errors.rePassword}
               id="re-password"
               name="rePassword"
             >
