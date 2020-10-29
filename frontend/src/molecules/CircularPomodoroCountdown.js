@@ -21,7 +21,7 @@ export function CircularPomodoroCountdown() {
         alignItems="center"
         justifyContent="center"
       >
-        <PomodoroTimerLabel remainingTime={state.remainingSeconds} />
+        <PomodoroTimerLabel remainingSeconds={state.remainingSeconds} />
       </Box>
     </Box>
   );
