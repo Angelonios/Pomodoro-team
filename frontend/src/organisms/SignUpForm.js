@@ -176,7 +176,9 @@ export function SignUpForm({
             </PasswordField>
           </Grid>
           <FormButton submit={handleSubmit}>Create your account</FormButton>
-          <FormLink />
+          <FormLink link={route.signIn()}>
+            Already have an account? Sign in
+          </FormLink>
         </form>
       </div>
       <Box mt={5}>
