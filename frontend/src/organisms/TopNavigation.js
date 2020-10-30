@@ -32,7 +32,11 @@ export function TopNavigation() {
             </NavLink>
           </Typography>
           <Typography>
-            Hello! Sign-in or{' '}
+            Hello!{' '}
+            <NavLink to={route.signIn()} style={{ textDecoration: 'none' }}>
+              <b style={{ color: 'white' }}>Sign-in</b>
+            </NavLink>{' '}
+            or{' '}
             <NavLink to={route.signUp()} style={{ textDecoration: 'none' }}>
               <b style={{ color: 'white' }}>create account</b>
             </NavLink>
