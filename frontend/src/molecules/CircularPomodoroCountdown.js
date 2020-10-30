@@ -10,7 +10,12 @@ export function CircularPomodoroCountdown() {
   let progressValue = (state.remainingSeconds / state.maxSeconds) * 100;
   return (
     <Box position="relative" display="inline-flex">
-      <CircularProgress variant="static" value={progressValue} size={300} />
+      <CircularProgress
+        variant="static"
+        value={progressValue}
+        size={300}
+        color={state.color}
+      />
       <Box
         top={0}
         left={0}

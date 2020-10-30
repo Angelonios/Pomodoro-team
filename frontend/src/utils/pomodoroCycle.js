@@ -5,18 +5,21 @@ const pomodoroCycleProps = {
       seconds: 1500,
       label: 'Pomodoro',
       buttonText: 'Begin work',
+      color: 'primary',
     },
     shortBreak: {
       type: 2,
       seconds: 300,
       label: 'Short break',
       buttonText: 'Take a break',
+      color: 'secondary',
     },
     longBreak: {
       type: 3,
       seconds: 900,
       label: 'Long break',
       buttonText: 'Take a long break',
+      color: 'secondary',
     },
   },
 };

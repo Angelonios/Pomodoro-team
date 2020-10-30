@@ -68,6 +68,7 @@ export function PomodoroProvider({ children }) {
       parseInt(Date.now() / 1000 + memoizedPomodoroComponent.seconds),
     );
 
+    //When pomodoroRunning si changed to false (user clicked on the Finish button)
     return function cleanup() {
       currentPositionInpomodoroCycle + 1 === getComponentTypeOrderLength()
         ? setCurrentPositionInpomodoroCycle(0)
@@ -113,6 +114,7 @@ export function PomodoroProvider({ children }) {
         buttonText: memoizedPomodoroComponent.buttonText,
         label: memoizedPomodoroComponent.label,
         type: memoizedPomodoroComponent.type,
+        color: memoizedPomodoroComponent.color,
       }}
     >
       <PomodoroDispatchContext.Provider value={switchPomodoroRunningState}>
