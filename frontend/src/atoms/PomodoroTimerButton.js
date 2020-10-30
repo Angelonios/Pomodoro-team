@@ -40,7 +40,7 @@ export function PomodoroTimerButton({ text, size }) {
     <Button
       startIcon={getStartIcon()}
       variant="contained"
-      color="primary"
+      color={state.color}
       size={size}
       onClick={() => dispatch()}
     >
