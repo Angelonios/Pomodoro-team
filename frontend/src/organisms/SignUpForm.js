@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
@@ -41,6 +41,19 @@ export function SignUpForm({
   rePasswordError,
   updateRePasswordError,
 }) {
+  /*
+  const {
+    emailError,
+    updateEmailError,
+    passwordError,
+    updatePasswordError,
+    rePasswordError,
+    updateRePasswordError,
+  } = props;
+
+  props.emailError
+*/
+
   const classes = useStyles();
 
   const initialFormData = Object.freeze({
@@ -57,53 +70,60 @@ export function SignUpForm({
   const [emailErrorText, updateEmailErrorText] = useState('');
   const [passwordErrorText, updatePasswordErrorText] = useState('');
   const [rePasswordErrorText, updateRePasswordErrorText] = useState('');
+  var password;
+  var email;
+  var rePassword;
 
   const history = useHistory();
-  const isMounted = useRef(false);
+  //const isMounted = useRef(false);
   const routeChange = (route) => {
     let path = route;
     history.push(path);
   };
-
+  /*
   useEffect(() => {
     if (isMounted.current) {
-      if (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.([A-Za-z]){2,3}$/.test(formData.email)) {
-        updateEmailError(false);
-        updateEmailErrorText('');
-      } else {
-        updateEmailError(true);
-        updateEmailErrorText('Enter a valid email adress !');
-      }
-      if (formData.password.length >= 6) {
-        updatePasswordError(false);
-        updatePasswordErrorText('');
-      } else {
-        updatePasswordError(true);
-        updatePasswordErrorText(
-          'The password must be atleast 6 characters long !',
-        );
-      }
-      if (formData.rePassword === formData.password) {
-        updateRePasswordError(false);
-        updateRePasswordErrorText('');
-      } else {
-        updateRePasswordError(true);
-        updateRePasswordErrorText('The passwords do not match !');
-      }
-      /*
       console.log(emailError);
       console.log(passwordError);
       console.log(rePasswordError);
-      */
     } else {
       isMounted.current = true;
     }
-  }, [formData]);
+  }, [formData]);*/
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // ... submit to API or something
-    if (!(rePasswordError || passwordError || emailError)) {
+    if (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.([A-Za-z]){2,3}$/.test(formData.email)) {
+      email = false;
+      updateEmailError(false);
+      updateEmailErrorText('');
+    } else {
+      email = true;
+      updateEmailError(true);
+      updateEmailErrorText('Enter a valid email adress !');
+    }
+    if (formData.password.length >= 6) {
+      password = false;
+      updatePasswordError(false);
+      updatePasswordErrorText('');
+    } else {
+      password = true;
+      updatePasswordError(true);
+      updatePasswordErrorText(
+        'The password must be atleast 6 characters long !',
+      );
+    }
+    if (formData.rePassword === formData.password) {
+      rePassword = false;
+      updateRePasswordError(false);
+      updateRePasswordErrorText('');
+    } else {
+      rePassword = true;
+      updateRePasswordError(true);
+      updateRePasswordErrorText('The passwords do not match !');
+    }
+    if (!(email || password || rePassword)) {
       return routeChange(route.home());
     } else {
       return routeChange(route.signUp());
