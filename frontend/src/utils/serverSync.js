@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+/* import { gql } from '@apollo/client'; */
 
 const getUdid = () => {
   return uuidv4();
@@ -30,3 +31,32 @@ export const initServerCommunication = () => {
     shareId = getIdsFromLocalStorage(shareId);
   }
 };
+
+/* const sendUpdatePomodoroMutation = () => {
+  const UPDATE_POMODORO_MUTATION = gql`
+    mutation UpdatePomodoro ($running: Boolean!, $position: Int!, $communicationId: String!, $shareId: String) {
+      pomodoros (running: $running, position: $position) {
+        running
+        position
+        ids (communicationId = $communicationId, shareId = $shareId) {
+          communicationId
+          shareId
+        }
+      }
+    }
+  `;
+};
+
+const sendPomodoroQuery = () => {
+  const POMODORO_QUERY = gql`
+      query Pomodoro ($communicationId: String!) {
+        pomodoros{
+          position
+          secondsSinceStart
+          ids (communicationId = $communicationId) {
+            communicationId
+          }
+        }
+      }
+    `;
+}; */
