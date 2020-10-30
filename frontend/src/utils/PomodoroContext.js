@@ -3,6 +3,7 @@ import {
   getPomodoroComponent,
   getComponentTypeOrderLength,
 } from './pomodoroCycle';
+import { initServerCommunication } from './serverSync';
 //
 //  💡 New improved logic 27. 10. 👇
 //  ===============================
@@ -44,6 +45,8 @@ export function PomodoroProvider({ children }) {
     currentPositionInpomodoroCycle,
     setCurrentPositionInpomodoroCycle,
   ] = useState(0);
+  //const [communicationId, setCommunicationId] = useState();
+  //const [shareId, setShareId] = useState();
 
   const memoizedPomodoroComponent = useMemo(
     () => getPomodoroComponent(currentPositionInpomodoroCycle),
@@ -104,6 +107,11 @@ export function PomodoroProvider({ children }) {
     }, 1000);
     return () => clearTimeout(timer);
   });
+
+  //First load
+  useEffect(() => {
+    initServerCommunication();
+  }, []);
 
   return (
     <PomodoroStateContext.Provider
