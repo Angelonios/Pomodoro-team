@@ -1,12 +1,16 @@
-import { mutations as UserMutations } from './user';
-import { mutations as AnonymPomodoroMutations, queries as AnonymPomodoroQueries} from './pomodoro';
+import { mutations as UserMutations, queries as UserQueries } from './user';
+import {
+  mutations as AnonymPomodoroMutations,
+  queries as AnonymPomodoroQueries,
+} from './pomodoro';
 
 export default {
   Query: {
-    ...AnonymPomodoroQueries
+    ...UserQueries,
+    ...AnonymPomodoroQueries,
   },
   Mutation: {
     ...UserMutations,
-    ...AnonymPomodoroMutations
+    ...AnonymPomodoroMutations,
   },
 };

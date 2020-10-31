@@ -1,3 +1,3 @@
 import * as mutations from './mutation';
-
-export { mutations };
+import * as queries from './query';
+export { mutations, queries };
