@@ -4,6 +4,7 @@ import {
   getComponentTypeOrderLength,
 } from './pomodoroCycle';
 import { initServerCommunication } from './serverSync';
+import { route } from 'src/Routes';
 //
 //  💡 New improved logic 27. 10. 👇
 //  ===============================
@@ -45,8 +46,9 @@ export function PomodoroProvider({ children }) {
     currentPositionInpomodoroCycle,
     setCurrentPositionInpomodoroCycle,
   ] = useState(0);
-  //const [communicationId, setCommunicationId] = useState();
-  //const [shareId, setShareId] = useState();
+  const [communicationId, setCommunicationId] = useState();
+  const [shareId, setShareId] = useState();
+  const [shareUrl, setShareUrl] = useState();
 
   const memoizedPomodoroComponent = useMemo(
     () => getPomodoroComponent(currentPositionInpomodoroCycle),
@@ -110,8 +112,14 @@ export function PomodoroProvider({ children }) {
 
   //First load
   useEffect(() => {
-    initServerCommunication();
+    const ids = initServerCommunication();
+    setCommunicationId(ids.communicationId);
+    setShareId(ids.shareId);
   }, []);
+
+  useEffect(() => {
+    setShareUrl(window.location.origin.toString() + route.share(shareId));
+  }, [shareId]);
 
   return (
     <PomodoroStateContext.Provider
@@ -123,6 +131,7 @@ export function PomodoroProvider({ children }) {
         label: memoizedPomodoroComponent.label,
         type: memoizedPomodoroComponent.type,
         color: memoizedPomodoroComponent.color,
+        shareUrl: shareUrl,
       }}
     >
       <PomodoroDispatchContext.Provider value={switchPomodoroRunningState}>

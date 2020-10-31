@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Container, Grid, Paper } from '@material-ui/core';
-import { CircularPomodoroCountdown } from 'src/molecules';
+import { CircularPomodoroCountdown, ShareUrl } from 'src/molecules';
 import { PomodoroTimerButton } from 'src/atoms';
 
 export function PomodoroTimer() {
@@ -32,6 +32,7 @@ export function PomodoroTimer() {
               </Grid>
             </Grid>
           </Grid>
+          <ShareUrl />
         </Box>
       </Paper>
     </Container>

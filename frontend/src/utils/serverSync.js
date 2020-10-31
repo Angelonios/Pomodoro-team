@@ -10,12 +10,6 @@ const saveIdsToLocalStorage = (communicationId, shareId) => {
   localStorage.setItem('shareId', shareId);
 };
 
-const getIdsFromLocalStorage = () => {
-  const communicationId = localStorage.getItem('communicationId');
-  const shareId = localStorage.getItem('shareId');
-  return { communicationId, shareId };
-};
-
 export const initServerCommunication = () => {
   let communicationId;
   let shareId;
@@ -26,9 +20,11 @@ export const initServerCommunication = () => {
     communicationId = getUdid();
     shareId = getUdid();
     saveIdsToLocalStorage(communicationId, shareId);
+    return { communicationId, shareId };
   } else {
-    communicationId = getIdsFromLocalStorage(communicationId);
-    shareId = getIdsFromLocalStorage(shareId);
+    communicationId = localStorage.getItem('communicationId');
+    shareId = localStorage.getItem('shareId');
+    return { communicationId, shareId };
   }
 };
 
