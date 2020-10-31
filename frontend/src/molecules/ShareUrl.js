@@ -21,7 +21,7 @@ export function ShareUrl() {
   };
   const state = usePomodoroState();
   return (
-    <FormControl>
+    <FormControl fullWidth>
       <TextField
         InputProps={{
           readOnly: true,
