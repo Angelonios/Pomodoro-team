@@ -39,7 +39,6 @@ export function SignInForm() {
   const initialFormData = Object.freeze({
     email: '',
     password: '',
-    rePassword: '',
   });
   const [formData, updateFormData] = useState(initialFormData);
 
