@@ -69,7 +69,7 @@ export function SignInForm() {
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
             <EmailField
-              formData={''}
+              formData={formData}
               formErrors={false}
               helperText={''}
               handleChange={handleChange}
@@ -77,7 +77,7 @@ export function SignInForm() {
             <PasswordField
               id="password"
               name="password"
-              formData={''}
+              formData={formData}
               formErrors={false}
               helperText={''}
               handleChange={handleChange}
