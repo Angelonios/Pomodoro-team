@@ -11,15 +11,35 @@ dotenv.config();
 
 const typeDefs = gql`
   type Query {
-    todo: String!
+    pomodoro(communicationId: String!): Pomodoro
   }
-
+  
+  type Pomodoro {
+    position: String!
+    secondsSinceStart: Int!
+    ids: Ids!
+  } 
+  
+  type Ids {
+    communicationId: String!
+    shareId: String!
+  }
+  
+  type User{
+    id: Int!
+    email: String!
+  }
+  
+  type Mutation {
+    SignIn(email: String!, password: String!): User!
+    
+    SignUp(email: String!, password: String!): User!
+    
+    UpdatePomodoro(running: Boolean!, position: String!, communicationId: String! , shareId: String!): Pomodoro!
+  }
+  
   type AuthInfo {
     token: String!
-  }
-
-  type Mutation {
-    signin(email: String!, password: String!): AuthInfo!
   }
 `;
 
