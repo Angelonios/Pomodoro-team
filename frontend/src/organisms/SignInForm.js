@@ -60,14 +60,14 @@ export function SignInForm() {
   const [error, updateError] = useState(false);
   const [signIn] = useMutation(SIGN_IN, {
     onCompleted: ({ SignIn: { user, token } }) => {
-      console.log('good SignIn');
+      //console.log('good SignIn');
       updateErrorText('');
       updateError(false);
       auth.signin({ token, user });
       history.replace('/');
     },
     onError: () => {
-      console.log('bad SignIn');
+      //console.log('bad SignIn');
       updateErrorText(
         'Meh, we were unable to find you using these credentials.',
       );

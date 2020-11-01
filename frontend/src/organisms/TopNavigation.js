@@ -46,8 +46,8 @@ export function TopNavigation({ currentUser }) {
             <Typography>
               <b>Hello {user.email}!</b>{' '}
             </Typography>{' '}
-            <IconButton color="primary" aria-label="add to shopping cart">
-              <ExitToAppIcon color="action" onClick={logOut} />
+            <IconButton color="primary" aria-label="log out" onClick={logOut}>
+              <ExitToAppIcon color="action" />
             </IconButton>
           </Toolbar>
         </AppBar>
