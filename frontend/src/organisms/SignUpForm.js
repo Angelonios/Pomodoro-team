@@ -13,6 +13,7 @@ import { FormButton } from '../atoms';
 import { useHistory } from 'react-router-dom';
 import { route } from 'src/Routes';
 import { gql, useMutation } from '@apollo/client';
+import { useAuth } from 'src/utils/auth';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -37,8 +38,11 @@ const useStyles = makeStyles((theme) => ({
 const SIGN_UP = gql`
   mutation SignUp($email: String!, $password: String!) {
     SignUp(email: $email, password: $password) {
-      user_id
-      email
+      user {
+        user_id
+        email
+      }
+      token
     }
   }
 `;
@@ -83,36 +87,26 @@ export function SignUpForm({
   var password;
   var email;
   var rePassword;
-
+  const auth = useAuth();
+  const history = useHistory();
   const [signUp] = useMutation(SIGN_UP, {
-    onCompleted: () => {
+    onCompleted: ({ SignUp: { user, token } }) => {
       console.log('good SignUp');
-      routeChange(route.signIn());
+      auth.signin({ token, user });
+      history.replace('/');
     },
     onError: () => {
       console.log('bad SignUp');
       updateEmailError(true);
       updateEmailErrorText('This email adress already exists !');
-      routeChange(route.signUp());
+      //routeChange(route.signUp());
     },
   });
 
-  const history = useHistory();
-  //const isMounted = useRef(false);
   const routeChange = (route) => {
     let path = route;
     history.push(path);
   };
-  /*
-  useEffect(() => {
-    if (isMounted.current) {
-      console.log(emailError);
-      console.log(passwordError);
-      console.log(rePasswordError);
-    } else {
-      isMounted.current = true;
-    }
-  }, [formData]);*/
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -151,9 +145,6 @@ export function SignUpForm({
       signUp({
         variables: { email: formData.email, password: formData.password },
       });
-      return; //routeChange(route.signIn());
-    } else {
-      return; //routeChange(route.signUp());
     }
   };
 

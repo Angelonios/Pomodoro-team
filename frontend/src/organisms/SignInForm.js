@@ -13,6 +13,7 @@ import { FormButton } from '../atoms';
 import { useHistory } from 'react-router-dom';
 import { route } from 'src/Routes';
 import { gql, useMutation } from '@apollo/client';
+import { useAuth } from 'src/utils/auth';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -37,29 +38,40 @@ const useStyles = makeStyles((theme) => ({
 const SIGN_IN = gql`
   mutation SignIn($email: String!, $password: String!) {
     SignIn(email: $email, password: $password) {
-      user_id
-      email
+      user {
+        user_id
+        email
+      }
+      token
     }
   }
 `;
 
 export function SignInForm() {
   const classes = useStyles();
-
+  const auth = useAuth();
+  const history = useHistory();
   const initialFormData = Object.freeze({
     email: '',
     password: '',
   });
   const [formData, updateFormData] = useState(initialFormData);
+  const [errorText, updateErrorText] = useState('');
+  const [error, updateError] = useState(false);
   const [signIn] = useMutation(SIGN_IN, {
-    onCompleted: () => {
+    onCompleted: ({ SignIn: { user, token } }) => {
       console.log('good SignIn');
-      console.log('SignedIn user: ' + formData.email);
-      //routeChange(route.signIn());
+      updateErrorText('');
+      updateError(false);
+      auth.signin({ token, user });
+      history.replace('/');
     },
     onError: () => {
       console.log('bad SignIn');
-      //routeChange(route.signUp());
+      updateErrorText(
+        'Meh, we were unable to find you using these credentials.',
+      );
+      updateError(true);
     },
   });
 
@@ -93,16 +105,16 @@ export function SignInForm() {
           <Grid container spacing={2}>
             <EmailField
               formData={formData}
-              formErrors={false}
-              helperText={''}
+              formErrors={error}
+              helperText={errorText}
               handleChange={handleChange}
             />
             <PasswordField
               id="password"
               name="password"
               formData={formData}
-              formErrors={false}
-              helperText={''}
+              formErrors={error}
+              helperText={errorText}
               handleChange={handleChange}
             >
               Password

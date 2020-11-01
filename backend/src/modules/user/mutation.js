@@ -9,15 +9,12 @@ export const SignIn = async (_, { email, password }, { dbConnection }) => {
 
   const user = dbResponse[0];
   if (await argon2.verify(user.password, password)) {
-    // const token = createToken({ id: user.id });
-    // return
-    // {
-    // user: { ...user },
-    // token,
-    // };
-    return user;
+    const token = createToken({ id: user.user_id });
+    return {
+      user: { ...user },
+      token,
+    };
   }
-  return null;
 };
 
 export const SignUp = async (_, { email, password }, { dbConnection }) => {
@@ -26,6 +23,7 @@ export const SignUp = async (_, { email, password }, { dbConnection }) => {
   )[0];
 
   if (userByEmail) {
+    console.log(userByEmail);
     throw new Error('Email already registered');
   }
 
@@ -37,12 +35,12 @@ export const SignUp = async (_, { email, password }, { dbConnection }) => {
     [email, passwordHash],
   );
 
-  // const token = createToken({ id: dbResponse.insertId });
+  const token = createToken({ id: dbResponse.insertId });
 
-  const user = {
+  const userObject = {
     user_id: dbResponse.insertId,
     email: email,
   };
 
-  return user;
+  return { user: userObject, token: token };
 };
