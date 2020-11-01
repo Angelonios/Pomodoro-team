@@ -12,21 +12,17 @@ export const SignIn = async (_, { email, password }, { dbConnection }) => {
     // const token = createToken({ id: user.id });
     // return
     // {
-      // user: { ...user },
-      // token,
+    // user: { ...user },
+    // token,
     // };
     return user;
   }
   return null;
 };
 
-
 export const SignUp = async (_, { email, password }, { dbConnection }) => {
-
   const userByEmail = (
-    await dbConnection.query(`SELECT * FROM users WHERE email = ?`, [
-      email,
-    ])
+    await dbConnection.query(`SELECT * FROM users WHERE email = ?`, [email])
   )[0];
 
   if (userByEmail) {
@@ -36,7 +32,7 @@ export const SignUp = async (_, { email, password }, { dbConnection }) => {
   const passwordHash = await argon2.hash(password);
 
   const dbResponse = await dbConnection.query(
-    `INSERT INTO users (email, password) 
+    `INSERT INTO users (email, password)
     VALUES (?, ?);`,
     [email, passwordHash],
   );
@@ -44,7 +40,7 @@ export const SignUp = async (_, { email, password }, { dbConnection }) => {
   // const token = createToken({ id: dbResponse.insertId });
 
   const user = {
-    id: dbResponse.insertId,
+    user_id: dbResponse.insertId,
     email: email,
   };
 

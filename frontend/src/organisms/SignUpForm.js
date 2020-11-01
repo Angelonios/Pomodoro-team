@@ -12,6 +12,7 @@ import { Copyright, EmailField, PasswordField, FormLink } from '../molecules';
 import { FormButton } from '../atoms';
 import { useHistory } from 'react-router-dom';
 import { route } from 'src/Routes';
+import { gql, useMutation } from '@apollo/client';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,6 +33,15 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
+
+const SIGN_UP = gql`
+  mutation SignUp($email: String!, $password: String!) {
+    SignUp(email: $email, password: $password) {
+      user_id
+      email
+    }
+  }
+`;
 
 export function SignUpForm({
   emailError,
@@ -73,6 +83,17 @@ export function SignUpForm({
   var password;
   var email;
   var rePassword;
+
+  const [signUp] = useMutation(SIGN_UP, {
+    onCompleted: () => {
+      console.log('good SignUp');
+      routeChange(route.signIn());
+    },
+    onError: () => {
+      console.log('bad SignUp');
+      routeChange(route.signUp());
+    },
+  });
 
   const history = useHistory();
   //const isMounted = useRef(false);
@@ -124,9 +145,13 @@ export function SignUpForm({
       updateRePasswordErrorText('The passwords do not match !');
     }
     if (!(email || password || rePassword)) {
-      return routeChange(route.home());
+      console.log(formData);
+      signUp({
+        variables: { email: formData.email, password: formData.password },
+      });
+      return; //routeChange(route.signIn());
     } else {
-      return routeChange(route.signUp());
+      return; //routeChange(route.signUp());
     }
   };
 
