@@ -91,6 +91,8 @@ export function SignUpForm({
     },
     onError: () => {
       console.log('bad SignUp');
+      updateEmailError(true);
+      updateEmailErrorText('This email adress already exists !');
       routeChange(route.signUp());
     },
   });
