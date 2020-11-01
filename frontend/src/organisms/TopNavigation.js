@@ -6,7 +6,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from 'src/atoms';
 import { useAuth } from 'src/utils/auth';
 import { useHistory } from 'react-router-dom';
-import { Button } from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,16 +46,9 @@ export function TopNavigation({ currentUser }) {
             <Typography>
               <b>Hello {user.email}!</b>{' '}
             </Typography>{' '}
-            <Typography> </Typography>
-            <Button
-              className={classes.menuButton}
-              type="submit"
-              variant="outlined"
-              size="small"
-              onClick={logOut}
-            >
-              Sign Out
-            </Button>
+            <IconButton color="primary" aria-label="add to shopping cart">
+              <ExitToAppIcon color="action" onClick={logOut} />
+            </IconButton>
           </Toolbar>
         </AppBar>
       </div>
