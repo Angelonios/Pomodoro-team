@@ -43,7 +43,7 @@ export function TopNavigation({ currentUser }) {
                 Team Pomodori
               </NavLink>
             </Typography>
-            <Typography>
+            <Typography align="right">
               <b>Hello {user.email}!</b>{' '}
             </Typography>{' '}
             <IconButton color="primary" aria-label="log out" onClick={logOut}>
@@ -66,7 +66,7 @@ export function TopNavigation({ currentUser }) {
                 Team Pomodori
               </NavLink>
             </Typography>
-            <Typography>
+            <Typography align="right">
               Hello!{' '}
               <NavLink to={route.signIn()} style={{ textDecoration: 'none' }}>
                 <b style={{ color: 'white' }}>Sign-in</b>
