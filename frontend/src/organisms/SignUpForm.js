@@ -92,8 +92,11 @@ export function SignUpForm({
   const [signUp] = useMutation(SIGN_UP, {
     onCompleted: ({ SignUp: { user, token } }) => {
       //console.log('good SignUp');
-      auth.signin({ token, user });
-      history.replace('/');
+      //auth.signin({ token, user });
+      history.push({
+        pathname: route.afterSignUp(),
+        data: formData.email,
+      });
     },
     onError: () => {
       //console.log('bad SignUp');
@@ -102,11 +105,6 @@ export function SignUpForm({
       //routeChange(route.signUp());
     },
   });
-
-  const routeChange = (route) => {
-    let path = route;
-    history.push(path);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();

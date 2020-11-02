@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Copyright, EmailField, PasswordField, FormLink } from '../molecules';
 import { FormButton } from '../atoms';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { route } from 'src/Routes';
 import { gql, useMutation } from '@apollo/client';
 import { useAuth } from 'src/utils/auth';
@@ -47,14 +47,18 @@ const SIGN_IN = gql`
   }
 `;
 
-export function SignInForm() {
+export function SignInForm({ props }) {
   const classes = useStyles();
   const auth = useAuth();
   const history = useHistory();
+
+  const location = useLocation();
+  const email = location.data;
   const initialFormData = Object.freeze({
-    email: '',
+    email: email,
     password: '',
   });
+
   const [formData, updateFormData] = useState(initialFormData);
   const [errorText, updateErrorText] = useState('');
   const [error, updateError] = useState(false);
@@ -104,6 +108,7 @@ export function SignInForm() {
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
             <EmailField
+              data={email}
               formData={formData}
               formErrors={error}
               helperText={errorText}

@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from 'src/atoms';
 import { useAuth } from 'src/utils/auth';
 import { useHistory } from 'react-router-dom';
-import { Button, IconButton } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const useStyles = makeStyles((theme) => ({
