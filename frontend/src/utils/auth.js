@@ -44,7 +44,10 @@ function createContextValue({ token, user, setState }) {
     token,
     user,
     signin: ({ token, user }) => setState({ token, user }),
-    signout: () => setState({ token: null }),
+    //signout: () => setState({ token: null }),
+    signout: () => {
+      localStorage.removeItem(LOCAL_STORAGE_AUTH_KEY);
+    },
   };
 }
 
@@ -72,7 +75,7 @@ function getStorageState(defaultState) {
   try {
     const { user, token } = JSON.parse(rawData);
 
-    if (token && user && user.email) {
+    if (token && user) {
       return { token, user };
     }
   } catch {}

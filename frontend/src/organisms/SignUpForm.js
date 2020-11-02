@@ -91,22 +91,20 @@ export function SignUpForm({
   const history = useHistory();
   const [signUp] = useMutation(SIGN_UP, {
     onCompleted: ({ SignUp: { user, token } }) => {
-      console.log('good SignUp');
-      auth.signin({ token, user });
-      history.replace('/');
+      //console.log('good SignUp');
+      //auth.signin({ token, user });
+      history.push({
+        pathname: route.afterSignUp(),
+        data: formData.email,
+      });
     },
     onError: () => {
-      console.log('bad SignUp');
+      //console.log('bad SignUp');
       updateEmailError(true);
       updateEmailErrorText('This email adress already exists !');
       //routeChange(route.signUp());
     },
   });
-
-  const routeChange = (route) => {
-    let path = route;
-    history.push(path);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -141,7 +139,7 @@ export function SignUpForm({
       updateRePasswordErrorText('The passwords do not match !');
     }
     if (!(email || password || rePassword)) {
-      console.log(formData);
+      //console.log(formData);
       signUp({
         variables: { email: formData.email, password: formData.password },
       });
