@@ -4,7 +4,6 @@ import {
   getComponentTypeOrderLength,
 } from './pomodoroCycle';
 import { initServerCommunication } from './serverSync';
-import { route } from 'src/Routes';
 //
 //  💡 New improved logic 27. 10. 👇
 //  ===============================
@@ -118,7 +117,7 @@ export function PomodoroProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    setShareUrl(window.location.origin.toString() + route.share(shareId));
+    setShareUrl(window.location.origin.toString() + '/share/' + shareId);
   }, [shareId]);
 
   return (
@@ -141,15 +140,15 @@ export function PomodoroProvider({ children }) {
   );
 }
 
-export function usePomodoroState() {
+export const usePomodoroState = () => {
   const context = React.useContext(PomodoroStateContext);
   if (context === undefined) {
     throw new Error('usePomodoroState must be used within a PomodoroProvider');
   }
   return context;
-}
+};
 
-export function usePomodoroDispatch() {
+export const usePomodoroDispatch = () => {
   const context = React.useContext(PomodoroDispatchContext);
   if (context === undefined) {
     throw new Error(
@@ -157,4 +156,6 @@ export function usePomodoroDispatch() {
     );
   }
   return context;
-}
+};
+
+//const mockServerResponse = () => {};
