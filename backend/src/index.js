@@ -11,7 +11,7 @@ dotenv.config();
 
 const typeDefs = gql`
   type Query {
-    pomodoro(communicationId: String!): Pomodoro
+    pomodoro(shareId: String!): Pomodoro
     users: [User!]!
     user(user_id: Int!): User
   }

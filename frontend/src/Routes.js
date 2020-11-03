@@ -13,7 +13,7 @@ export const route = {
   signUp: () => `/auth/signup`,
   afterSignUp: () => `/auth/aftersignup`,
   signIn: () => `/signin`,
-  share: (shareId) => `/share/` + shareId,
+  share: () => `/share/:params`  ,
 };
 
 export function Routes() {
