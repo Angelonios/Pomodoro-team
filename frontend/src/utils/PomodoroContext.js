@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   getPomodoroComponent,
   getComponentTypeOrderLength,
@@ -25,13 +25,21 @@ export function PomodoroProvider({ children }) {
 
   const POMODORO_QUERY = gql`
     query Pomodoro($shareId: String!) {
-      pomodoros {
+      pomodoro(shareId: $shareId) {
         position
         secondsSinceStart
       }
     }
   `;
-  const serverPomodoro = useQuery(POMODORO_QUERY);
+
+  const serverPomodoro = useQuery(POMODORO_QUERY, { variables: { shareId } });
+
+  const cachedServerData = useMemo(() => {
+    if (serverPomodoro.loading || serverPomodoro.error) return null;
+
+    // mutate data here
+    return serverPomodoro.data;
+  }, [serverPomodoro.loading, serverPomodoro.error, serverPomodoro.data]);
 
   ////////////////////////////////////////////////////////////////////
   // Perform these actions every time a user clicks on the main button
@@ -55,7 +63,9 @@ export function PomodoroProvider({ children }) {
   ////////////////////////////
   // Timer initialization
   ////////////////////////////
-  const initializeTimer = (props) => {
+  const initializeTimer = useCallback((props) => {
+    console.log(props);
+
     setCurrentPositionInCycle(props.position);
 
     setPomodoroRunning(props.running);
@@ -75,7 +85,7 @@ export function PomodoroProvider({ children }) {
     });
 
     // Here comes the mutation to the server
-  };
+  }, []);
 
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // Calculates final time from seconds in current pomodoro component and seconds since start
@@ -116,55 +126,31 @@ export function PomodoroProvider({ children }) {
     setCommunicationId(ids.communicationId);
     setShareId(ids.shareId);
     setShareUrl(window.location.origin.toString() + '/share/' + ids.shareId);
-    console.log(serverPomodoro);
     //handleServerConfiguration(3, 40);
   }, []);
 
-  ////////////////////////////////////////////////////////////////////
-  // Convert timer configuration from server to initializeTimer props
-  ////////////////////////////////////////////////////////////////////
-  const handleServerConfiguration = (position, secondsSinceStart) => {
-    if (secondsSinceStart === 0) {
-      initializeTimer({
-        position: position,
-        running: false,
-        secondsSinceStart: 0,
-      });
-    } else {
-      initializeTimer({
-        position: position,
-        running: true,
-        secondsSinceStart: secondsSinceStart,
-      });
-    }
-  };
-
-  const sendDataToServer = () => {
-    const UPDATE_POMODORO_MUTATION = gql`
-    mutation UpdatePomodoro ($running: Boolean!, $position: Int!, $communicationId: String!, $shareId: String) {
-      pomodoros (running: $running, position: $position) {
-        running
-        position
-        ids (communicationId = $communicationId, shareId = $shareId) {
-          communicationId
-          shareId
+  useEffect(() => {
+    console.log(cachedServerData);
+    if (cachedServerData !== null) {
+      if (cachedServerData.pomodoro !== null) {
+        let position = parseInt(cachedServerData.pomodoro.position);
+        let secondsSinceStart = cachedServerData.pomodoro.secondsSinceStart;
+        if (secondsSinceStart === 0) {
+          initializeTimer({
+            position: position,
+            running: false,
+            secondsSinceStart: 0,
+          });
+        } else {
+          initializeTimer({
+            position: position,
+            running: true,
+            secondsSinceStart: secondsSinceStart,
+          });
         }
       }
     }
-  `;
-  };
-
-  const getDataFromServer = () => {
-    const POMODORO_QUERY = gql`
-      query Pomodoro($shareId: String!) {
-        pomodoros {
-          position
-          secondsSinceStart
-        }
-      }
-    `;
-    // return useQuery(POMODORO_QUERY);
-  };
+  }, [cachedServerData, initializeTimer]);
 
   return (
     <PomodoroStateContext.Provider
