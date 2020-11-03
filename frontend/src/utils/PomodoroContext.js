@@ -3,8 +3,9 @@ import {
   getPomodoroComponent,
   getComponentTypeOrderLength,
 } from './pomodoroCycle';
-import { initServerCommunication } from './serverSync';
+import { initServerCommunication } from './ServerSync';
 import { pomodoroReducer } from './pomodoroReducer';
+import { gql, useQuery } from '@apollo/client';
 
 const PomodoroStateContext = React.createContext();
 const PomodoroDispatchContext = React.createContext();
@@ -21,6 +22,16 @@ export function PomodoroProvider({ children }) {
     pomodoroReducer,
     getPomodoroComponent(currentPositionInCycle).seconds,
   );
+
+  const POMODORO_QUERY = gql`
+    query Pomodoro($shareId: String!) {
+      pomodoros {
+        position
+        secondsSinceStart
+      }
+    }
+  `;
+  const serverPomodoro = useQuery(POMODORO_QUERY);
 
   ////////////////////////////////////////////////////////////////////
   // Perform these actions every time a user clicks on the main button
@@ -62,6 +73,8 @@ export function PomodoroProvider({ children }) {
         props.secondsSinceStart,
       ),
     });
+
+    // Here comes the mutation to the server
   };
 
   ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -103,6 +116,7 @@ export function PomodoroProvider({ children }) {
     setCommunicationId(ids.communicationId);
     setShareId(ids.shareId);
     setShareUrl(window.location.origin.toString() + '/share/' + ids.shareId);
+    console.log(serverPomodoro);
     //handleServerConfiguration(3, 40);
   }, []);
 
@@ -123,6 +137,33 @@ export function PomodoroProvider({ children }) {
         secondsSinceStart: secondsSinceStart,
       });
     }
+  };
+
+  const sendDataToServer = () => {
+    const UPDATE_POMODORO_MUTATION = gql`
+    mutation UpdatePomodoro ($running: Boolean!, $position: Int!, $communicationId: String!, $shareId: String) {
+      pomodoros (running: $running, position: $position) {
+        running
+        position
+        ids (communicationId = $communicationId, shareId = $shareId) {
+          communicationId
+          shareId
+        }
+      }
+    }
+  `;
+  };
+
+  const getDataFromServer = () => {
+    const POMODORO_QUERY = gql`
+      query Pomodoro($shareId: String!) {
+        pomodoros {
+          position
+          secondsSinceStart
+        }
+      }
+    `;
+    // return useQuery(POMODORO_QUERY);
   };
 
   return (
