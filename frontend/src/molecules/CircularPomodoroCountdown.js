@@ -7,7 +7,10 @@ import { PomodoroTimerLabel } from 'src/atoms';
 
 export function CircularPomodoroCountdown() {
   const state = usePomodoroState();
-  let progressValue = (state.remainingSeconds / state.maxSeconds) * 100;
+  let progressValue = 0;
+  state.remainingSeconds >= 0
+    ? (progressValue = (state.remainingSeconds / state.maxSeconds) * 100)
+    : (progressValue = 0);
   return (
     <Box position="relative" display="inline-flex">
       <CircularProgress
