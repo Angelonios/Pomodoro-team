@@ -22,6 +22,9 @@ export function PomodoroProvider({ children }) {
     getPomodoroComponent(currentPositionInCycle).seconds,
   );
 
+  ////////////////////////////////////////////////////////////////////
+  // Perform these actions every time a user clicks on the main button
+  ////////////////////////////////////////////////////////////////////
   const switchPomodoroRunningState = () => {
     if (pomodoroRunning) {
       initializeTimer({
@@ -40,7 +43,7 @@ export function PomodoroProvider({ children }) {
 
   ////////////////////////////
   // Timer initialization
-  ///////////////////////////
+  ////////////////////////////
   const initializeTimer = (props) => {
     setCurrentPositionInCycle(props.position);
 
@@ -61,12 +64,18 @@ export function PomodoroProvider({ children }) {
     });
   };
 
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  // Calculates final time from seconds in current pomodoro component and seconds since start
+  ///////////////////////////////////////////////////////////////////////////////////////////////
   const calculateFinalTime = (secondsInComponent, secondsSinceStart) => {
     return parseInt(
       Date.now() / 1000 + (secondsInComponent - secondsSinceStart),
     );
   };
 
+  ////////////////////////////////////////////////////////////////
+  // Returns next index in pomodoro cycle
+  ////////////////////////////////////////////////////////////////
   const nextIndex = () => {
     if (currentPositionInCycle + 1 === getComponentTypeOrderLength()) {
       return 0;
@@ -75,6 +84,9 @@ export function PomodoroProvider({ children }) {
     }
   };
 
+  ////////////////////////////////////////////////////////////////
+  // If timer === running, refresh remaining seconds every second
+  ////////////////////////////////////////////////////////////////
   useEffect(() => {
     if (!pomodoroRunning) return;
     const timer = setTimeout(() => {
@@ -83,7 +95,9 @@ export function PomodoroProvider({ children }) {
     return () => clearTimeout(timer);
   });
 
-  //First load
+  ////////////////////////////////////////////////////////////////
+  // Perform these actions after first load / reload of the page
+  ////////////////////////////////////////////////////////////////
   useEffect(() => {
     const ids = initServerCommunication();
     setCommunicationId(ids.communicationId);
@@ -92,6 +106,9 @@ export function PomodoroProvider({ children }) {
     //handleServerConfiguration(3, 40);
   }, []);
 
+  ////////////////////////////////////////////////////////////////////
+  // Convert timer configuration from server to initializeTimer props
+  ////////////////////////////////////////////////////////////////////
   const handleServerConfiguration = (position, secondsSinceStart) => {
     if (secondsSinceStart === 0) {
       initializeTimer({
