@@ -13,7 +13,6 @@ import { FormButton } from '../atoms';
 import { useHistory } from 'react-router-dom';
 import { route } from 'src/Routes';
 import { gql, useMutation } from '@apollo/client';
-import { useAuth } from 'src/utils/auth';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -87,7 +86,6 @@ export function SignUpForm({
   var password;
   var email;
   var rePassword;
-  const auth = useAuth();
   const history = useHistory();
   const [signUp] = useMutation(SIGN_UP, {
     onCompleted: ({ SignUp: { user, token } }) => {

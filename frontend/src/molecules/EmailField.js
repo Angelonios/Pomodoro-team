@@ -15,7 +15,6 @@ export function EmailField({
         error={formErrors}
         variant="outlined"
         required
-        autoFocus
         fullWidth
         id="email"
         label="Email Address"
