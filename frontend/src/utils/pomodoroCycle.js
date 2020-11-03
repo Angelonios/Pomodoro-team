@@ -36,7 +36,6 @@ const componentsOrder = [
 ];
 
 export const getPomodoroComponent = (index) => {
-  console.log(componentsOrder[index]);
   return componentsOrder[index];
 };
 

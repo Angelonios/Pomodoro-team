@@ -1,106 +1,80 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   getPomodoroComponent,
   getComponentTypeOrderLength,
 } from './pomodoroCycle';
 import { initServerCommunication } from './serverSync';
-//
-//  💡 New improved logic 27. 10. 👇
-//  ===============================
-//
-//  On timer startup:
-//  - get pomodoroTimes interval
-//  - get current system time
-//  - add pomodoroTimes interval to current system time  – to get final time
-//  - save final time as a state using hooks
-//  - send pomodoroTimes interval to the loading circle
-//
-//  While running
-//  -Every second (useEffect):
-//    - calculate remaining time ((final time) - (current system time)) and save it as a state using hooks
-//    - send remaining time to the loading circle and its label
-//
-//  On timer pause:
-//  - stop calculating remaining time – keep saved values
-//
-//  On timer resume:
-//  - same as startup but with saved remaining time instead of the pomodoroTimes interval
-//
-//
-//  Other tasks:
-//  - Move pomodoro countdown timer logic to utils
-//
+import { pomodoroReducer } from './pomodoroReducer';
 
 const PomodoroStateContext = React.createContext();
 const PomodoroDispatchContext = React.createContext();
 
-function pomodoroReducer(state, props) {
-  return props.finalTime - parseInt(Date.now() / 1000);
-}
-
 export function PomodoroProvider({ children }) {
   const [finalTime, setFinalTime] = useState();
   const [pomodoroRunning, setPomodoroRunning] = useState(false);
-  const [
-    currentPositionInpomodoroCycle,
-    setCurrentPositionInpomodoroCycle,
-  ] = useState(0);
+  const [currentPositionInCycle, setCurrentPositionInCycle] = useState(0);
   const [communicationId, setCommunicationId] = useState();
   const [shareId, setShareId] = useState();
   const [shareUrl, setShareUrl] = useState();
 
-  const memoizedPomodoroComponent = useMemo(
-    () => getPomodoroComponent(currentPositionInpomodoroCycle),
-    [currentPositionInpomodoroCycle],
-  );
-
   const [remainingSeconds, setRemainingSeconds] = React.useReducer(
     pomodoroReducer,
-    memoizedPomodoroComponent.seconds,
+    getPomodoroComponent(currentPositionInCycle).seconds,
   );
 
   const switchPomodoroRunningState = () => {
-    pomodoroRunning ? setPomodoroRunning(false) : setPomodoroRunning(true);
+    if (pomodoroRunning) {
+      initializeTimer({
+        position: nextIndex(),
+        running: false,
+        secondsSinceStart: 0,
+      });
+    } else {
+      initializeTimer({
+        position: currentPositionInCycle,
+        running: true,
+        secondsSinceStart: 0,
+      });
+    }
   };
 
-  //If pomodoroRunning is set to true
-  useEffect(() => {
-    if (!pomodoroRunning) {
-      return;
-    }
+  ////////////////////////////
+  // Timer initialization
+  ///////////////////////////
+  const initializeTimer = (props) => {
+    setCurrentPositionInCycle(props.position);
+
+    setPomodoroRunning(props.running);
+
     setFinalTime(
-      parseInt(Date.now() / 1000 + memoizedPomodoroComponent.seconds),
+      calculateFinalTime(
+        getPomodoroComponent(props.position).seconds,
+        props.secondsSinceStart,
+      ),
     );
 
-    //When pomodoroRunning si changed to false (user clicked on the Finish button)
-    return function cleanup() {
-      currentPositionInpomodoroCycle + 1 === getComponentTypeOrderLength()
-        ? setCurrentPositionInpomodoroCycle(0)
-        : setCurrentPositionInpomodoroCycle(currentPositionInpomodoroCycle + 1);
-    };
-  }, [
-    pomodoroRunning,
-    memoizedPomodoroComponent,
-    currentPositionInpomodoroCycle,
-  ]);
+    setRemainingSeconds({
+      finalTime: calculateFinalTime(
+        getPomodoroComponent(props.position).seconds,
+        props.secondsSinceStart,
+      ),
+    });
+  };
 
-  //If pomodoroRunning is set to false
-  useEffect(() => {
-    if (pomodoroRunning) {
-      return;
-    }
-    setFinalTime(
-      parseInt(Date.now() / 1000 + memoizedPomodoroComponent.seconds),
+  const calculateFinalTime = (secondsInComponent, secondsSinceStart) => {
+    return parseInt(
+      Date.now() / 1000 + (secondsInComponent - secondsSinceStart),
     );
-    setRemainingSeconds({ finalTime: finalTime });
-  }, [
-    pomodoroRunning,
-    memoizedPomodoroComponent,
-    finalTime,
-    currentPositionInpomodoroCycle,
-  ]);
+  };
 
-  //Timer to refresh
+  const nextIndex = () => {
+    if (currentPositionInCycle + 1 === getComponentTypeOrderLength()) {
+      return 0;
+    } else {
+      return currentPositionInCycle + 1;
+    }
+  };
+
   useEffect(() => {
     if (!pomodoroRunning) return;
     const timer = setTimeout(() => {
@@ -114,22 +88,36 @@ export function PomodoroProvider({ children }) {
     const ids = initServerCommunication();
     setCommunicationId(ids.communicationId);
     setShareId(ids.shareId);
+    setShareUrl(window.location.origin.toString() + '/share/' + ids.shareId);
+    //handleServerConfiguration(3, 40);
   }, []);
 
-  useEffect(() => {
-    setShareUrl(window.location.origin.toString() + '/share/' + shareId);
-  }, [shareId]);
+  const handleServerConfiguration = (position, secondsSinceStart) => {
+    if (secondsSinceStart === 0) {
+      initializeTimer({
+        position: position,
+        running: false,
+        secondsSinceStart: 0,
+      });
+    } else {
+      initializeTimer({
+        position: position,
+        running: true,
+        secondsSinceStart: secondsSinceStart,
+      });
+    }
+  };
 
   return (
     <PomodoroStateContext.Provider
       value={{
         remainingSeconds: remainingSeconds,
         pomodoroRunning: pomodoroRunning,
-        maxSeconds: memoizedPomodoroComponent.seconds,
-        buttonText: memoizedPomodoroComponent.buttonText,
-        label: memoizedPomodoroComponent.label,
-        type: memoizedPomodoroComponent.type,
-        color: memoizedPomodoroComponent.color,
+        maxSeconds: getPomodoroComponent(currentPositionInCycle).seconds,
+        buttonText: getPomodoroComponent(currentPositionInCycle).buttonText,
+        label: getPomodoroComponent(currentPositionInCycle).label,
+        type: getPomodoroComponent(currentPositionInCycle).type,
+        color: getPomodoroComponent(currentPositionInCycle).color,
         shareUrl: shareUrl,
       }}
     >
@@ -157,5 +145,3 @@ export const usePomodoroDispatch = () => {
   }
   return context;
 };
-
-//const mockServerResponse = () => {};
