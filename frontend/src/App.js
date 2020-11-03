@@ -13,13 +13,13 @@ export function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <PomodoroProvider>
-          <EnhancedAppoloProvider>
+        <EnhancedAppoloProvider>
+          <PomodoroProvider>
             <CssBaseline />
             <ScrollToTop />
             <Routes />
-          </EnhancedAppoloProvider>
-        </PomodoroProvider>
+          </PomodoroProvider>
+        </EnhancedAppoloProvider>
       </AuthProvider>
     </BrowserRouter>
   );

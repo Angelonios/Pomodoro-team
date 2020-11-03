@@ -3,8 +3,9 @@ import {
   getPomodoroComponent,
   getComponentTypeOrderLength,
 } from './pomodoroCycle';
-import { initServerCommunication } from './serverSync';
+import { initServerCommunication } from './ServerSync';
 import { pomodoroReducer } from './pomodoroReducer';
+import { gql, useQuery } from '@apollo/client';
 
 const PomodoroStateContext = React.createContext();
 const PomodoroDispatchContext = React.createContext();
@@ -22,6 +23,19 @@ export function PomodoroProvider({ children }) {
     getPomodoroComponent(currentPositionInCycle).seconds,
   );
 
+  const POMODORO_QUERY = gql`
+    query Pomodoro($shareId: String!) {
+      pomodoros {
+        position
+        secondsSinceStart
+      }
+    }
+  `;
+  const serverPomodoro = useQuery(POMODORO_QUERY);
+
+  ////////////////////////////////////////////////////////////////////
+  // Perform these actions every time a user clicks on the main button
+  ////////////////////////////////////////////////////////////////////
   const switchPomodoroRunningState = () => {
     if (pomodoroRunning) {
       initializeTimer({
@@ -40,7 +54,7 @@ export function PomodoroProvider({ children }) {
 
   ////////////////////////////
   // Timer initialization
-  ///////////////////////////
+  ////////////////////////////
   const initializeTimer = (props) => {
     setCurrentPositionInCycle(props.position);
 
@@ -59,14 +73,22 @@ export function PomodoroProvider({ children }) {
         props.secondsSinceStart,
       ),
     });
+
+    // Here comes the mutation to the server
   };
 
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  // Calculates final time from seconds in current pomodoro component and seconds since start
+  ///////////////////////////////////////////////////////////////////////////////////////////////
   const calculateFinalTime = (secondsInComponent, secondsSinceStart) => {
     return parseInt(
       Date.now() / 1000 + (secondsInComponent - secondsSinceStart),
     );
   };
 
+  ////////////////////////////////////////////////////////////////
+  // Returns next index in pomodoro cycle
+  ////////////////////////////////////////////////////////////////
   const nextIndex = () => {
     if (currentPositionInCycle + 1 === getComponentTypeOrderLength()) {
       return 0;
@@ -75,6 +97,9 @@ export function PomodoroProvider({ children }) {
     }
   };
 
+  ////////////////////////////////////////////////////////////////
+  // If timer === running, refresh remaining seconds every second
+  ////////////////////////////////////////////////////////////////
   useEffect(() => {
     if (!pomodoroRunning) return;
     const timer = setTimeout(() => {
@@ -83,15 +108,21 @@ export function PomodoroProvider({ children }) {
     return () => clearTimeout(timer);
   });
 
-  //First load
+  ////////////////////////////////////////////////////////////////
+  // Perform these actions after first load / reload of the page
+  ////////////////////////////////////////////////////////////////
   useEffect(() => {
     const ids = initServerCommunication();
     setCommunicationId(ids.communicationId);
     setShareId(ids.shareId);
     setShareUrl(window.location.origin.toString() + '/share/' + ids.shareId);
+    console.log(serverPomodoro);
     //handleServerConfiguration(3, 40);
   }, []);
 
+  ////////////////////////////////////////////////////////////////////
+  // Convert timer configuration from server to initializeTimer props
+  ////////////////////////////////////////////////////////////////////
   const handleServerConfiguration = (position, secondsSinceStart) => {
     if (secondsSinceStart === 0) {
       initializeTimer({
@@ -106,6 +137,33 @@ export function PomodoroProvider({ children }) {
         secondsSinceStart: secondsSinceStart,
       });
     }
+  };
+
+  const sendDataToServer = () => {
+    const UPDATE_POMODORO_MUTATION = gql`
+    mutation UpdatePomodoro ($running: Boolean!, $position: Int!, $communicationId: String!, $shareId: String) {
+      pomodoros (running: $running, position: $position) {
+        running
+        position
+        ids (communicationId = $communicationId, shareId = $shareId) {
+          communicationId
+          shareId
+        }
+      }
+    }
+  `;
+  };
+
+  const getDataFromServer = () => {
+    const POMODORO_QUERY = gql`
+      query Pomodoro($shareId: String!) {
+        pomodoros {
+          position
+          secondsSinceStart
+        }
+      }
+    `;
+    // return useQuery(POMODORO_QUERY);
   };
 
   return (
