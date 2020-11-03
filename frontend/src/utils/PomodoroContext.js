@@ -51,39 +51,11 @@ export function PomodoroProvider({ children }) {
   const serverPomodoro = useQuery(POMODORO_QUERY, { variables: { shareId } });
   const [updateMutation] = useMutation(UPDATE_POMODORO_MUTATION);
 
-  const cachedServerData = useMemo(() => {
-    if (serverPomodoro.loading || serverPomodoro.error) return null;
-
-    // mutate data here
-    return serverPomodoro.data;
-  }, [serverPomodoro.loading, serverPomodoro.error, serverPomodoro.data]);
-
-  ////////////////////////////////////////////////////////////////////
-  // Perform these actions every time a user clicks on the main button
-  ////////////////////////////////////////////////////////////////////
-  const switchPomodoroRunningState = () => {
-    if (pomodoroRunning) {
-      initializeTimer({
-        position: nextIndex(),
-        running: false,
-        secondsSinceStart: 0,
-      });
-    } else {
-      initializeTimer({
-        position: currentPositionInCycle,
-        running: true,
-        secondsSinceStart: 0,
-      });
-    }
-  };
-
   ////////////////////////////
   // Timer initialization
   ////////////////////////////
   const initializeTimer = useCallback(
     (props) => {
-      console.log(props);
-
       setCurrentPositionInCycle(props.position);
 
       setPomodoroRunning(props.running);
@@ -117,6 +89,44 @@ export function PomodoroProvider({ children }) {
     },
     [shareId, communicationId, updateMutation],
   );
+
+  const cachedServerData = useMemo(() => {
+    if (serverPomodoro.loading || serverPomodoro.error) return null;
+    if (serverPomodoro.data.pomodoro === null) {
+      //If backend returns null, then we have to initialize timer in order to send mutation with new share and communication ids
+      initializeTimer({
+        position: 0,
+        running: false,
+        secondsSinceStart: 0,
+      });
+    }
+    //return query result here
+    return serverPomodoro.data;
+  }, [
+    serverPomodoro.loading,
+    serverPomodoro.error,
+    serverPomodoro.data,
+    initializeTimer,
+  ]);
+
+  ////////////////////////////////////////////////////////////////////
+  // Perform these actions every time a user clicks on the main button
+  ////////////////////////////////////////////////////////////////////
+  const switchPomodoroRunningState = () => {
+    if (pomodoroRunning) {
+      initializeTimer({
+        position: nextIndex(),
+        running: false,
+        secondsSinceStart: 0,
+      });
+    } else {
+      initializeTimer({
+        position: currentPositionInCycle,
+        running: true,
+        secondsSinceStart: 0,
+      });
+    }
+  };
 
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // Calculates final time from seconds in current pomodoro component and seconds since start
