@@ -1,7 +1,32 @@
-
-export const UpdatePomodoro = async (_, {running, position, communicationId, shareId}, { dbConnection }) => {
+export const updatePomodoro = async (
+  _,
+  { running, position, communicationId, shareId },
+  { dbConnection },
+) => {
   await dbConnection.query(
-    `UPDATE anonym_pomodoro SET running = ?, position = ?, WHERE communicationId = ?;`,
-    [action, lastUpdated, id]
+    `INSERT INTO pomodoros
+    (
+        running, position_in_cycle, communication_id, share_id
+    )
+    VALUES
+        (?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
+    running = ?, position_in_cycle = ?, communication_id = ?, share_id = ?;
+`,
+    [
+      running,
+      position,
+      communicationId,
+      shareId,
+      running,
+      position,
+      communicationId,
+      shareId,
+    ],
   );
+  /*   await dbConnection.query(
+    `UPDATE pomodoros SET running = ?, position_in_cycle = ?, WHERE communication_id = ?;`,
+    [running, position, communicationId],
+  ); */
+  return 'ok';
 };
