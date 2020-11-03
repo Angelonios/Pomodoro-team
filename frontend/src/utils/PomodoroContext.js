@@ -5,7 +5,7 @@ import {
 } from './pomodoroCycle';
 import { initServerCommunication } from './ServerSync';
 import { pomodoroReducer } from './pomodoroReducer';
-import { gql, useQuery } from '@apollo/client';
+import { gql, useQuery, useMutation } from '@apollo/client';
 
 const PomodoroStateContext = React.createContext();
 const PomodoroDispatchContext = React.createContext();
@@ -14,8 +14,8 @@ export function PomodoroProvider({ children }) {
   const [finalTime, setFinalTime] = useState();
   const [pomodoroRunning, setPomodoroRunning] = useState(false);
   const [currentPositionInCycle, setCurrentPositionInCycle] = useState(0);
-  const [communicationId, setCommunicationId] = useState();
-  const [shareId, setShareId] = useState();
+  const [communicationId, setCommunicationId] = useState('');
+  const [shareId, setShareId] = useState('');
   const [shareUrl, setShareUrl] = useState();
 
   const [remainingSeconds, setRemainingSeconds] = React.useReducer(
@@ -32,7 +32,24 @@ export function PomodoroProvider({ children }) {
     }
   `;
 
+  const UPDATE_POMODORO_MUTATION = gql`
+    mutation UpdatePomodoro(
+      $running: Boolean!
+      $position: Int!
+      $communicationId: String!
+      $shareId: String!
+    ) {
+      updatePomodoro(
+        running: $running
+        position: $position
+        communicationId: $communicationId
+        shareId: $shareId
+      )
+    }
+  `;
+
   const serverPomodoro = useQuery(POMODORO_QUERY, { variables: { shareId } });
+  const [updateMutation] = useMutation(UPDATE_POMODORO_MUTATION);
 
   const cachedServerData = useMemo(() => {
     if (serverPomodoro.loading || serverPomodoro.error) return null;
@@ -63,29 +80,43 @@ export function PomodoroProvider({ children }) {
   ////////////////////////////
   // Timer initialization
   ////////////////////////////
-  const initializeTimer = useCallback((props) => {
-    console.log(props);
+  const initializeTimer = useCallback(
+    (props) => {
+      console.log(props);
 
-    setCurrentPositionInCycle(props.position);
+      setCurrentPositionInCycle(props.position);
 
-    setPomodoroRunning(props.running);
+      setPomodoroRunning(props.running);
 
-    setFinalTime(
-      calculateFinalTime(
-        getPomodoroComponent(props.position).seconds,
-        props.secondsSinceStart,
-      ),
-    );
+      setFinalTime(
+        calculateFinalTime(
+          getPomodoroComponent(props.position).seconds,
+          props.secondsSinceStart,
+        ),
+      );
 
-    setRemainingSeconds({
-      finalTime: calculateFinalTime(
-        getPomodoroComponent(props.position).seconds,
-        props.secondsSinceStart,
-      ),
-    });
+      setRemainingSeconds({
+        finalTime: calculateFinalTime(
+          getPomodoroComponent(props.position).seconds,
+          props.secondsSinceStart,
+        ),
+      });
 
-    // Here comes the mutation to the server
-  }, []);
+      //console.log(updateMutation.data);
+      // mutate data here
+
+      updateMutation({
+        variables: {
+          running: props.running,
+          position: props.position,
+          communicationId: communicationId,
+          shareId: shareId,
+        },
+      });
+      // Here comes the mutation to the server
+    },
+    [shareId, communicationId, updateMutation],
+  );
 
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // Calculates final time from seconds in current pomodoro component and seconds since start
