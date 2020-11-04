@@ -3,9 +3,13 @@ import {
   getPomodoroComponent,
   getComponentTypeOrderLength,
 } from './pomodoroCycle';
-import { initServerCommunication } from './ServerSync';
+import {
+  initServerCommunication,
+  POMODORO_QUERY,
+  UPDATE_POMODORO_MUTATION,
+} from './serverSync';
 import { pomodoroReducer } from './pomodoroReducer';
-import { gql, useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 
 const PomodoroStateContext = React.createContext();
 const PomodoroDispatchContext = React.createContext();
@@ -22,31 +26,6 @@ export function PomodoroProvider({ children }) {
     pomodoroReducer,
     getPomodoroComponent(currentPositionInCycle).seconds,
   );
-
-  const POMODORO_QUERY = gql`
-    query Pomodoro($shareId: String!) {
-      pomodoro(shareId: $shareId) {
-        position
-        secondsSinceStart
-      }
-    }
-  `;
-
-  const UPDATE_POMODORO_MUTATION = gql`
-    mutation UpdatePomodoro(
-      $running: Boolean!
-      $position: Int!
-      $communicationId: String!
-      $shareId: String!
-    ) {
-      updatePomodoro(
-        running: $running
-        position: $position
-        communicationId: $communicationId
-        shareId: $shareId
-      )
-    }
-  `;
 
   const serverPomodoro = useQuery(POMODORO_QUERY, { variables: { shareId } });
   const [updateMutation] = useMutation(UPDATE_POMODORO_MUTATION);
