@@ -8,7 +8,6 @@ import { pomodoroReducer } from '../utils/pomodoroReducer';
 import { CircularPomodoroCountdown, ShareUrl } from '../molecules';
 import { PageNotFound } from './PageNotFound';
 
-
 export function SharePage() {
   const urlParams = useParams('shareId');
   let shareId = urlParams.shareId;
@@ -23,33 +22,49 @@ export function SharePage() {
     }
 
     return timerUpdate.data;
-  }, [timerUpdate.loading, timerUpdate.error, timerUpdate.data,
-  ]);
+  }, [timerUpdate.loading, timerUpdate.error, timerUpdate.data]);
 
   const [remainingSeconds, setRemainingSeconds] = useReducer(
     pomodoroReducer,
-    getPomodoroComponent(cache.pomodoro.position).seconds,
+    30,
+    //getPomodoroComponent(cache.pomodoro.position).seconds,
   );
 
   /** loading data from server */
-useEffect(() => {
-  let refreshTimeout = setTimeout(() => {
-    timerUpdate.refetch();
-  }, 5000);
+  /*   useEffect(() => {
+    let refreshTimeout = setTimeout(() => {
+      timerUpdate.refetch();
+    }, 5000);
 
-  clearTimeout(refreshTimeout);
-}, [timerUpdate.loading]);
+    clearTimeout(refreshTimeout);
+  }, [timerUpdate.loading]); */
 
   /** timer time */
-  useEffect(() => {
+  /*   useEffect(() => {
     if (cache !== null) {
+      console.log(cache.pomodoro.position);
       const timerTimeout = setTimeout(() => {
         setRemainingSeconds({
-          finalTime: getPomodoroComponent(cache.pomodoro.position).seconds - cache.pomodoro.secondsSinceStart,
+          finalTime:
+            ,
         });
       }, 1000);
 
       return clearTimeout(timerTimeout);
+    }
+  }); */
+
+  useEffect(() => {
+    if (cache !== null) {
+      const timer = setTimeout(() => {
+        setRemainingSeconds({
+          finalTime:
+            Date.now() / 1000 +
+            (getPomodoroComponent(cache.pomodoro.position).seconds -
+              cache.pomodoro.secondsSinceStart),
+        });
+      }, 1000);
+      return () => clearTimeout(timer);
     }
   });
 
@@ -68,10 +83,12 @@ useEffect(() => {
               <CircularPomodoroCountdown
                 remainingSeconds={remainingSeconds}
                 maxSeconds={
-                  getPomodoroComponent(cache.pomodoro.position).seconds
+                  //getPomodoroComponent(cache.pomodoro.position).seconds
+                  111
                 }
                 color={
-                  getPomodoroComponent(cache.pomodoro.position).color
+                  //getPomodoroComponent(cache.pomodoro.position).color
+                  'primary'
                 }
               />
             </Grid>
