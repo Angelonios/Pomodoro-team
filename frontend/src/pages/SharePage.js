@@ -42,7 +42,7 @@ export function SharePage() {
     getPomodoroComponent(position).seconds,
   );
 
-  /** loading data from server */
+  /** loading data from server ---*/
   /*  useEffect(() => {
     if (timerUpdate.loading) return;
     const refreshTimeout = setTimeout(() => {
