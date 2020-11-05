@@ -107,7 +107,9 @@ export function SignUpForm({
   const handleSubmit = (e) => {
     e.preventDefault();
     // ... submit to API or something
-    if (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.([A-Za-z]){2,3}$/.test(formData.email)) {
+    if (
+      /^[a-zA-Z0-9.]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]{2,4}$/.test(formData.email)
+    ) {
       email = false;
       updateEmailError(false);
       updateEmailErrorText('');
