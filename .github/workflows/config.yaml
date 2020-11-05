@@ -3,7 +3,6 @@ on:
   push:
     branches:
       develop
-
 - name: Deploy
   runs-on: ubuntu-latest
   uses: JimCronqvist/action-ssh@master
