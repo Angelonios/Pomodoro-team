@@ -1,0 +1,22 @@
+name: CD
+on: push
+jobs:
+  first_job:
+     name: Deploy
+     runs-on: ubuntu-latest
+     steps:
+       - name: pull_build_start_step
+         uses: JimCronqvist/action-ssh@master
+         with:
+          hosts: 'team05@vse.handson.pro'
+          privateKey: ${{ secrets.POMODORO_SECRET }}
+          command: |
+            cd ~/code/project
+            git pull origin develop
+            git status
+            cd ~/code/project/backend
+            yarn build
+            touch ~/code/project/frontend/tmp/restart.txt
+            cd ~/code/project/frontend
+            yarn build
+            touch ~/code/project/frontend/tmp/restart.txt
