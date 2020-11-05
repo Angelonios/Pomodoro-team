@@ -11,7 +11,6 @@ import { PageNotFound } from './PageNotFound';
 export function SharePage() {
   const urlParams = useParams('shareId');
   let shareId = urlParams.shareId;
-  //todo get url
 
   const timerUpdate = useQuery(POMODORO_QUERY, { variables: { shareId } });
 
