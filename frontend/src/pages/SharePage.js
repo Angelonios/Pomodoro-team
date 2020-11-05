@@ -7,10 +7,12 @@ import { getPomodoroComponent } from '../utils/pomodoroCycle';
 import { pomodoroReducer } from '../utils/pomodoroReducer';
 import { CircularPomodoroCountdown, ShareUrl } from '../molecules';
 import { PageNotFound } from './PageNotFound';
+import { usePomodoroState } from 'src/utils/PomodoroContext';
 
 export function SharePage() {
   const urlParams = useParams('shareId');
   let shareId = urlParams.shareId;
+  const state = usePomodoroState();
   //todo get url
 
   const timerUpdate = useQuery(POMODORO_QUERY, { variables: { shareId } });
@@ -97,7 +99,7 @@ export function SharePage() {
         <Box p={4}>
           <Grid container alignItems="center" justify="center">
             <Grid item lg={8} xs={12}>
-              <ShareUrl shareUrl={shareId} />
+              <ShareUrl shareUrl={state.shareUrl} />
             </Grid>
           </Grid>
         </Box>
