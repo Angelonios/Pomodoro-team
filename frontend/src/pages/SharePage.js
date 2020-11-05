@@ -15,43 +15,36 @@ export function SharePage() {
   //todo get url
 
   const timerUpdate = useQuery(POMODORO_QUERY, { variables: { shareId } });
-
-  const cache = useMemo(() => {
-    if (timerUpdate.loading || timerUpdate.error) return null;
-    if (timerUpdate.data.pomodoro === null) {
-      return <PageNotFound />;
-    }
-
-    return timerUpdate.data;
-  }, [timerUpdate.loading, timerUpdate.error, timerUpdate.data,
-  ]);
-
+  debugger;
   const [remainingSeconds, setRemainingSeconds] = useReducer(
     pomodoroReducer,
-    getPomodoroComponent(cache.pomodoro.position).seconds,
+    getPomodoroComponent(0).seconds,
   );
 
   /** loading data from server */
-useEffect(() => {
   let refreshTimeout = setTimeout(() => {
     timerUpdate.refetch();
   }, 5000);
+      timerUpdate.refetch();
+    }, 5000);
 
-  clearTimeout(refreshTimeout);
-}, [timerUpdate.loading]);
+    clearTimeout(refreshTimeout);
+  }, [timerUpdate.loading]);
 
   /** timer time */
   useEffect(() => {
-    if (cache !== null) {
+    if (timerUpdate !== null) {
       const timerTimeout = setTimeout(() => {
         setRemainingSeconds({
-          finalTime: getPomodoroComponent(cache.pomodoro.position).seconds - cache.pomodoro.secondsSinceStart,
+          finalTime:
+            getPomodoroComponent(timerUpdate.data.pomodoro.position).seconds -
+            timerUpdate.data.pomodoro.secondsSinceStart,
         });
       }, 1000);
 
       return clearTimeout(timerTimeout);
     }
-  });
+  }, [timerUpdate.loading]);
 
   return (
     <Container component="main">
@@ -67,12 +60,8 @@ useEffect(() => {
             <Grid item xl={4} lg={4} xs={12} align="center">
               <CircularPomodoroCountdown
                 remainingSeconds={remainingSeconds}
-                maxSeconds={
-                  getPomodoroComponent(cache.pomodoro.position).seconds
-                }
-                color={
-                  getPomodoroComponent(cache.pomodoro.position).color
-                }
+                maxSeconds={getPomodoroComponent(0).seconds}
+                color={getPomodoroComponent(0).color}
               />
             </Grid>
           </Grid>
@@ -80,7 +69,7 @@ useEffect(() => {
         <Box p={4}>
           <Grid container alignItems="center" justify="center">
             <Grid item lg={8} xs={12}>
-              <ShareUrl shareUrl={urlParams.shareId} />
+              <ShareUrl shareUrl={shareId} />
             </Grid>
           </Grid>
         </Box>
