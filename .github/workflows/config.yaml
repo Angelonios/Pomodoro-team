@@ -23,4 +23,3 @@ jobs:
           cd ~/code/project/frontend
           yarn build
           yarn start
-				
