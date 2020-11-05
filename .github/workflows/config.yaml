@@ -1,7 +1,8 @@
 name: Execute SSH commmands on remote server
 on:
 	push:
-		branches: [develop]
+		branches: 
+			develop
 
 jobs:
 	job_one:
