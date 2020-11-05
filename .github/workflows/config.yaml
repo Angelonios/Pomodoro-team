@@ -1,6 +1,6 @@
 name: Execute SSH commmands on remote server
 on:
-	push:
+  push:
 		branches: 
 			develop
 
