@@ -7,19 +7,17 @@ jobs:
   job_one:
     name: Deploy
     runs-on: ubuntu-latest
-    steps:
-      -name: pulling actual version from remote origin
-      uses: JimCronqvist/action-ssh@master
-      with:
-        hosts: 'team05@vse.handson.pro'
-        privateKey: ${{ secrets.POMODORO_SECRET }}
-        command: |
-          cd ~/code/project
-          git pull origin develop
-          git status
-          cd ~/code/project/backend
-          yarn build
-          yarn start
-          cd ~/code/project/frontend
-          yarn build
-          yarn start
+    uses: JimCronqvist/action-ssh@master
+    with:
+      hosts: 'team05@vse.handson.pro'
+      privateKey: ${{ secrets.POMODORO_SECRET }}
+      command: |
+        cd ~/code/project
+        git pull origin develop
+        git status
+        cd ~/code/project/backend
+        yarn build
+        yarn start
+        cd ~/code/project/frontend
+        yarn build
+        yarn start
