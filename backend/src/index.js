@@ -37,12 +37,12 @@ const typeDefs = gql`
 
     SignUp(email: String!, password: String!): AuthInfo!
 
-    UpdatePomodoro(
+    updatePomodoro(
       running: Boolean!
-      position: String!
+      position: Int!
       communicationId: String!
       shareId: String!
-    ): Pomodoro!
+    ): String!
   }
 
   type AuthUser {

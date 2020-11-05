@@ -1,16 +1,13 @@
 import React, { useRef, useState } from 'react';
 import {
   TextField,
-  InputLabel,
   Button,
   FormControl,
   InputAdornment,
 } from '@material-ui/core';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 
-import { usePomodoroState } from 'src/utils/PomodoroContext';
-
-export function ShareUrl() {
+export function ShareUrl({ shareUrl }) {
   const inputRef = useRef();
   const [copySuccess, setCopySuccess] = useState('Copy');
 
@@ -19,7 +16,6 @@ export function ShareUrl() {
     document.execCommand('copy');
     setCopySuccess('Copied!');
   };
-  const state = usePomodoroState();
   return (
     <FormControl fullWidth>
       <TextField
@@ -38,7 +34,7 @@ export function ShareUrl() {
           ),
         }}
         label="Share URL"
-        value={state.shareUrl || ''}
+        value={shareUrl || ''}
         ref={inputRef}
       />
     </FormControl>
