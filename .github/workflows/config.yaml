@@ -1,7 +1,5 @@
 name: CD
-on:
-  push:
-    develop
+on: push
 jobs:
   first_job:
      name: Deploy
@@ -12,7 +10,6 @@ jobs:
          with:
           hosts: 'team05@vse.handson.pro'
           privateKey: ${{ secrets.POMODORO_SECRET }}
-          debug: true
           command: |
             cd ~/code/project
             git pull origin develop
