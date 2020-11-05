@@ -15,19 +15,32 @@ export function SharePage() {
 
   const timerUpdate = useQuery(POMODORO_QUERY, { variables: { shareId } });
 
+  const [finalTime, setFinalTime] = useState();
+  const [running, setRunning] = useState(true);
+  const [position, setPosition] = useState(0);
+  const [secondsSinceStart, setSecondsSinceStart] = useState(0);
+
   const cache = useMemo(() => {
     if (timerUpdate.loading || timerUpdate.error)
-      return { pomodoro: { position: 0, secondsSinceStart: 0 } };
+      return {
+        pomodoro: { position: position, secondsSinceStart: secondsSinceStart },
+      };
     if (timerUpdate.data.pomodoro === null) {
       return <PageNotFound />;
     }
 
     return timerUpdate.data;
-  }, [timerUpdate.loading, timerUpdate.error, timerUpdate.data]);
+  }, [
+    timerUpdate.loading,
+    timerUpdate.error,
+    timerUpdate.data,
+    position,
+    secondsSinceStart,
+  ]);
 
   const [remainingSeconds, setRemainingSeconds] = useReducer(
     pomodoroReducer,
-    getPomodoroComponent(cache.pomodoro.position).seconds,
+    getPomodoroComponent(position).seconds,
   );
 
   /** loading data from server */
@@ -47,16 +60,16 @@ export function SharePage() {
 
     const timeoutId = setTimeout(() => {
       timerUpdate.refetch();
-    }, 5000);
+    }, 10000);
+
+    setSecondsSinceStart(timerUpdate.data.pomodoro.secondsSinceStart);
+    setPosition(timerUpdate.data.pomodoro.position);
 
     return () => {
       // this code will be called when component unmounts:
       clearTimeout(timeoutId);
     };
   }, [timerUpdate.loading, timerUpdate]);
-
-  const [finalTime, setFinalTime] = useState();
-  const [running, setRunning] = useState();
 
   useEffect(() => {
     if (cache.pomodoro.secondsSinceStart === 0) {

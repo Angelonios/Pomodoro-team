@@ -150,7 +150,6 @@ export function PomodoroProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    console.log(cachedServerData);
     if (cachedServerData !== null) {
       if (cachedServerData.pomodoro !== null) {
         let position = parseInt(cachedServerData.pomodoro.position);
