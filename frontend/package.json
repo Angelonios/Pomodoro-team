@@ -16,6 +16,8 @@
     "@fortawesome/free-regular-svg-icons": "5.14.0",
     "@fortawesome/free-solid-svg-icons": "5.14.0",
     "@fortawesome/react-fontawesome": "0.1.11",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
     "classnames": "2.2.6",
     "date-fns": "2.16.1",
     "formik": "2.1.5",
@@ -25,6 +27,7 @@
     "react-dom": "^16.13.1",
     "react-router-dom": "5.2.0",
     "react-scripts": "3.4.3",
+    "uuid": "^8.3.1",
     "yup": "0.29.3"
   },
   "eslintConfig": {

@@ -1,10 +1,35 @@
 import React from 'react';
+import { TopNavigation } from 'src/organisms';
+import { Box, Container, Grid, Paper, Typography } from '@material-ui/core';
+import sadTomato from '../assets/sadTomato.svg';
 
 export function PageNotFound() {
   return (
-    <div className="appWrapper">
-      <h1>Error 404:</h1>
-      <p>Page not found</p>
-    </div>
+    <>
+      <TopNavigation />
+      <Container component="main">
+        <Paper elevation={3}>
+          <Box p={6}>
+            <Grid
+              container
+              spacing={10}
+              direction="row"
+              alignItems="center"
+              justify="space-evenly"
+            >
+              <Grid item xl={4} md={4} sm={6} xs={10}>
+                <Typography variant="h1">404</Typography>
+                <Typography variant="h6" component="p">
+                  Oops! We couldn't find the page.
+                </Typography>
+              </Grid>
+              <Grid item xl={4} md={4} sm={6} xs={10}>
+                <img src={sadTomato} alt="Sad tomato" width="90%" />
+              </Grid>
+            </Grid>
+          </Box>
+        </Paper>
+      </Container>
+    </>
   );
 }
