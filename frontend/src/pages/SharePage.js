@@ -26,7 +26,7 @@ export function SharePage() {
         pomodoro: { position: position, secondsSinceStart: secondsSinceStart },
       };
     if (timerUpdate.data.pomodoro === null) {
-      return <PageNotFound />;
+      return (window.location.href = '/*');
     }
 
     return timerUpdate.data;
