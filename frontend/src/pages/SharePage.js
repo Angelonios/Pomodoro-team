@@ -16,7 +16,8 @@ export function SharePage() {
   const timerUpdate = useQuery(POMODORO_QUERY, { variables: { shareId } });
 
   const cache = useMemo(() => {
-    if (timerUpdate.loading || timerUpdate.error) return null;
+    if (timerUpdate.loading || timerUpdate.error)
+      return { pomodoro: { position: 0, secondsSinceStart: 0 } };
     if (timerUpdate.data.pomodoro === null) {
       return <PageNotFound />;
     }
@@ -26,45 +27,61 @@ export function SharePage() {
 
   const [remainingSeconds, setRemainingSeconds] = useReducer(
     pomodoroReducer,
-    30,
-    //getPomodoroComponent(cache.pomodoro.position).seconds,
+    getPomodoroComponent(cache.pomodoro.position).seconds,
   );
 
   /** loading data from server */
-  /*   useEffect(() => {
-    let refreshTimeout = setTimeout(() => {
+  /*  useEffect(() => {
+    if (timerUpdate.loading) return;
+    const refreshTimeout = setTimeout(() => {
+      console.log('refetch');
       timerUpdate.refetch();
     }, 5000);
-
     clearTimeout(refreshTimeout);
   }, [timerUpdate.loading]); */
 
-  /** timer time */
-  /*   useEffect(() => {
-    if (cache !== null) {
-      console.log(cache.pomodoro.position);
-      const timerTimeout = setTimeout(() => {
-        setRemainingSeconds({
-          finalTime:
-            ,
-        });
-      }, 1000);
-
-      return clearTimeout(timerTimeout);
+  useEffect(() => {
+    if (timerUpdate.loading) {
+      return;
     }
-  }); */
+
+    const timeoutId = setTimeout(() => {
+      timerUpdate.refetch();
+    }, 5000);
+
+    return () => {
+      // this code will be called when component unmounts:
+      clearTimeout(timeoutId);
+    };
+  }, [timerUpdate.loading, timerUpdate]);
+
+  const [finalTime, setFinalTime] = useState();
+  const [running, setRunning] = useState();
 
   useEffect(() => {
-    if (cache !== null) {
+    if (cache.pomodoro.secondsSinceStart === 0) {
+      setRunning(false);
+    } else setRunning(true);
+
+    setFinalTime(
+      Date.now() / 1000 +
+        (getPomodoroComponent(cache.pomodoro.position).seconds -
+          cache.pomodoro.secondsSinceStart),
+    );
+  }, [cache]);
+
+  useEffect(() => {
+    if (running) {
       const timer = setTimeout(() => {
         setRemainingSeconds({
-          finalTime:
-            Date.now() / 1000 +
-            (getPomodoroComponent(cache.pomodoro.position).seconds -
-              cache.pomodoro.secondsSinceStart),
+          finalTime: finalTime,
         });
       }, 1000);
       return () => clearTimeout(timer);
+    } else {
+      setRemainingSeconds({
+        finalTime: finalTime,
+      });
     }
   });
 
@@ -83,13 +100,9 @@ export function SharePage() {
               <CircularPomodoroCountdown
                 remainingSeconds={remainingSeconds}
                 maxSeconds={
-                  //getPomodoroComponent(cache.pomodoro.position).seconds
-                  111
+                  getPomodoroComponent(cache.pomodoro.position).seconds
                 }
-                color={
-                  //getPomodoroComponent(cache.pomodoro.position).color
-                  'primary'
-                }
+                color={getPomodoroComponent(cache.pomodoro.position).color}
               />
             </Grid>
           </Grid>
@@ -97,7 +110,7 @@ export function SharePage() {
         <Box p={4}>
           <Grid container alignItems="center" justify="center">
             <Grid item lg={8} xs={12}>
-              <ShareUrl shareUrl={urlParams.shareId} />
+              <ShareUrl shareUrl={window.location.href} />
             </Grid>
           </Grid>
         </Box>
