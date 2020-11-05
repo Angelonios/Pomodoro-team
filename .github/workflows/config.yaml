@@ -1,26 +1,22 @@
-name: Execute SSH commmands on remote server
-on:
-  push:
-    branches:
-      develop
+name: CD
+on: push
 jobs:
-  job_one:
-    name: Deploy
-    runs-on: ubuntu-latest
-    steps:
-      -name: pulling actual version from remote origin
-      uses: JimCronqvist/action-ssh@master
-      with:
-        hosts: 'team05@vse.handson.pro'
-        privateKey: ${{ secrets.POMODORO_SECRET }}
-        command: |
-          cd ~/code/project
-          git pull origin develop
-          git status
-          cd ~/code/project/backend
-          yarn build
-          yarn start
-          cd ~/code/project/frontend
-          yarn build
-          yarn start
-				
+  first_job:
+     name: Deploy
+     runs-on: ubuntu-latest
+     steps:
+       - name: pull_build_start_step
+         uses: JimCronqvist/action-ssh@master
+         with:
+          hosts: 'team05@vse.handson.pro'
+          privateKey: ${{ secrets.POMODORO_SECRET }}
+          command: |
+            cd ~/code/project
+            git pull origin develop
+            git status
+            cd ~/code/project/backend
+            yarn build
+            touch ~/code/project/frontend/tmp/restart.txt
+            cd ~/code/project/frontend
+            yarn build
+            touch ~/code/project/frontend/tmp/restart.txt
