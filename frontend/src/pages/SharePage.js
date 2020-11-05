@@ -8,43 +8,65 @@ import { pomodoroReducer } from '../utils/pomodoroReducer';
 import { CircularPomodoroCountdown, ShareUrl } from '../molecules';
 import { PageNotFound } from './PageNotFound';
 
-
 export function SharePage() {
   const urlParams = useParams('shareId');
   let shareId = urlParams.shareId;
   //todo get url
 
   const timerUpdate = useQuery(POMODORO_QUERY, { variables: { shareId } });
-  debugger;
+
+  const cache = useMemo(() => {
+    if (timerUpdate.loading || timerUpdate.error) return null;
+    if (timerUpdate.data.pomodoro === null) {
+      return <PageNotFound />;
+    }
+
+    return timerUpdate.data;
+  }, [timerUpdate.loading, timerUpdate.error, timerUpdate.data]);
+
   const [remainingSeconds, setRemainingSeconds] = useReducer(
     pomodoroReducer,
-    getPomodoroComponent(0).seconds,
+    30,
+    //getPomodoroComponent(cache.pomodoro.position).seconds,
   );
 
   /** loading data from server */
-  let refreshTimeout = setTimeout(() => {
-    timerUpdate.refetch();
-  }, 5000);
+  /*   useEffect(() => {
+    let refreshTimeout = setTimeout(() => {
       timerUpdate.refetch();
     }, 5000);
 
     clearTimeout(refreshTimeout);
-  }, [timerUpdate.loading]);
+  }, [timerUpdate.loading]); */
 
   /** timer time */
-  useEffect(() => {
-    if (timerUpdate !== null) {
+  /*   useEffect(() => {
+    if (cache !== null) {
+      console.log(cache.pomodoro.position);
       const timerTimeout = setTimeout(() => {
         setRemainingSeconds({
           finalTime:
-            getPomodoroComponent(timerUpdate.data.pomodoro.position).seconds -
-            timerUpdate.data.pomodoro.secondsSinceStart,
+            ,
         });
       }, 1000);
 
       return clearTimeout(timerTimeout);
     }
-  }, [timerUpdate.loading]);
+  }); */
+
+  useEffect(() => {
+    if (cache !== null) {
+      const timer = setTimeout(() => {
+        setRemainingSeconds({
+          finalTime:
+            Date.now() / 1000 +
+            (getPomodoroComponent(cache.pomodoro.position).seconds -
+              cache.pomodoro.secondsSinceStart),
+        });
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  });
 
   return (
     <Container component="main">
@@ -60,8 +82,14 @@ export function SharePage() {
             <Grid item xl={4} lg={4} xs={12} align="center">
               <CircularPomodoroCountdown
                 remainingSeconds={remainingSeconds}
-                maxSeconds={getPomodoroComponent(0).seconds}
-                color={getPomodoroComponent(0).color}
+                maxSeconds={
+                  //getPomodoroComponent(cache.pomodoro.position).seconds
+                  111
+                }
+                color={
+                  //getPomodoroComponent(cache.pomodoro.position).color
+                  'primary'
+                }
               />
             </Grid>
           </Grid>
