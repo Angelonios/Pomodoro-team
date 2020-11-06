@@ -24,10 +24,12 @@ export const pomodoro = async (_, { shareId }, { dbConnection }) => {
       currentTime['CURRENT_TIMESTAMP()'] / 1000 - pomodoro.last_updated / 1000;
   }
 
+  const hour = 3600;
+
   //If timer is idle for more than 10 hours, then restart it
   if (
     currentTime['CURRENT_TIMESTAMP()'] / 1000 - pomodoro.last_updated / 1000 >
-    36000
+    hour * 10
   ) {
     return { position: 0, secondsSinceStart: 0 };
   } else {
