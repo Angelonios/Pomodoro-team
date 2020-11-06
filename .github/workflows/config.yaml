@@ -15,8 +15,8 @@ jobs:
             git pull origin develop
             git status
             cd ~/code/project/backend
-            yarn build
+            yarn install
             touch ~/code/project/frontend/tmp/restart.txt
             cd ~/code/project/frontend
-            yarn build
+            yarn install
             touch ~/code/project/frontend/tmp/restart.txt

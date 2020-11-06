@@ -76,9 +76,11 @@ export function SharePage() {
     } else setRunning(true);
 
     setFinalTime(
-      Date.now() / 1000 +
-        (getPomodoroComponent(cache.pomodoro.position).seconds -
-          cache.pomodoro.secondsSinceStart),
+      parseInt(
+        Date.now() / 1000 +
+          (getPomodoroComponent(cache.pomodoro.position).seconds -
+            cache.pomodoro.secondsSinceStart),
+      ),
     );
   }, [cache]);
 
