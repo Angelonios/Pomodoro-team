@@ -14,7 +14,7 @@ export function SharePage() {
 
   const timerUpdate = useQuery(POMODORO_QUERY, {
     variables: { shareId },
-    pollInterval: 10000,
+    pollInterval: 5000,
     onComplete: () => {
       setSecondsSinceStart(timerUpdate.data.pomodoro.secondsSinceStart);
       setPosition(timerUpdate.data.pomodoro.position);
