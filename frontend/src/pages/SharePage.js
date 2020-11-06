@@ -12,7 +12,14 @@ export function SharePage() {
   const urlParams = useParams('shareId');
   let shareId = urlParams.shareId;
 
-  const timerUpdate = useQuery(POMODORO_QUERY, { variables: { shareId } });
+  const timerUpdate = useQuery(POMODORO_QUERY, {
+    variables: { shareId },
+    pollInterval: 10000,
+    onComplete: () => {
+      setSecondsSinceStart(timerUpdate.data.pomodoro.secondsSinceStart);
+      setPosition(timerUpdate.data.pomodoro.position);
+    },
+  });
 
   const [finalTime, setFinalTime] = useState();
   const [running, setRunning] = useState(true);
@@ -52,7 +59,7 @@ export function SharePage() {
     clearTimeout(refreshTimeout);
   }, [timerUpdate.loading]); */
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (timerUpdate.loading) {
       return;
     }
@@ -68,7 +75,7 @@ export function SharePage() {
       // this code will be called when component unmounts:
       clearTimeout(timeoutId);
     };
-  }, [timerUpdate.loading, timerUpdate]);
+  }, [timerUpdate.loading, timerUpdate]); */
 
   useEffect(() => {
     if (cache.pomodoro.secondsSinceStart === 0) {
