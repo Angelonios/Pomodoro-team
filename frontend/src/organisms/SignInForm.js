@@ -112,12 +112,7 @@ export function SignInForm({ props }) {
             Sign in
           </Typography>
           <Container maxWidth="xs" className={classes.error}>
-            <Typography
-              component="h8"
-              variant="h9"
-              color="error"
-              display="inline"
-            >
+            <Typography variant="h6" color="error" display="inline">
               <b>{errorText}</b>
             </Typography>
           </Container>
