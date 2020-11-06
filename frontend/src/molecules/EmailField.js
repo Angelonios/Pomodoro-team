@@ -23,6 +23,7 @@ export function EmailField({
         defaultValue={data}
         onChange={handleChange}
         helperText={helperText}
+        value={formData.email}
       />
     </Grid>
   );
