@@ -6,7 +6,6 @@ import { useQuery } from '@apollo/client';
 import { getPomodoroComponent } from '../utils/pomodoroCycle';
 import { pomodoroReducer } from '../utils/pomodoroReducer';
 import { CircularPomodoroCountdown, ShareUrl } from '../molecules';
-import { PageNotFound } from './PageNotFound';
 
 export function SharePage() {
   const urlParams = useParams('shareId');
@@ -59,6 +58,7 @@ export function SharePage() {
     clearTimeout(refreshTimeout);
   }, [timerUpdate.loading]); */
 
+  //useffect version o refetch
   /* useEffect(() => {
     if (timerUpdate.loading) {
       return;
