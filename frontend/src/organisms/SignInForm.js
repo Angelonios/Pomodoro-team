@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   error: {
     backgroundColor: '#1b0f0f',
     borderRadius: 50,
-    marginTop: 8,
+    marginTop: 15,
   },
 }));
 
@@ -112,7 +112,13 @@ export function SignInForm({ props }) {
             Sign in
           </Typography>
           <Container maxWidth="xs" className={classes.error}>
-            <Typography variant="h6" color="error" display="inline">
+            <Typography
+              alignCenter
+              component="h5"
+              variant="caption"
+              color="error"
+              display="inline"
+            >
               <b>{errorText}</b>
             </Typography>
           </Container>
