@@ -33,6 +33,11 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  error: {
+    backgroundColor: '#1b0f0f',
+    borderRadius: 50,
+    marginTop: 8,
+  },
 }));
 
 const SIGN_IN = gql`
@@ -95,45 +100,90 @@ export function SignInForm({ props }) {
     });
   };
 
-  return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <EmailField
-              data={email}
-              formData={formData}
-              formErrors={error}
-              helperText={errorText}
-              handleChange={handleChange}
-            />
-            <PasswordField
-              id="password"
-              name="password"
-              formData={formData}
-              formErrors={error}
-              helperText={errorText}
-              handleChange={handleChange}
-            >
-              Password
-            </PasswordField>
-          </Grid>
-          <FormButton submit={handleSubmit}>Sign in</FormButton>
-          <FormLink link={route.signUp()}>
-            Don't have an account? Sign Up
-          </FormLink>
-        </form>
-      </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-    </Container>
-  );
+  if (error) {
+    return (
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <Container maxWidth="xs" className={classes.error}>
+            <Typography variant="h6" color="error" display="inline">
+              <b>{errorText}</b>
+            </Typography>
+          </Container>
+          <form className={classes.form} noValidate>
+            <Grid container spacing={2}>
+              <EmailField
+                data={email}
+                formData={formData}
+                formErrors={error}
+                handleChange={handleChange}
+              />
+              <PasswordField
+                id="password"
+                name="password"
+                formData={formData}
+                formErrors={error}
+                handleChange={handleChange}
+              >
+                Password
+              </PasswordField>
+            </Grid>
+            <FormButton submit={handleSubmit}>Sign in</FormButton>
+            <FormLink link={route.signUp()}>
+              Don't have an account? Sign Up
+            </FormLink>
+          </form>
+        </div>
+        <Box mt={8}>
+          <Copyright />
+        </Box>
+      </Container>
+    );
+  } else {
+    return (
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <form className={classes.form} noValidate>
+            <Grid container spacing={2}>
+              <EmailField
+                data={email}
+                formData={formData}
+                formErrors={error}
+                handleChange={handleChange}
+              />
+              <PasswordField
+                id="password"
+                name="password"
+                formData={formData}
+                formErrors={error}
+                handleChange={handleChange}
+              >
+                Password
+              </PasswordField>
+            </Grid>
+            <FormButton submit={handleSubmit}>Sign in</FormButton>
+            <FormLink link={route.signUp()}>
+              Don't have an account? Sign Up
+            </FormLink>
+          </form>
+        </div>
+        <Box mt={8}>
+          <Copyright />
+        </Box>
+      </Container>
+    );
+  }
 }
