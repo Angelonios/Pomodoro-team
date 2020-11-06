@@ -9,7 +9,7 @@ import { CircularPomodoroCountdown, ShareUrl } from '../molecules';
 
 export function SharePage() {
   const urlParams = useParams('shareId');
-  let shareId = urlParams.shareId;
+  const shareId = urlParams.shareId;
 
   const timerUpdate = useQuery(POMODORO_QUERY, {
     variables: { shareId },
