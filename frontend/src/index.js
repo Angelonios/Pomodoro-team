@@ -14,7 +14,6 @@ const theme = createMuiTheme({
 
 ReactDOM.render(
   <ThemeProvider theme={theme}>
-    <CssBaseline />
     <App />
   </ThemeProvider>,
   document.getElementById('root'),
