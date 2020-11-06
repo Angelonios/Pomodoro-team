@@ -102,7 +102,7 @@ export function PomodoroProvider({ children }) {
       initializeTimer({
         position: currentPositionInCycle,
         running: true,
-        secondsSinceStart: 0,
+        secondsSinceStart: 1,
       });
     }
   };
