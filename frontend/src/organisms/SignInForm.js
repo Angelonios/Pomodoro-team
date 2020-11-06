@@ -113,7 +113,6 @@ export function SignInForm({ props }) {
           </Typography>
           <Container maxWidth="xs" className={classes.error}>
             <Typography
-              alignCenter
               component="h5"
               variant="caption"
               color="error"
