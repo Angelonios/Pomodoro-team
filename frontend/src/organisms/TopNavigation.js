@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { AppBar, Toolbar, Typography } from '@material-ui/core/';
-import { route } from 'src/Routes';
-import { makeStyles } from '@material-ui/core/styles';
-import { NavLink } from 'src/atoms';
-import { useAuth } from 'src/utils/auth';
 import { useHistory } from 'react-router-dom';
+import { AppBar, Toolbar, Typography } from '@material-ui/core/';
+import { makeStyles } from '@material-ui/core/styles';
 import { IconButton } from '@material-ui/core';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { route } from 'src/Routes';
+import { NavLink } from 'src/atoms';
+import { useAuth } from 'src/utils/auth';
 
 const useStyles = makeStyles((theme) => ({
   root: {

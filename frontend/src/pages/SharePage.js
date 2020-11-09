@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useReducer, useMemo } from 'react';
 import { useParams } from 'react-router';
-import { Container, Paper, Box, Grid } from '@material-ui/core';
-import { POMODORO_QUERY } from '../utils/serverSync';
 import { useQuery } from '@apollo/client';
+import { Container, Paper, Box, Grid } from '@material-ui/core';
 import { getPomodoroComponent } from '../utils/pomodoroCycle';
 import { pomodoroReducer } from '../utils/pomodoroReducer';
 import { CircularPomodoroCountdown, ShareUrl } from '../molecules';
+import { POMODORO_QUERY } from '../utils/serverSync';
 
 export function SharePage() {
   const urlParams = useParams('shareId');

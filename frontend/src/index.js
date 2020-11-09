@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import './index.css';
 import { App } from 'src/App';
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
   palette: {

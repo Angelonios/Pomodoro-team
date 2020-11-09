@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
 import {
   getPomodoroComponent,
   getComponentTypeOrderLength,
@@ -9,7 +10,6 @@ import {
   UPDATE_POMODORO_MUTATION,
 } from './serverSync';
 import { pomodoroReducer } from './pomodoroReducer';
-import { useQuery, useMutation } from '@apollo/client';
 
 const PomodoroStateContext = React.createContext();
 const PomodoroDispatchContext = React.createContext();

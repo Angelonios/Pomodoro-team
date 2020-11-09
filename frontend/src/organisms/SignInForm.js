@@ -1,5 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
+import { gql, useMutation } from '@apollo/client';
 import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
@@ -10,9 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Copyright, EmailField, PasswordField, FormLink } from '../molecules';
 import { FormButton } from '../atoms';
-import { useHistory, useLocation } from 'react-router-dom';
 import { route } from 'src/Routes';
-import { gql, useMutation } from '@apollo/client';
 import { useAuth } from 'src/utils/auth';
 
 const useStyles = makeStyles((theme) => ({

@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { useHistory, useLocation } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Box from '@material-ui/core/Box';
@@ -9,7 +10,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Copyright } from '../molecules';
 import { FormButton } from '../atoms';
-import { useHistory, useLocation } from 'react-router-dom';
 import { route } from 'src/Routes';
 
 const useStyles = makeStyles((theme) => ({
