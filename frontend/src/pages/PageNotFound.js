@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Container, Grid, Paper, Typography } from '@material-ui/core';
 import { TopNavigation } from 'src/organisms';
-import sadTomato from '../assets/sadTomato.svg';
+import sadTomato from 'src/assets/sadTomato.svg';
 
 export function PageNotFound() {
   return (

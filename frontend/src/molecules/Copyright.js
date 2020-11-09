@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import { NavLink } from '../atoms';
+import { NavLink } from 'src/atoms';
 import { route } from 'src/Routes';
 
 export function Copyright() {

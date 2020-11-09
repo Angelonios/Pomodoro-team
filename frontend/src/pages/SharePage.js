@@ -2,10 +2,10 @@ import React, { useEffect, useState, useReducer, useMemo } from 'react';
 import { useParams } from 'react-router';
 import { useQuery } from '@apollo/client';
 import { Container, Paper, Box, Grid } from '@material-ui/core';
-import { getPomodoroComponent } from '../utils/pomodoroCycle';
-import { pomodoroReducer } from '../utils/pomodoroReducer';
+import { getPomodoroComponent } from 'src/utils/pomodoroCycle';
+import { pomodoroReducer } from 'src/utils/pomodoroReducer';
 import { CircularPomodoroCountdown, ShareUrl } from '../molecules';
-import { POMODORO_QUERY } from '../utils/serverSync';
+import { POMODORO_QUERY } from 'src/utils/serverSync';
 
 export function SharePage() {
   const urlParams = useParams('shareId');

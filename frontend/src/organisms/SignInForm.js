@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Copyright, EmailField, PasswordField, FormLink } from '../molecules';
-import { FormButton } from '../atoms';
+import { FormButton } from 'src/atoms';
 import { route } from 'src/Routes';
 import { useAuth } from 'src/utils/auth';
 

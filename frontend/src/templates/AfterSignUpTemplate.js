@@ -8,8 +8,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Copyright } from '../molecules';
-import { FormButton } from '../atoms';
+import { Copyright } from 'src/molecules';
+import { FormButton } from 'src/atoms';
 import { route } from 'src/Routes';
 
 const useStyles = makeStyles((theme) => ({

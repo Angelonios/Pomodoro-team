@@ -3,13 +3,13 @@ import { useQuery, useMutation } from '@apollo/client';
 import {
   getPomodoroComponent,
   getComponentTypeOrderLength,
-} from './pomodoroCycle';
+} from 'src/utils/pomodoroCycle';
 import {
   initServerCommunication,
   POMODORO_QUERY,
   UPDATE_POMODORO_MUTATION,
-} from './serverSync';
-import { pomodoroReducer } from './pomodoroReducer';
+} from 'src/utils/serverSync';
+import { pomodoroReducer } from 'src/utils/pomodoroReducer';
 
 const PomodoroStateContext = React.createContext();
 const PomodoroDispatchContext = React.createContext();
