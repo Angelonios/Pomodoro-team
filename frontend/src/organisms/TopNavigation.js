@@ -45,7 +45,7 @@ export function TopNavigation({ currentUser }) {
               </NavLink>
             </Typography>
             <Typography align="right">
-              <TeamsViewMenu />
+              <TeamsViewMenu user_id={user.user_id} />
             </Typography>
             <Typography align="right">
               <b>Hello {user.email}!</b>{' '}
