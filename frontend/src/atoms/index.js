@@ -5,3 +5,4 @@ export { FormButton } from './FormButton';
 export { Link } from './Link';
 export { TeamsViewMenu } from './TeamsViewMenu';
 export { MenuItems } from './MenuItems';
+export { LogOut } from './LogOut';

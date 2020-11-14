@@ -18,7 +18,6 @@ import { MenuItems } from 'src/atoms';
 
 export function TeamsViewMenu({ user_id }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
-
   const history = useHistory();
 
   const handleClick = (event) => {
@@ -28,19 +27,32 @@ export function TeamsViewMenu({ user_id }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const handleCreate = () => {
     history.replace(route.createTeam());
   };
+  
+  const handleClickItem = (e) => {
+      history.push({
+        pathname: route.teamDetail(),
+        data: {
+          name: e.target.innerText,
+          id: e.target.id
+        }
+      });
+      console.log(e.target);
+      console.log(e.target.tagName);
+      console.log(e.target.innerText);
+      console.log(e.target.id);
+  };
 
-  const { loading, error, data } = useQuery(USER_TEAMS, {
+  const { loading, data } = useQuery(USER_TEAMS, {
     variables: { user_id: user_id },
   });
 
-  console.log('data:', data);
-  
   if (loading) {
     return (
-      <div>
+      <>
         <Button
           aria-controls="simple-menu"
           aria-haspopup="true"
@@ -58,12 +70,12 @@ export function TeamsViewMenu({ user_id }) {
           <MenuItem>loading</MenuItem>
           <MenuItem onClick={handleCreate}>Create Team</MenuItem>
         </Menu>
-      </div>
+      </>
     );
   }
   else {
     return (
-      <div>
+      <>
         <Button
           aria-controls="simple-menu"
           aria-haspopup="true"
@@ -78,34 +90,10 @@ export function TeamsViewMenu({ user_id }) {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItems data={data}></MenuItems>
+          <MenuItems data={data} onClick={handleClickItem}></MenuItems>
           <MenuItem onClick={handleCreate}>Create Team</MenuItem>
         </Menu>
-      </div>
+      </>
     );
   }
-  /*
-  if (error) {
-    return (
-      <div>
-        <Button
-          aria-controls="simple-menu"
-          aria-haspopup="true"
-          onClick={handleClick}
-        >
-          Teams
-        </Button>
-        <Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          <MenuItem>Something went wrong !</MenuItem>
-        </Menu>
-      </div>
-    );
-  }
-  */
 }
