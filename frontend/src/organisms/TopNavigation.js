@@ -44,7 +44,7 @@ export function TopNavigation({ currentUser }) {
                 Team Pomodori
               </NavLink>
             </Typography>
-            <Typography>
+            <Typography align="right">
               <TeamsViewMenu />
             </Typography>
             <Typography align="right">
