@@ -68,24 +68,24 @@ const getRemainingSeconds = (state) => {
 };
 
 const setPomodoroState = (state, newState) => {
-  let running;
-  newState.secondsSinceStart === 0 ? (running = false) : (running = true);
-  //console.log(newState);
   const updatedState = {
-    running: running,
     position: parseInt(newState.position),
     secondsSinceStart: newState.secondsSinceStart,
   };
-  finalTime = calculateFinalTime(updatedState);
-  console.log(finalTime);
-  console.log({
-    ...updatedState,
-    remainingSeconds: calculateRemainingSeconds(),
-  });
-  return {
-    ...updatedState,
-    remainingSeconds: calculateRemainingSeconds(),
-  };
+  if (newState.secondsSinceStart === 0) {
+    return {
+      ...updatedState,
+      running: false,
+      remainingSeconds: getPomodoroComponent(updatedState.position).seconds,
+    };
+  } else {
+    finalTime = calculateFinalTime(updatedState);
+    return {
+      ...updatedState,
+      running: true,
+      remainingSeconds: calculateRemainingSeconds(),
+    };
+  }
 };
 
 export function pomodoroReducer(state, action) {

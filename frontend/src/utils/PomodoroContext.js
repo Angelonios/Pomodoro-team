@@ -46,13 +46,6 @@ export function PomodoroProvider({ children }) {
 
   useEffect(() => {
     if (shareId !== '') {
-      console.log({
-        running: state.running,
-        position: state.position,
-        communicationId: communicationId,
-        shareId: shareId,
-      });
-
       updateMutation({
         variables: {
           running: state.running,
@@ -114,7 +107,6 @@ export function PomodoroProvider({ children }) {
       }); */
     }
     //return query result here
-    console.log(serverPomodoro);
     return serverPomodoro.data;
   }, [serverPomodoro.loading, serverPomodoro.error, serverPomodoro.data]);
 
