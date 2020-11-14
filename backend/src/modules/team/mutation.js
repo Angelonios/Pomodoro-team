@@ -14,9 +14,9 @@ export const CreateTeam = async (
     [owner_id, dbResponse.insertId],
   );
   const teamObject = {
-    team_id: 3,
+    team_id: dbResponse.insertId,
     name: teamName,
     owner_id: owner_id,
   };
-  return { Team: teamObject };
+  return teamObject;
 };

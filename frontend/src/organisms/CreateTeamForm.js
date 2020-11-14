@@ -13,6 +13,7 @@ import Container from '@material-ui/core/Container';
 import { Copyright, TeamNameField } from 'src/molecules';
 import { FormButton } from 'src/atoms';
 import { route } from 'src/Routes';
+import { useAuth } from 'src/utils/auth';
 
 //TODO: CREATE_TEAM
 const CREATE_TEAM = gql`
@@ -26,26 +27,28 @@ const CREATE_TEAM = gql`
   }
 `;
 
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(3),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
+
 export function CreateTeamForm({ teamNameError, setTeamNameError }) {
-  const useStyles = makeStyles((theme) => ({
-    paper: {
-      marginTop: theme.spacing(8),
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    avatar: {
-      margin: theme.spacing(1),
-      backgroundColor: theme.palette.secondary.main,
-    },
-    form: {
-      width: '100%', // Fix IE 11 issue.
-      marginTop: theme.spacing(3),
-    },
-    submit: {
-      margin: theme.spacing(3, 0, 2),
-    },
-  }));
+  const { user, signout } = useAuth();
 
   const classes = useStyles();
 
@@ -82,7 +85,7 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
     if (teamName) {
       //TODO: Change to CREATE_TEAM
       createTeam({
-        variables: { teamName: formData.teamName, owner_id: 3 },
+        variables: { teamName: formData.teamName, owner_id: user.user_id },
       });
     }
   };
