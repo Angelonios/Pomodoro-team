@@ -61,7 +61,7 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
 
   const [createTeam] = useMutation(CREATE_TEAM, {
     onCompleted: ({ CreateTeam: { teamName, owner_id } }) => {
-      console.log('Team created!');
+      history.push(route.home());
     },
     onError: () => {},
   });

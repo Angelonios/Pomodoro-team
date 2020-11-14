@@ -1,12 +1,9 @@
-import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import InboxIcon from '@material-ui/icons/Inbox';
+import { Container, Paper } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,16 +22,16 @@ const GET_TEAM_MEMBERS = gql`
 `;
 
 export function TeamDetailPageTemplate() {
-  debugger;
   const classes = useStyles();
   const location = useLocation();
   const dataSet = !(location.data === null || location.data === undefined);
   const name = dataSet ? location.data.name : 'No team set!';
-  const ID = dataSet ? parseInt(location.data.id) : 0;
+  const id = dataSet ? parseInt(location.data.id) : 0;
+
 
   const teamMembers = useQuery(GET_TEAM_MEMBERS, {
     variables: {
-      team_id: ID,
+      team_id: id,
     },
   });
   if (teamMembers.data === undefined) {
@@ -42,26 +39,29 @@ export function TeamDetailPageTemplate() {
   }
 
   return (
-    <div className={classes.root}>
-      <List component="nav" aria-label="main mailbox folders">
-        {dataSet && teamMembers.data.getUsersFromTeam.map(tm =>
-          <ListItem button key={tm.user_id}>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary={tm.email} />
-          </ListItem>,
-        )}
-        {!dataSet &&
-        <ListItem button>
-          <ListItemIcon>
-            <InboxIcon />
-          </ListItemIcon>
-          <ListItemText primary="No team selected!" />
-        </ListItem>
-        }
-      </List>
-    </div>
+    <Container component="main">
+      <Paper elevation={3}>
+        <div className={classes.root}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Typography align={'center'} variant={'h3'}>
+                {dataSet ? name : 'No team selected!'}
+              </Typography>
+            </Grid>
+            {dataSet && teamMembers.data.getUsersFromTeam.map(tm =>
+              <Grid item xs={12} key={tm.user_id}>
+                <Typography align={'center'} variant={'body2'}>
+                  {tm.email}
+                </Typography>
+              </Grid>,
+            )}
+
+          </Grid>
+        </div>
+      </Paper>
+    </Container>
+
+
   );
 }
 
