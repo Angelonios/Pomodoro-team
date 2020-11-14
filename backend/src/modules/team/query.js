@@ -44,3 +44,17 @@ export const teams = async (_, __, { dbConnection }) => {
   const teams = await dbConnection.query('SELECT * FROM teams');
   return teams;
 };
+
+export const getUsersFromTeam = async (_, { team_id }, { dbConnection }) => {
+  const usersFromTeam = (
+    await dbConnection.query(
+      `SELECT email, users.user_id FROM users JOIN in_team ON users.user_id = in_team.user_id WHERE in_team.team_id = ?`
+      , [team_id])
+  );
+
+  if(!usersFromTeam){
+    return null;
+  }
+
+  return usersFromTeam;
+}
