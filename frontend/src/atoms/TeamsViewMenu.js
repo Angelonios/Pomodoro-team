@@ -3,6 +3,9 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { gql, useQuery } from '@apollo/client';
+import { useHistory } from 'react-router-dom';
+import { route } from 'src/Routes';
+import { MenuItems } from 'src/atoms';
 
 export function TeamsViewMenu({ user_id }) {
   const USER_TEAMS = gql`
@@ -13,13 +16,10 @@ export function TeamsViewMenu({ user_id }) {
       }
     }
   `;
-  const { loading, error, data } = useQuery(USER_TEAMS, {
-    variables: { user_id: user_id },
-  });
-
-  console.log(data);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const history = useHistory();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -28,6 +28,61 @@ export function TeamsViewMenu({ user_id }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleCreate = () => {
+    history.replace(route.createTeam());
+  };
+
+  const { loading, error, data } = useQuery(USER_TEAMS, {
+    variables: { user_id: user_id },
+  });
+
+  console.log(('data': data));
+
+  if (loading) {
+    return (
+      <div>
+        <Button
+          aria-controls="simple-menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
+          Teams
+        </Button>
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem>loading</MenuItem>
+          <MenuItem onClick={handleCreate}>Create Team</MenuItem>
+        </Menu>
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div>
+        <Button
+          aria-controls="simple-menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
+          Teams
+        </Button>
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem>Something went wrong !</MenuItem>
+        </Menu>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -45,9 +100,8 @@ export function TeamsViewMenu({ user_id }) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>Team 1</MenuItem>
-        <MenuItem onClick={handleClose}>Team 2</MenuItem>
-        <MenuItem onClick={handleClose}>Team 3</MenuItem>
+        <MenuItems data={data} />
+        <MenuItem onClick={handleCreate}>Create Team</MenuItem>
       </Menu>
     </div>
   );
