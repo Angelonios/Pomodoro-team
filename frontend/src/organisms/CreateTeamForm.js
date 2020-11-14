@@ -59,7 +59,6 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
   var teamName;
   const history = useHistory();
 
-  //TODO: Change to CREATE_TEAM
   const [createTeam] = useMutation(CREATE_TEAM, {
     onCompleted: ({ CreateTeam: { teamName, owner_id } }) => {
       console.log('Team created!');
@@ -69,7 +68,6 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // ... submit to API or something
     if (formData.teamName === '') {
       teamName = false;
       setTeamNameError(true);
@@ -80,7 +78,6 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
       setTeamNameErrorText('');
     }
     if (teamName) {
-      //TODO: Change to CREATE_TEAM
       createTeam({
         variables: { teamName: formData.teamName, owner_id: user.user_id },
       });
