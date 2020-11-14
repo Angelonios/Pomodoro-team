@@ -12,10 +12,9 @@ const typeDefs = gql`
     pomodoro(shareId: String!): Pomodoro
     users: [User!]!
     user(user_id: Int!): User
-
     teams: [Team!]!
     team(team_id: Int!): Team
-    teamsForUser(user_id: Int!): [Team]!
+    userTeams(user_id: Int!): [Team]!
   }
 
   type Pomodoro {
@@ -38,6 +37,11 @@ const typeDefs = gql`
     team_id: Int!
     owner_id: Int!
     name: String!
+  }
+
+  type userTeams {
+    user_id: Int!
+    teams: [Team!]!
   }
 
   type Mutation {
