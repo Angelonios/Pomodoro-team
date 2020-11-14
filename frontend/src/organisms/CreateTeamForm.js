@@ -70,7 +70,6 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
   });
 
   const handleSubmit = (e) => {
-    debugger;
     e.preventDefault();
     // ... submit to API or something
     if (formData.teamName === '') {
