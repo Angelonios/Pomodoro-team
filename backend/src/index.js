@@ -55,7 +55,7 @@ const typeDefs = gql`
 
     AddUserToTeam(teamName: String!, email: String!): Team!
 
-    RemoveUserFromTeam(teamName: String!, email: String!): Team!
+    LeaveTeam(team_id: Int!, user_id: Int!): Boolean
 
     DeleteTeam(teamName: String!, email: String!): String!
   }

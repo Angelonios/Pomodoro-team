@@ -60,7 +60,7 @@ export function TeamDetailPageTemplate() {
 
           </Grid>
           <Grid item xs={12}>
-            <LeaveTeamButton />
+            <LeaveTeamButton team_id={id} />
           </Grid>
         </div>
       </Paper>
