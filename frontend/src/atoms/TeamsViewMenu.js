@@ -2,8 +2,23 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import { gql, useQuery } from '@apollo/client';
 
-export function TeamsViewMenu() {
+export function TeamsViewMenu({ user_id }) {
+  const USER_TEAMS = gql`
+    query userTeams($user_id: Int!) {
+      userTeams(user_id: $user_id) {
+        name
+        team_id
+      }
+    }
+  `;
+  const { loading, error, data } = useQuery(USER_TEAMS, {
+    variables: { user_id: user_id },
+  });
+
+  console.log(data);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
