@@ -32,8 +32,7 @@ const nextIndex = (state) => {
   }
 };
 
-/////////// Main functions
-
+// Basic actions
 const clickMainButton = (state) => {
   if (state.running) {
     const updatedState = {

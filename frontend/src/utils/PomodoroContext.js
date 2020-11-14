@@ -2,15 +2,11 @@ import React, {
   useState,
   useEffect,
   useMemo,
-  useCallback,
   useReducer,
   createContext,
 } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import {
-  getPomodoroComponent,
-  getComponentTypeOrderLength,
-} from 'src/utils/pomodoroCycle';
+import { getPomodoroComponent } from 'src/utils/pomodoroCycle';
 import {
   initServerCommunication,
   POMODORO_QUERY,
@@ -44,6 +40,7 @@ export function PomodoroProvider({ children }) {
     dispatch({ type: CLICK_MAIN_BUTTON });
   };
 
+  //Update database if "running" changes
   useEffect(() => {
     if (shareId !== '') {
       updateMutation({
@@ -55,103 +52,35 @@ export function PomodoroProvider({ children }) {
         },
       });
     }
-  }, [state.running]);
+  }, [state.running, state.position, communicationId, shareId, updateMutation]);
 
-  /* ////////////////////////////
-  // Timer initialization
-  ////////////////////////////
-  const initializeTimer = useCallback(
-    (props) => {
-      setCurrentPositionInCycle(props.position);
-
-      setPomodoroRunning(props.running);
-
-      setFinalTime(
-        calculateFinalTime(
-          getPomodoroComponent(props.position).seconds,
-          props.secondsSinceStart,
-        ),
-      );
-
-      setRemainingSeconds({
-        finalTime: calculateFinalTime(
-          getPomodoroComponent(props.position).seconds,
-          props.secondsSinceStart,
-        ),
-      });
-
-      //console.log(updateMutation.data);
-      // mutate data here
-
+  const cachedServerData = useMemo(() => {
+    if (serverPomodoro.loading || serverPomodoro.error) {
+      return null;
+    }
+    if (serverPomodoro.data.pomodoro === null) {
+      //If backend returns null, then we have to send mutation with new share and communication ids
       updateMutation({
         variables: {
-          running: props.running,
-          position: props.position,
+          running: false,
+          position: 0,
           communicationId: communicationId,
           shareId: shareId,
         },
       });
-      // Here comes the mutation to the server
-    },
-    [shareId, communicationId, updateMutation],
-  ); */
-
-  const cachedServerData = useMemo(() => {
-    if (serverPomodoro.loading || serverPomodoro.error) return null;
-    if (serverPomodoro.data.pomodoro === null) {
-      //If backend returns null, then we have to initialize timer in order to send mutation with new share and communication ids
-      /*       initializeTimer({
-        position: 0,
-        running: false,
-        secondsSinceStart: 0,
-      }); */
+      return null;
     }
     //return query result here
     return serverPomodoro.data;
-  }, [serverPomodoro.loading, serverPomodoro.error, serverPomodoro.data]);
+  }, [
+    serverPomodoro.loading,
+    serverPomodoro.error,
+    serverPomodoro.data,
+    communicationId,
+    shareId,
+    updateMutation,
+  ]);
 
-  ////////////////////////////////////////////////////////////////////
-  // Perform these actions every time a user clicks on the main button
-  ////////////////////////////////////////////////////////////////////
-  /*   const switchPomodoroRunningState = () => {
-    if (pomodoroRunning) {
-      initializeTimer({
-        position: nextIndex(),
-        running: false,
-        secondsSinceStart: 0,
-      });
-    } else {
-      initializeTimer({
-        position: currentPositionInCycle,
-        running: true,
-        secondsSinceStart: 1,
-      });
-    }
-  }; */
-
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  // Calculates final time from seconds in current pomodoro component and seconds since start
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  /*   const calculateFinalTime = (secondsInComponent, secondsSinceStart) => {
-    return parseInt(
-      Date.now() / 1000 + (secondsInComponent - secondsSinceStart),
-    );
-  };
- */
-  ////////////////////////////////////////////////////////////////
-  // Returns next index in pomodoro cycle
-  ////////////////////////////////////////////////////////////////
-  /*   const nextIndex = () => {
-    if (currentPositionInCycle + 1 === getComponentTypeOrderLength()) {
-      return 0;
-    } else {
-      return currentPositionInCycle + 1;
-    }
-  }; */
-
-  ////////////////////////////////////////////////////////////////
-  // If timer === running, refresh remaining seconds every second
-  ////////////////////////////////////////////////////////////////
   useEffect(() => {
     if (!state.running) return;
     const timer = setTimeout(() => {
@@ -168,7 +97,6 @@ export function PomodoroProvider({ children }) {
     setCommunicationId(ids.communicationId);
     setShareId(ids.shareId);
     setShareUrl(window.location.origin.toString() + '/share/' + ids.shareId);
-    //handleServerConfiguration(3, 40);
   }, []);
 
   useEffect(() => {
