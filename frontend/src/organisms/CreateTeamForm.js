@@ -73,17 +73,17 @@ export function CreateTeamForm({teamNameError, setTeamNameError}) {
     },
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e) => {  
     e.preventDefault();
     // ... submit to API or something
-    if (formData.email === null) {
-      teamName = false;
-      setTeamNameError(false);
-      setTeamNameErrorText('');
-    } else {
+    if (formData.teamName === "") {
       teamName = true;
       setTeamNameError(true);
       setTeamNameErrorText('Please enter a name for your new team.');
+    } else {
+      teamName = false;
+      setTeamNameError(false);
+      setTeamNameErrorText('');
     }
     if (!teamName) {
       //TODO: Change to CREATE_TEAM
