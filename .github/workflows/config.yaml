@@ -16,7 +16,7 @@ jobs:
             git status
             cd ~/code/project/backend
             yarn install
-            touch ~/code/project/frontend/tmp/restart.txt
+            touch ~/code/project/backend/tmp/restart.txt
             cd ~/code/project/frontend
             yarn install
             touch ~/code/project/frontend/tmp/restart.txt
