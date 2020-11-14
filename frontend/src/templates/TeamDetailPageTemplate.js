@@ -1,9 +1,11 @@
+import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { Container, Paper } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import { LeaveTeamButton } from '../molecules';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,11 +59,11 @@ export function TeamDetailPageTemplate() {
             )}
 
           </Grid>
+          <Grid item xs={12}>
+            <LeaveTeamButton />
+          </Grid>
         </div>
       </Paper>
-    </Container>
-
-
-  );
+    </Container>);
 }
 
