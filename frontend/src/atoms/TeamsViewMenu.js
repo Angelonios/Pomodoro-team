@@ -78,9 +78,7 @@ export function TeamsViewMenu({ user_id }) {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          {data.userTeams.map((team, id) => (
-            <MenuItem id={team.team_id}>{team.name}</MenuItem>
-          ))}
+          <MenuItems data={data}></MenuItems>
           <MenuItem onClick={handleCreate}>Create Team</MenuItem>
         </Menu>
       </div>

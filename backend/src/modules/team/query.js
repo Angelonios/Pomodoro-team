@@ -1,7 +1,7 @@
 export const userTeams = async (_, { user_id }, { dbConnection }) => {
   //const userTeams = getUserTeams(user_id, dbConnection);
   const userTeams = await dbConnection.query(
-    `SELECT teams.team_id, name from teams JOIN in_team WHERE user_id= ?;`,
+    `SELECT teams.team_id, name from teams JOIN in_team ON in_team.team_id = teams.team_id WHERE user_id= ?;`,
     [user_id],
   );
   if (!userTeams) {
