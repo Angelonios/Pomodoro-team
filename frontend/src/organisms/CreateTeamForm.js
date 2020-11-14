@@ -14,21 +14,19 @@ import { Copyright, TeamNameField } from 'src/molecules';
 import { FormButton } from 'src/atoms';
 import { route } from 'src/Routes';
 
-//TODO: Change to CREATE_TEAM
-const SIGN_UP = gql`
-  mutation SignUp($email: String!, $password: String!) {
-    SignUp(email: $email, password: $password) {
-      user {
-        user_id
-        email
+//TODO: CREATE_TEAM
+const CREATE_TEAM = gql`
+  mutation CreateTeam($teamName: String!, $owner_id: Int!) {
+    CreateTeam(teamName: $teamName, owner_id: $owner_id) {
+      team {
+        team_id
+        name
       }
-      token
     }
   }
 `;
 
-export function CreateTeamForm({teamNameError, setTeamNameError}) {
-
+export function CreateTeamForm({ teamNameError, setTeamNameError }) {
   const useStyles = makeStyles((theme) => ({
     paper: {
       marginTop: theme.spacing(8),
@@ -52,7 +50,7 @@ export function CreateTeamForm({teamNameError, setTeamNameError}) {
   const classes = useStyles();
 
   const initialFormData = Object.freeze({
-    teamName: ''
+    teamName: '',
   });
 
   const [formData, updateFormData] = useState(initialFormData);
@@ -61,34 +59,30 @@ export function CreateTeamForm({teamNameError, setTeamNameError}) {
   const history = useHistory();
 
   //TODO: Change to CREATE_TEAM
-  const [signUp] = useMutation(SIGN_UP, {
-    onCompleted: ({ SignUp: { user, token } }) => {
-      history.push({
-        pathname: route.afterSignUp(),
-        data: formData.email,
-      });
+  const [createTeam] = useMutation(CREATE_TEAM, {
+    onCompleted: ({ CreateTeam: { teamName, owner_id } }) => {
+      console.log('Team created!');
     },
-    onError: () => {
-
-    },
+    onError: () => {},
   });
 
-  const handleSubmit = (e) => {  
+  const handleSubmit = (e) => {
+    debugger;
     e.preventDefault();
     // ... submit to API or something
-    if (formData.teamName === "") {
-      teamName = true;
+    if (formData.teamName === '') {
+      teamName = false;
       setTeamNameError(true);
       setTeamNameErrorText('Please enter a name for your new team.');
     } else {
-      teamName = false;
+      teamName = true;
       setTeamNameError(false);
       setTeamNameErrorText('');
     }
-    if (!teamName) {
+    if (teamName) {
       //TODO: Change to CREATE_TEAM
-      signUp({
-        variables: { email: formData.email, password: formData.password },
+      createTeam({
+        variables: { teamName: formData.teamName, owner_id: 3 },
       });
     }
   };

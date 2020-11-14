@@ -3,7 +3,7 @@ import {
   mutations as AnonymPomodoroMutations,
   queries as AnonymPomodoroQueries,
 } from './pomodoro';
-import { queries as TeamQueries } from './team';
+import { queries as TeamQueries, mutations as TeamMutations } from './team';
 
 export default {
   Query: {
@@ -14,5 +14,6 @@ export default {
   Mutation: {
     ...UserMutations,
     ...AnonymPomodoroMutations,
+    ...TeamMutations,
   },
 };

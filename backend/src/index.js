@@ -36,8 +36,8 @@ const typeDefs = gql`
 
   type Team {
     team_id: Int!
+    owner_id: Int!
     name: String!
-    users: [User!]!
   }
 
   type Mutation {
@@ -52,7 +52,7 @@ const typeDefs = gql`
       shareId: String!
     ): String!
 
-    CreateTeam(teamName: String!, email: String!): Team!
+    CreateTeam(teamName: String!, owner_id: Int!): Team!
 
     AddUserToTeam(teamName: String!, email: String!): Team!
 
