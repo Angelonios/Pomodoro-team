@@ -44,12 +44,11 @@ export function TopNavigation({ currentUser }) {
                 Team Pomodori
               </NavLink>
             </Typography>
-            <Typography align="right">
+            <Typography variant="body2" align="right">
               <b>Hello {user.email}!</b>{' '}
-            </Typography>
-            <Typography align="right">
               <MenuUser user_id={user.user_id} logOut={logOut}/>
             </Typography>
+
           </Toolbar>
         </AppBar>
       </div>
