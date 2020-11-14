@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function LeaveTeamButton({ team_id }) {
-  debugger;
   const { user } = useAuth();
   const history = useHistory();
   const [leaveTeam] = useMutation(LEAVE_TEAM,
