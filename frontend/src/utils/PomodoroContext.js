@@ -20,12 +20,14 @@ import {
   pomodoroReducer,
   CLICK_MAIN_BUTTON,
   GET_REMAINING_SECONDS,
+  SET_POMODORO_STATE,
 } from 'src/utils/pomodoroReducer';
 
 const PomodoroStateContext = createContext();
 const PomodoroDispatchContext = createContext();
 
 export function PomodoroProvider({ children }) {
+  const [communicationId, setCommunicationId] = useState('');
   const [shareId, setShareId] = useState('');
   const [shareUrl, setShareUrl] = useState();
   const serverPomodoro = useQuery(POMODORO_QUERY, { variables: { shareId } });
@@ -33,7 +35,7 @@ export function PomodoroProvider({ children }) {
 
   const [state, dispatch] = useReducer(pomodoroReducer, {
     remainingSeconds: 1500,
-    secondsSinceStart: 1,
+    secondsSinceStart: 0,
     position: 0,
     running: false,
   });
@@ -41,6 +43,26 @@ export function PomodoroProvider({ children }) {
   const clickMainButton = () => {
     dispatch({ type: CLICK_MAIN_BUTTON });
   };
+
+  useEffect(() => {
+    if (shareId !== '') {
+      console.log({
+        running: state.running,
+        position: state.position,
+        communicationId: communicationId,
+        shareId: shareId,
+      });
+
+      updateMutation({
+        variables: {
+          running: state.running,
+          position: state.position,
+          communicationId: communicationId,
+          shareId: shareId,
+        },
+      });
+    }
+  }, [state.running]);
 
   /* ////////////////////////////
   // Timer initialization
@@ -81,24 +103,20 @@ export function PomodoroProvider({ children }) {
     [shareId, communicationId, updateMutation],
   ); */
 
-  /*   const cachedServerData = useMemo(() => {
+  const cachedServerData = useMemo(() => {
     if (serverPomodoro.loading || serverPomodoro.error) return null;
     if (serverPomodoro.data.pomodoro === null) {
       //If backend returns null, then we have to initialize timer in order to send mutation with new share and communication ids
-      initializeTimer({
+      /*       initializeTimer({
         position: 0,
         running: false,
         secondsSinceStart: 0,
-      });
+      }); */
     }
     //return query result here
+    console.log(serverPomodoro);
     return serverPomodoro.data;
-  }, [
-    serverPomodoro.loading,
-    serverPomodoro.error,
-    serverPomodoro.data,
-    initializeTimer,
-  ]); */
+  }, [serverPomodoro.loading, serverPomodoro.error, serverPomodoro.data]);
 
   ////////////////////////////////////////////////////////////////////
   // Perform these actions every time a user clicks on the main button
@@ -146,7 +164,6 @@ export function PomodoroProvider({ children }) {
     if (!state.running) return;
     const timer = setTimeout(() => {
       dispatch({ type: GET_REMAINING_SECONDS });
-      console.log('State in timer:', state);
     }, 1000);
     return () => clearTimeout(timer);
   });
@@ -154,7 +171,7 @@ export function PomodoroProvider({ children }) {
   ////////////////////////////////////////////////////////////////
   // Perform these actions after first load / reload of the page
   ////////////////////////////////////////////////////////////////
-  /*   useEffect(() => {
+  useEffect(() => {
     const ids = initServerCommunication();
     setCommunicationId(ids.communicationId);
     setShareId(ids.shareId);
@@ -164,25 +181,9 @@ export function PomodoroProvider({ children }) {
 
   useEffect(() => {
     if (cachedServerData !== null) {
-      if (cachedServerData.pomodoro !== null) {
-        let position = parseInt(cachedServerData.pomodoro.position);
-        let secondsSinceStart = cachedServerData.pomodoro.secondsSinceStart;
-        if (secondsSinceStart === 0) {
-          initializeTimer({
-            position: position,
-            running: false,
-            secondsSinceStart: 0,
-          });
-        } else {
-          initializeTimer({
-            position: position,
-            running: true,
-            secondsSinceStart: secondsSinceStart,
-          });
-        }
-      }
+      dispatch({ type: SET_POMODORO_STATE, newState: cachedServerData });
     }
-  }, [cachedServerData, initializeTimer]); */
+  }, [cachedServerData]);
 
   return (
     <PomodoroStateContext.Provider

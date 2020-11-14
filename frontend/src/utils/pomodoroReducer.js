@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   getPomodoroComponent,
   getComponentTypeOrderLength,
@@ -6,6 +5,7 @@ import {
 
 export const CLICK_MAIN_BUTTON = 'CLICK_MAIN_BUTTON';
 export const GET_REMAINING_SECONDS = 'GET_REMAINING_SECONDS';
+export const SET_POMODORO_STATE = 'SET_POMODORO_STATE';
 let finalTime;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,13 +21,6 @@ const calculateRemainingSeconds = () => {
   return parseInt(finalTime - Date.now() / 1000);
 };
 
-const getRemainingSeconds = (state) => {
-  return {
-    ...state,
-    remainingSeconds: calculateRemainingSeconds(),
-  };
-};
-
 ////////////////////////////////////////////////////////////////
 // Returns next index in pomodoro cycle
 ////////////////////////////////////////////////////////////////
@@ -39,8 +32,9 @@ const nextIndex = (state) => {
   }
 };
 
+/////////// Main functions
+
 const clickMainButton = (state) => {
-  console.log('clicked');
   if (state.running) {
     const updatedState = {
       ...state,
@@ -66,12 +60,42 @@ const clickMainButton = (state) => {
   }
 };
 
+const getRemainingSeconds = (state) => {
+  return {
+    ...state,
+    remainingSeconds: calculateRemainingSeconds(),
+  };
+};
+
+const setPomodoroState = (state, newState) => {
+  let running;
+  newState.secondsSinceStart === 0 ? (running = false) : (running = true);
+  //console.log(newState);
+  const updatedState = {
+    running: running,
+    position: parseInt(newState.position),
+    secondsSinceStart: newState.secondsSinceStart,
+  };
+  finalTime = calculateFinalTime(updatedState);
+  console.log(finalTime);
+  console.log({
+    ...updatedState,
+    remainingSeconds: calculateRemainingSeconds(),
+  });
+  return {
+    ...updatedState,
+    remainingSeconds: calculateRemainingSeconds(),
+  };
+};
+
 export function pomodoroReducer(state, action) {
   switch (action.type) {
     case CLICK_MAIN_BUTTON:
       return clickMainButton(state);
     case GET_REMAINING_SECONDS:
       return getRemainingSeconds(state);
+    case SET_POMODORO_STATE:
+      return setPomodoroState(state, action.newState.pomodoro);
     default:
       return state;
   }
