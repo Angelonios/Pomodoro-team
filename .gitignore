@@ -14,3 +14,5 @@ yarn-error.log*
 .vscode
 .idea
 *.iml
+frontend/src/utils/PomodoroContext copy.js
+frontend/src/utils/pomodoroReducer copy.js

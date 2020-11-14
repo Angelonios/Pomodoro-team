@@ -1,11 +1,6 @@
 export const pomodoro = async (_, { shareId }, { dbConnection }) => {
-  if (shareId !== undefined) {
+  if (shareId !== '' || shareId !== undefined) {
     const pomodoro = await getPomodoro({ shareId, dbConnection });
-
-    if (!pomodoro) {
-      console.log('null');
-      return null;
-    }
 
     const currentTime = await getDbTime(dbConnection);
 
@@ -33,6 +28,7 @@ export const pomodoro = async (_, { shareId }, { dbConnection }) => {
         position: positionInCycle,
         secondsSinceStart: secondsSinceStart,
       });
+
       return {
         position: positionInCycle,
         secondsSinceStart: secondsSinceStart,
@@ -42,6 +38,7 @@ export const pomodoro = async (_, { shareId }, { dbConnection }) => {
 };
 
 async function getPomodoro({ shareId, dbConnection }) {
+  console.log(shareId);
   const result = await dbConnection.query(
     `SELECT * FROM pomodoros WHERE share_id = ?`,
     [shareId],

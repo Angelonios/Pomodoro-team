@@ -33,7 +33,8 @@ export function SharePage() {
     if (timerUpdate.data.pomodoro === null) {
       return (window.location.href = '/*');
     }
-
+    setSecondsSinceStart(timerUpdate.data.pomodoro.secondsSinceStart);
+    setPosition(timerUpdate.data.pomodoro.position);
     return timerUpdate.data;
   }, [
     timerUpdate.loading,
