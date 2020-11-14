@@ -7,7 +7,6 @@ import { useHistory } from 'react-router-dom';
 import { route } from 'src/Routes';
 import { MenuItems } from 'src/atoms';
 
-export function TeamsViewMenu({ user_id }) {
   const USER_TEAMS = gql`
     query userTeams($user_id: Int!) {
       userTeams(user_id: $user_id) {
@@ -17,6 +16,7 @@ export function TeamsViewMenu({ user_id }) {
     }
   `;
 
+export function TeamsViewMenu({ user_id }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const history = useHistory();
@@ -36,8 +36,8 @@ export function TeamsViewMenu({ user_id }) {
     variables: { user_id: user_id },
   });
 
-  console.log(('data': data));
-
+  console.log('data:', data);
+  
   if (loading) {
     return (
       <div>
@@ -61,6 +61,32 @@ export function TeamsViewMenu({ user_id }) {
       </div>
     );
   }
+  else {
+    return (
+      <div>
+        <Button
+          aria-controls="simple-menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
+          Teams
+        </Button>
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          {data.userTeams.map((team, id) => (
+            <MenuItem id={team.team_id}>{team.name}</MenuItem>
+          ))}
+          <MenuItem onClick={handleCreate}>Create Team</MenuItem>
+        </Menu>
+      </div>
+    );
+  }
+  /*
   if (error) {
     return (
       <div>
@@ -83,26 +109,5 @@ export function TeamsViewMenu({ user_id }) {
       </div>
     );
   }
-
-  return (
-    <div>
-      <Button
-        aria-controls="simple-menu"
-        aria-haspopup="true"
-        onClick={handleClick}
-      >
-        Teams
-      </Button>
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItems data={data} />
-        <MenuItem onClick={handleCreate}>Create Team</MenuItem>
-      </Menu>
-    </div>
-  );
+  */
 }

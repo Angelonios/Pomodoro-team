@@ -19,10 +19,8 @@ import { useAuth } from 'src/utils/auth';
 const CREATE_TEAM = gql`
   mutation CreateTeam($teamName: String!, $owner_id: Int!) {
     CreateTeam(teamName: $teamName, owner_id: $owner_id) {
-      team {
         team_id
         name
-      }
     }
   }
 `;

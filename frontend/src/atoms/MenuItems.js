@@ -6,4 +6,7 @@ export function MenuItems({ data }) {
   //data.map((item) => {
   //  return <MenuItem>{item.name}</MenuItem>;
   //});
+  //console.log(data.userTeams)
+  return <MenuItem>test</MenuItem>;
+
 }
