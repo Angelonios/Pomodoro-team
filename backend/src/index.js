@@ -33,12 +33,6 @@ const typeDefs = gql`
     email: String!
   }
 
-  type Team {
-    team_id: Int!
-    owner_id: Int!
-    name: String!
-  }
-
   type userTeams {
     user_id: Int!
     teams: [Team!]!
@@ -73,6 +67,12 @@ const typeDefs = gql`
   type AuthInfo {
     user: AuthUser!
     token: String!
+  }
+
+  type Team {
+    team_id: Int!
+    owner_id: Int!
+    name: String!
   }
 `;
 
