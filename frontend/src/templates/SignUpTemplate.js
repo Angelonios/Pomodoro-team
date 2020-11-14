@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 
-import { SignUpForm, TopNavigation } from 'src/organisms/';
+import { SignUpForm, TopNavigation } from 'src/organisms';
 
 export function SignUpTemplate() {
   const [emailError, updateEmailError] = useState(false);
