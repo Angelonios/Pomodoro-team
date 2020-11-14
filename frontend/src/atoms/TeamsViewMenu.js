@@ -30,9 +30,9 @@ export function TeamsViewMenu() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem onClick={handleClose}>Team 1</MenuItem>
+        <MenuItem onClick={handleClose}>Team 2</MenuItem>
+        <MenuItem onClick={handleClose}>Team 3</MenuItem>
       </Menu>
     </div>
   );
