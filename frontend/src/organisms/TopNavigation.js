@@ -8,6 +8,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { route } from 'src/Routes';
 import { NavLink } from 'src/atoms';
 import { useAuth } from 'src/utils/auth';
+import { TeamsViewMenu } from 'src/atoms';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,6 +43,9 @@ export function TopNavigation({ currentUser }) {
               >
                 Team Pomodori
               </NavLink>
+            </Typography>
+            <Typography>
+              <TeamsViewMenu />
             </Typography>
             <Typography align="right">
               <b>Hello {user.email}!</b>{' '}
