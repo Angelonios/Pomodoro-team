@@ -19,10 +19,9 @@ import { useAuth } from 'src/utils/auth';
 const CREATE_TEAM = gql`
   mutation CreateTeam($teamName: String!, $owner_id: Int!) {
     CreateTeam(teamName: $teamName, owner_id: $owner_id) {
-      team {
-        team_id
-        name
-      }
+      name
+      team_id
+      owner_id
     }
   }
 `;
@@ -48,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function CreateTeamForm({ teamNameError, setTeamNameError }) {
-  const { user, signout } = useAuth();
+  const { user } = useAuth();
 
   const classes = useStyles();
 
