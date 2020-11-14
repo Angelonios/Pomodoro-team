@@ -90,7 +90,7 @@ export function TeamsViewMenu({ user_id }) {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItems data={data} onClick={handleClickItem}></MenuItems>
+          <MenuItems data={data} onClick={handleClickItem}/>
           <MenuItem onClick={handleCreate}>Create Team</MenuItem>
         </Menu>
       </>
