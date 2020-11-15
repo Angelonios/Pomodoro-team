@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
 
-export function PomodoroTimerLabel({ remainingSeconds }) {
+export function PomodoroTimerLabel({ remainingSeconds, variant }) {
   let min = parseInt(remainingSeconds / 60);
   let sec = parseInt(remainingSeconds % 60);
 
@@ -13,7 +13,7 @@ export function PomodoroTimerLabel({ remainingSeconds }) {
     sec = '0' + sec;
   }
   return (
-    <Typography variant="h2" component="div" color="textSecondary">
+    <Typography variant={variant} component="div" color="textSecondary">
       {min}:{sec}
     </Typography>
   );
