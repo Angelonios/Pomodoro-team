@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer } from 'react';
-
+import { useQuery } from '@apollo/client';
 import { Container, Paper, Box, Grid } from '@material-ui/core';
 import { getPomodoroComponent } from 'src/utils/pomodoroCycle';
 import {
@@ -8,8 +8,15 @@ import {
   SET_POMODORO_STATE,
 } from 'src/utils/pomodoroReducer';
 import { CircularPomodoroCountdown, ShareUrl } from 'src/molecules';
+import { POMODORO_QUERY } from 'src/utils/serverSync';
 
-export function SharedPomodoro({ serverPomodoro }) {
+export function SharedPomodoro({ shareId }) {
+  const serverPomodoro = useQuery(POMODORO_QUERY, {
+    variables: { shareId },
+    pollInterval: 5000,
+    errorPolicy: 'all',
+  });
+
   const [state, dispatch] = useReducer(pomodoroReducer, {
     remainingSeconds: 1500,
     secondsSinceStart: 0,

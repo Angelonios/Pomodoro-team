@@ -46,15 +46,27 @@ export const teams = async (_, __, { dbConnection }) => {
 };
 
 export const getUsersFromTeam = async (_, { team_id }, { dbConnection }) => {
-  const usersFromTeam = (
-    await dbConnection.query(
-      `SELECT email, users.user_id FROM users JOIN in_team ON users.user_id = in_team.user_id WHERE in_team.team_id = ?`
-      , [team_id])
+  const usersFromTeam = await dbConnection.query(
+    `SELECT email, users.user_id, pomodoro_id FROM users JOIN in_team ON users.user_id = in_team.user_id WHERE in_team.team_id = ?`,
+    [team_id],
   );
 
-  if(!usersFromTeam){
+  if (!usersFromTeam) {
     return null;
   }
 
   return usersFromTeam;
-}
+};
+
+export const teamMembersPomodoro = async (_, { team_id }, { dbConnection }) => {
+  const teamMembersPomodoro = await dbConnection.query(
+    `SELECT users.email, users.user_id, pomodoros.share_id FROM in_team 
+    JOIN users ON in_team.user_id = users.user_id JOIN pomodoros ON users.pomodoro_id = pomodoros.pomodoro_id WHERE in_team.team_id = ?`,
+    [team_id],
+  );
+
+  if (!teamMembersPomodoro) {
+    return null;
+  }
+  return teamMembersPomodoro;
+};

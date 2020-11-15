@@ -16,12 +16,19 @@ const typeDefs = gql`
     team(team_id: Int!): Team
     userTeams(user_id: Int!): [Team]!
     getUsersFromTeam(team_id: Int!): [User!]!
+    teamMembersPomodoro(team_id: Int!): [UsersPomodoro!]!
   }
 
   type Pomodoro {
     position: String!
     secondsSinceStart: Int!
     ids: Ids!
+  }
+
+  type UsersPomodoro {
+    share_id: String!
+    email: String!
+    user_id: Int!
   }
 
   type Ids {

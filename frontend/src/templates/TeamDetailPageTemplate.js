@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { LeaveTeamButton } from '../molecules';
 import { SharedPomodoro } from '../organisms';
-import { POMODORO_QUERY } from 'src/utils/serverSync';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,12 +17,21 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 58,
   },
 }));
-
+/*
 const GET_TEAM_MEMBERS = gql`
   query getUsersFromTeam($team_id: Int!) {
     getUsersFromTeam(team_id: $team_id) {
       email
       user_id
+    }
+  }
+`;
+*/
+const GET_TEAM_MEMBERS_POMODORO = gql`
+  query teamMembersPomodoro($team_id: Int!) {
+    teamMembersPomodoro(team_id: $team_id) {
+      share_id
+      email
     }
   }
 `;
@@ -35,21 +43,17 @@ export function TeamDetailPageTemplate() {
   const name = dataSet ? location.data.name : 'No team set!';
   const id = dataSet ? parseInt(location.data.id) : 0;
 
-  const teamMembers = useQuery(GET_TEAM_MEMBERS, {
+  const teamMembers = useQuery(GET_TEAM_MEMBERS_POMODORO, {
     variables: {
       team_id: id,
     },
-  });
-  const shareId = window.localStorage.getItem('shareId');
-  const serverPomodoro = useQuery(POMODORO_QUERY, {
-    variables: { shareId },
-    pollInterval: 5000,
-    errorPolicy: 'all',
   });
 
   if (teamMembers.data === undefined) {
     return <div>loading...</div>;
   }
+
+  console.log(teamMembers);
 
   return (
     <Container component="main">
@@ -62,8 +66,8 @@ export function TeamDetailPageTemplate() {
               </Typography>
             </Grid>
             {dataSet &&
-              teamMembers.data.getUsersFromTeam.map((tm) => (
-                <Grid container spacing={3} key={tm.user_id}>
+              teamMembers.data.teamMembersPomodoro.map((pomodoro) => (
+                <Grid container spacing={3} key={pomodoro.user_id}>
                   <Grid item xl={4} lg={4} xs={6} align="center">
                     <Typography
                       align={'center'}
@@ -71,11 +75,11 @@ export function TeamDetailPageTemplate() {
                       className={classes.name}
                       display="block"
                     >
-                      {tm.email}
+                      {pomodoro.email}
                     </Typography>
                   </Grid>
                   <Grid item xs={6} align="center">
-                    <SharedPomodoro serverPomodoro={serverPomodoro} />
+                    <SharedPomodoro shareId={pomodoro.share_id} />
                   </Grid>
                 </Grid>
               ))}
