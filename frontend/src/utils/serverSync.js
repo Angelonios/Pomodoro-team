@@ -27,29 +27,46 @@ export const UPDATE_POMODORO_MUTATION = gql`
   }
 `;
 
+export const GET_USER_POMODORO_IDS = gql`
+  query UserPomodoroIDs($user_id: Int!) {
+    userPomodoroIds(user_id: $user_id) {
+      share_id
+      communication_id
+    }
+  }
+`;
+
 const getUdid = () => {
   return uuidv4();
 };
 
-const saveIdsToLocalStorage = (communicationId, shareId) => {
+export const saveIdsToLocalStorage = (communicationId, shareId) => {
   localStorage.setItem('communicationId', communicationId);
   localStorage.setItem('shareId', shareId);
 };
 
-export const initServerCommunication = () => {
-  let communicationId;
-  let shareId;
-  if (
-    localStorage.getItem('communicationId') === null ||
-    localStorage.getItem('shareId') === null
-  ) {
-    communicationId = getUdid();
-    shareId = getUdid();
-    saveIdsToLocalStorage(communicationId, shareId);
-    return { communicationId, shareId };
+export const initServerCommunication = (
+  serverCommunicationId,
+  serverShareId,
+) => {
+  if (serverCommunicationId && serverShareId) {
+    saveIdsToLocalStorage(serverCommunicationId, serverShareId);
+    return { communicationId: serverCommunicationId, shareId: serverShareId };
   } else {
-    communicationId = localStorage.getItem('communicationId');
-    shareId = localStorage.getItem('shareId');
-    return { communicationId, shareId };
+    let communicationId;
+    let shareId;
+    if (
+      localStorage.getItem('communicationId') === null ||
+      localStorage.getItem('shareId') === null
+    ) {
+      communicationId = getUdid();
+      shareId = getUdid();
+      saveIdsToLocalStorage(communicationId, shareId);
+      return { communicationId, shareId };
+    } else {
+      communicationId = localStorage.getItem('communicationId');
+      shareId = localStorage.getItem('shareId');
+      return { communicationId, shareId };
+    }
   }
 };

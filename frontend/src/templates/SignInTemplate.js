@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TopNavigation, SignInForm } from 'src/organisms/';
+import { TopNavigation, SignInForm } from 'src/organisms';
 
 export function SignInTemplate() {
   return (

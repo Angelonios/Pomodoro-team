@@ -15,8 +15,10 @@ import {
 } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import { LeaveTeamButton } from '../molecules';
+import { LeaveTeamButton, AddUserToTeam } from '../molecules';
 import { SharedPomodoro } from '../organisms';
+import { useAuth } from '../utils/auth';
+import { ForbiddenPage } from '../pages/ForbiddenPage';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,6 +49,7 @@ const GET_TEAM_MEMBERS_POMODORO = gql`
 `;
 
 export function TeamDetailPageTemplate() {
+  const { user } = useAuth();
   const classes = useStyles();
   const location = useLocation();
   const dataSet = !(location.data === null || location.data === undefined);
@@ -66,8 +69,11 @@ export function TeamDetailPageTemplate() {
     return <div>loading...</div>;
   }
 
-  console.log(teamMembers);
+  // console.log(teamMembers);
 
+  if(!user){
+    return <ForbiddenPage />
+  }
   return (
     <Container component="main">
       <Paper elevation={3}>
@@ -133,9 +139,13 @@ export function TeamDetailPageTemplate() {
                 <Grid item>
                   <SharedPomodoro shareId={pomodoro.share_id} key={index} />
                 </Grid>
+<<<<<<< HEAD
               </Grid> */}
-                <Grid item xs={12}>
+                <Grid item>
                   <LeaveTeamButton team_id={id} />
+                </Grid>
+                <Grid item>
+                <AddUserToTeam team_id={id} />
                 </Grid>
               </Grid>
             </div>
@@ -149,6 +159,15 @@ export function TeamDetailPageTemplate() {
             </Grid>
           )}
         </Box>
+=======
+              ))}
+          </Grid>
+          <Grid item xs={12}>
+            <LeaveTeamButton team_id={id} />
+            <AddUserToTeam team_id={id} />
+          </Grid>
+        </div>
+>>>>>>> b34538b874e4660f80917b9698f0376291ac0103
       </Paper>
     </Container>
   );

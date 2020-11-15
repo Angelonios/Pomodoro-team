@@ -7,3 +7,5 @@ export { ShareUrl } from './ShareUrl';
 export { TeamNameField } from './TeamNameField';
 export { LeaveTeamButton } from './LeaveTeamButton';
 export { TeamsViewMenu } from './TeamsViewMenu';
+export { CreateTeamDialog } from './CreateTeamDialog';
+export { AddUserToTeam } from './AddUserToTeam';

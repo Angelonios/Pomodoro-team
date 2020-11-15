@@ -7,7 +7,7 @@ import {
   GET_REMAINING_SECONDS,
   SET_POMODORO_STATE,
 } from 'src/utils/pomodoroReducer';
-import { CircularPomodoroCountdown, ShareUrl } from 'src/molecules';
+import { CircularPomodoroCountdown } from 'src/molecules';
 import { POMODORO_QUERY } from 'src/utils/serverSync';
 
 export function SharedPomodoro({ shareId }) {
