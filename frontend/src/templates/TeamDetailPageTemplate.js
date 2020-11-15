@@ -48,6 +48,9 @@ export function TeamDetailPageTemplate() {
       team_id: id,
     },
   });
+  const teamMembersSet = !(
+    teamMembers.data === null || teamMembers.data === undefined
+  );
 
   if (teamMembers.data === undefined) {
     return <div>loading...</div>;
@@ -66,8 +69,9 @@ export function TeamDetailPageTemplate() {
               </Typography>
             </Grid>
             {dataSet &&
-              teamMembers.data.teamMembersPomodoro.map((pomodoro) => (
-                <Grid container spacing={3} key={pomodoro.user_id}>
+              teamMembersSet &&
+              teamMembers.data.teamMembersPomodoro.map((pomodoro, index) => (
+                <Grid container spacing={3} key={index}>
                   <Grid item xl={4} lg={4} xs={6} align="center">
                     <Typography
                       align={'center'}
@@ -79,7 +83,7 @@ export function TeamDetailPageTemplate() {
                     </Typography>
                   </Grid>
                   <Grid item xs={6} align="center">
-                    <SharedPomodoro shareId={pomodoro.share_id} />
+                    <SharedPomodoro shareId={pomodoro.share_id} key={index} />
                   </Grid>
                 </Grid>
               ))}

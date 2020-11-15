@@ -29,6 +29,7 @@ export function SharedPomodoro({ shareId }) {
       if (serverPomodoro.data.pomodoro === null) {
         console.log('loading');
       } else {
+        console.log(serverPomodoro.data);
         dispatch({ type: SET_POMODORO_STATE, newState: serverPomodoro.data });
       }
     }
