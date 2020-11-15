@@ -18,8 +18,8 @@ import { FormButton } from '../atoms';
 const CREATE_TEAM = gql`
   mutation CreateTeam($teamName: String!, $owner_id: Int!) {
     CreateTeam(teamName: $teamName, owner_id: $owner_id) {
-        team_id
-        name
+      team_id
+      name
     }
   }
 `;
@@ -59,9 +59,7 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
   var teamName;
 
   const [createTeam] = useMutation(CREATE_TEAM, {
-    onCompleted: ({ CreateTeam: { teamName, owner_id } }) => {
-
-    },
+    onCompleted: ({ CreateTeam: { teamName, owner_id } }) => {},
     onError: () => {},
   });
 

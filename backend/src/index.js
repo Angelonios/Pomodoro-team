@@ -62,7 +62,7 @@ const typeDefs = gql`
 
     CreateTeam(teamName: String!, owner_id: Int!): Team!
 
-    AddUserToTeam(teamName: String!, email: String!): Team!
+    AddUserToTeam(team_id: Int!, email: String!): Team!
 
     LeaveTeam(team_id: Int!, user_id: Int!): Boolean
 

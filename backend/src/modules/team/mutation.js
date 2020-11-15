@@ -21,15 +21,40 @@ export const CreateTeam = async (
   return teamObject;
 };
 
-export const LeaveTeam = async (
-  _,
-  { team_id, user_id },
-  { dbConnection },
-) => {
+export const LeaveTeam = async (_, { team_id, user_id }, { dbConnection }) => {
   const dbResponse = await dbConnection.query(
     `DELETE FROM in_team WHERE team_id = ? AND user_id = ?`,
     [team_id, user_id],
   );
 
-  return (dbResponse.warningStatus === 0);
+  return dbResponse.warningStatus === 0;
+};
+
+export const AddUserToTeam = async (
+  _,
+  { team_id, email },
+  { dbConnection },
+) => {
+  const dbResponse = await dbConnection.query(
+    `SELECT user_id FROM users WHERE email = ?`,
+    [email],
+  );
+  if (dbResponse !== null) {
+    console.log(dbResponse.user_id);
+    console.log(dbResponse[0]);
+    console.log(dbResponse[0].user_id);
+    const dbResponse2 = await dbConnection.query(
+      `INSERT INTO in_team (user_id, team_id)
+    VALUES (?, ?);`,
+      [dbResponse[0].user_id, team_id],
+    );
+    const teamObject = {
+      team_id: team_id,
+      name: 'teamName',
+      owner_id: 0,
+    };
+    return teamObject;
+  }
+
+  return false;
 };
