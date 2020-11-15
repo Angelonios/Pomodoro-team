@@ -19,6 +19,8 @@ import {
   SET_POMODORO_STATE,
 } from 'src/utils/pomodoroReducer';
 
+import { convertSecondsToMinutesSting } from 'src/utils/pomodoroUtils';
+
 const PomodoroStateContext = createContext();
 const PomodoroDispatchContext = createContext();
 
@@ -86,17 +88,20 @@ export function PomodoroProvider({ children }) {
 
   useEffect(() => {
     let title = '';
-    if (state.remainingSeconds < 0) {
+    if (!state.running) {
+      title = 'Idle' + ' - ' + 'Team Pomodori';
+    } else if (state.remainingSeconds < 0) {
       title =
-        state.remainingSeconds +
-        ' ' +
+        '(' +
+        convertSecondsToMinutesSting(state.remainingSeconds) +
+        ') ' +
         getPomodoroComponent(state.position).label +
-        ' ' +
+        ' - ' +
         'Team Pomodori';
     } else {
       {
         title =
-          getPomodoroComponent(state.position).label + ' ' + 'Team Pomodori';
+          getPomodoroComponent(state.position).label + ' - ' + 'Team Pomodori';
       }
     }
     document.title = title;
