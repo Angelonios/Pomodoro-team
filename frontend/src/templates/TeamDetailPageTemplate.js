@@ -6,11 +6,16 @@ import { Container, Paper } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { LeaveTeamButton } from '../molecules';
+import { SharedPomodoro } from '../organisms';
+import { POMODORO_QUERY } from 'src/utils/serverSync';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     backgroundColor: theme.palette.background.paper,
+  },
+  name: {
+    marginTop: 58,
   },
 }));
 
@@ -30,12 +35,18 @@ export function TeamDetailPageTemplate() {
   const name = dataSet ? location.data.name : 'No team set!';
   const id = dataSet ? parseInt(location.data.id) : 0;
 
-
   const teamMembers = useQuery(GET_TEAM_MEMBERS, {
     variables: {
       team_id: id,
     },
   });
+  const shareId = window.localStorage.getItem('shareId');
+  const serverPomodoro = useQuery(POMODORO_QUERY, {
+    variables: { shareId },
+    pollInterval: 5000,
+    errorPolicy: 'all',
+  });
+
   if (teamMembers.data === undefined) {
     return <div>loading...</div>;
   }
@@ -50,20 +61,30 @@ export function TeamDetailPageTemplate() {
                 {dataSet ? name : 'No team selected!'}
               </Typography>
             </Grid>
-            {dataSet && teamMembers.data.getUsersFromTeam.map(tm =>
-              <Grid item xs={12} key={tm.user_id}>
-                <Typography align={'center'} variant={'body2'}>
-                  {tm.email}
-                </Typography>
-              </Grid>,
-            )}
-
+            {dataSet &&
+              teamMembers.data.getUsersFromTeam.map((tm) => (
+                <Grid container xs={12} spacing={3} key={tm.user_id}>
+                  <Grid item xl={4} lg={4} xs={6} align="center">
+                    <Typography
+                      align={'center'}
+                      variant={'body2'}
+                      className={classes.name}
+                      display="block"
+                    >
+                      {tm.email}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6} align="center">
+                    <SharedPomodoro serverPomodoro={serverPomodoro} />
+                  </Grid>
+                </Grid>
+              ))}
           </Grid>
           <Grid item xs={12}>
             <LeaveTeamButton team_id={id} />
           </Grid>
         </div>
       </Paper>
-    </Container>);
+    </Container>
+  );
 }
-
