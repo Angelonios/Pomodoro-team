@@ -16,6 +16,16 @@ export const pomodoro = async (_, { shareId }, { dbConnection }) => {
       }
 
       const HOUR = 3600;
+      let isOffline = false;
+
+      //Return offline if no action in 30 minutes
+      if (
+        currentTime['CURRENT_TIMESTAMP()'] / 1000 -
+          pomodoro.last_updated / 1000 >=
+        HOUR / 2
+      ) {
+        isOffline = true;
+      }
 
       //If timer is idle for more than 10 hours, then restart it
       if (
@@ -23,11 +33,12 @@ export const pomodoro = async (_, { shareId }, { dbConnection }) => {
           pomodoro.last_updated / 1000 >
         HOUR * 10
       ) {
-        return { position: 0, secondsSinceStart: 0 };
+        return { position: 0, secondsSinceStart: 0, isOffline: true };
       } else {
         return {
           position: positionInCycle,
           secondsSinceStart: secondsSinceStart,
+          isOffline: isOffline,
         };
       }
     }
