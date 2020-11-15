@@ -1,13 +1,13 @@
 import React, { useEffect, useReducer } from 'react';
 import { useQuery } from '@apollo/client';
-import { Container, Paper, Box, Grid } from '@material-ui/core';
+import { Container, Box, Grid } from '@material-ui/core';
 import { getPomodoroComponent } from 'src/utils/pomodoroCycle';
 import {
   pomodoroReducer,
   GET_REMAINING_SECONDS,
   SET_POMODORO_STATE,
 } from 'src/utils/pomodoroReducer';
-import { CircularPomodoroCountdown, ShareUrl } from 'src/molecules';
+import { CircularPomodoroCountdown } from 'src/molecules';
 import { POMODORO_QUERY } from 'src/utils/serverSync';
 
 export function SharedPomodoro({ shareId }) {

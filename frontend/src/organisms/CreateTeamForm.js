@@ -10,10 +10,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Copyright, TeamNameField } from 'src/molecules';
-import { FormButton } from 'src/atoms';
-import { route } from 'src/Routes';
+import { Copyright, TeamNameField, CreateTeamDialog } from 'src/molecules';
 import { useAuth } from 'src/utils/auth';
+import { FormButton } from '../atoms';
 
 //TODO: CREATE_TEAM
 const CREATE_TEAM = gql`
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function CreateTeamForm({ teamNameError, setTeamNameError }) {
-  const { user, signout } = useAuth();
+  const { user } = useAuth();
 
   const classes = useStyles();
 
@@ -54,14 +53,14 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
     teamName: '',
   });
 
+  const [open, setOpen] = useState(false);
   const [formData, updateFormData] = useState(initialFormData);
   const [teamNameErrorText, setTeamNameErrorText] = useState('');
   var teamName;
-  const history = useHistory();
 
   const [createTeam] = useMutation(CREATE_TEAM, {
     onCompleted: ({ CreateTeam: { teamName, owner_id } }) => {
-      history.push(route.home());
+
     },
     onError: () => {},
   });
@@ -78,6 +77,7 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
       setTeamNameErrorText('');
     }
     if (teamName) {
+      setOpen(true);
       createTeam({
         variables: { teamName: formData.teamName, owner_id: user.user_id },
       });
@@ -112,6 +112,7 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
             />
           </Grid>
           <FormButton submit={handleSubmit}>Create team</FormButton>
+          <CreateTeamDialog open={open} />
         </form>
       </div>
       <Box mt={5}>

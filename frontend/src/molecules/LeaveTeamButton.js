@@ -53,7 +53,7 @@ export function LeaveTeamButton({ team_id }) {
 
   return (
     <div>
-      <Button className={classes.button} variant="outlined" color="#f50057" onClick={handleClickOpen}>
+      <Button className={classes.button} variant="outlined" onClick={handleClickOpen}>
         Leave Team
       </Button>
       <Dialog
