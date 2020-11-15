@@ -46,7 +46,6 @@ const useStyles = makeStyles((theme) => ({
 
 export function CreateTeamForm({ teamNameError, setTeamNameError }) {
   const { user } = useAuth();
-
   const classes = useStyles();
 
   const initialFormData = Object.freeze({
@@ -110,7 +109,13 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
             />
           </Grid>
           <FormButton submit={handleSubmit}>Create team</FormButton>
-          <CreateTeamDialog open={open} />
+          <CreateTeamDialog
+            open={open}
+            text={'You have successfully created team'}
+            path={'/'}
+            teamName={formData.teamName}
+            id={user.user_id}
+          />
         </form>
       </div>
       <Box mt={5}>

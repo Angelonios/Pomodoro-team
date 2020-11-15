@@ -6,8 +6,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { Copyright, EmailField, PasswordField, FormLink } from 'src/molecules';
+import { EmailField } from 'src/molecules';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { CreateTeamDialog } from 'src/molecules';
 
 const ADD_USER = gql`
   mutation AddUserToTeam($team_id: Int!, $email: String!) {
@@ -22,18 +23,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function AddUserToTeam({ team_id }) {
+export function AddUserToTeam({ team_id, team_name }) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
   const [emailErrorText, updateEmailErrorText] = useState('');
   const [emailError, updateEmailError] = useState(false);
+  const [badEmail, setBadEmail] = useState(false);
   const initialFormData = Object.freeze({
     email: '',
   });
   const [formData, updateFormData] = useState(initialFormData);
   var email;
   const handleClickOpen = () => {
+    updateFormData({
+      email: '',
+    });
     setOpen(true);
+    setBadEmail(false);
   };
 
   const handleClose = () => {
@@ -42,12 +49,12 @@ export function AddUserToTeam({ team_id }) {
 
   const [addUserToTeam] = useMutation(ADD_USER, {
     onCompleted: ({ AddUserToTeam: { team_id, email } }) => {
-      setOpen(false);
-      updateFormData({
-        email: '',
-      });
+      setOpen2(true);
     },
-    onError: () => {},
+    onError: () => {
+      setBadEmail(true);
+      setOpen2(true);
+    },
   });
 
   const handleSubmit = (e) => {
@@ -92,7 +99,7 @@ export function AddUserToTeam({ team_id }) {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Add team member</DialogTitle>
+        <DialogTitle id="form-dialog-title">{team_name}</DialogTitle>
         <DialogContent>
           <DialogContentText>Add new team member </DialogContentText>
           <EmailField
@@ -112,6 +119,23 @@ export function AddUserToTeam({ team_id }) {
           </Button>
         </DialogActions>
       </Dialog>
+      <CreateTeamDialog
+        open={open}
+        setOpen={setOpen}
+        open2={open2}
+        setOpen2={setOpen2}
+        text={
+          badEmail
+            ? 'Unable to find user ' + formData.email
+            : 'User ' +
+              formData.email +
+              ' has been addded to group ' +
+              team_name
+        }
+        path={'/teamdetail'}
+        teamName={team_name}
+        id={team_id}
+      />
     </div>
   );
 }

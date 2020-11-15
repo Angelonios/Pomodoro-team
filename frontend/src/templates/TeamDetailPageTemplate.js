@@ -144,7 +144,7 @@ export function TeamDetailPageTemplate() {
                   <LeaveTeamButton team_id={id} />
                 </Grid>
                 <Grid item>
-                  <AddUserToTeam team_id={id} />
+                  <AddUserToTeam team_id={id} team_name={name} />
                 </Grid>
               </Grid>
             </div>
