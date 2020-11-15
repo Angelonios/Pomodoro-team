@@ -48,12 +48,8 @@ export const AddUserToTeam = async (
     VALUES (?, ?);`,
       [dbResponse[0].user_id, team_id],
     );
-    const teamObject = {
-      team_id: team_id,
-      name: 'teamName',
-      owner_id: 0,
-    };
-    return teamObject;
+
+    return dbResponse ? true : false;
   }
 
   return false;

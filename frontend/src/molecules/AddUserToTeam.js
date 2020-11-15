@@ -1,24 +1,29 @@
 import React, { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import { Copyright, EmailField, PasswordField, FormLink } from 'src/molecules';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 const ADD_USER = gql`
   mutation AddUserToTeam($team_id: Int!, $email: String!) {
-    AddUserToTeam(team_id: $team_id, email: $email) {
-      team_id
-      email
-    }
+    AddUserToTeam(team_id: $team_id, email: $email)
   }
 `;
 
+const useStyles = makeStyles((theme) => ({
+  button: {
+    color: '#3f51b5',
+    backgroundColor: '#ffffff',
+  },
+}));
+
 export function AddUserToTeam({ team_id }) {
+  const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [emailErrorText, updateEmailErrorText] = useState('');
   const [emailError, updateEmailError] = useState(false);
@@ -36,13 +41,17 @@ export function AddUserToTeam({ team_id }) {
   };
 
   const [addUserToTeam] = useMutation(ADD_USER, {
-    onCompleted: ({ AddUserToTeam: { team_id, email } }) => {},
+    onCompleted: ({ AddUserToTeam: { team_id, email } }) => {
+      setOpen(false);
+      updateFormData({
+        email: '',
+      });
+    },
     onError: () => {},
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // ... submit to API or something
     if (
       /^[a-zA-Z0-9.]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]{2,4}$/.test(formData.email)
     ) {
@@ -71,17 +80,21 @@ export function AddUserToTeam({ team_id }) {
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Open form dialog
+      <Button
+        variant="outlined"
+        className={classes.button}
+        onClick={handleClickOpen}
+      >
+        Add team member
       </Button>
       <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+        <DialogTitle id="form-dialog-title">Add team member</DialogTitle>
         <DialogContent>
-          <DialogContentText>Subscribe to PewDiePie</DialogContentText>
+          <DialogContentText>Add new team member </DialogContentText>
           <EmailField
             formData={formData}
             handleChange={handleChange}
@@ -95,7 +108,7 @@ export function AddUserToTeam({ team_id }) {
             Cancel
           </Button>
           <Button onClick={handleSubmit} color="primary">
-            Subscribe
+            Add
           </Button>
         </DialogActions>
       </Dialog>
