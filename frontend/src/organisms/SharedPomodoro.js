@@ -22,6 +22,7 @@ export function SharedPomodoro({ shareId }) {
     position: 0,
     running: false,
     finalTime: 0,
+    isOffline: false,
   });
 
   useEffect(() => {
@@ -29,7 +30,6 @@ export function SharedPomodoro({ shareId }) {
       if (serverPomodoro.data.pomodoro === null) {
         console.log('loading');
       } else {
-        console.log(serverPomodoro.data);
         dispatch({ type: SET_POMODORO_STATE, newState: serverPomodoro.data });
       }
     }
@@ -57,6 +57,13 @@ export function SharedPomodoro({ shareId }) {
           alignItems="center"
           justify="center"
         >
+          <Grid item>
+            {state.isOffline
+              ? 'Offline'
+              : state.running
+              ? getPomodoroComponent(state.position).label
+              : 'Idle'}
+          </Grid>
           <Grid item xl={4} lg={4} xs={12} align="center">
             <CircularPomodoroCountdown
               remainingSeconds={state.remainingSeconds}

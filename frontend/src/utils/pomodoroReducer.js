@@ -56,6 +56,7 @@ const setPomodoroState = (state, newState) => {
   const updatedState = {
     position: parseInt(newState.position),
     secondsSinceStart: newState.secondsSinceStart,
+    isOffline: newState.isOffline,
   };
   if (newState.secondsSinceStart === 0) {
     return {

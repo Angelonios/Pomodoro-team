@@ -23,6 +23,7 @@ const typeDefs = gql`
   type Pomodoro {
     position: String!
     secondsSinceStart: Int!
+    isOffline: Boolean!
     ids: Ids!
   }
 
