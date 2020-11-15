@@ -51,7 +51,11 @@ const typeDefs = gql`
   type Mutation {
     SignIn(email: String!, password: String!): AuthInfo!
 
-    SignUp(email: String!, password: String!): AuthInfo!
+    SignUp(
+      email: String!
+      password: String!
+      communicationId: String!
+    ): AuthInfo!
 
     updatePomodoro(
       running: Boolean!
@@ -67,8 +71,6 @@ const typeDefs = gql`
     LeaveTeam(team_id: Int!, user_id: Int!): Boolean
 
     DeleteTeam(teamName: String!, email: String!): String!
-
-    AssignPomodoro(user_id: Int!, pomodoro_id: Int!): Pomodoro!
   }
 
   type AuthUser {
