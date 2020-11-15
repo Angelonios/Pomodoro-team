@@ -1,20 +1,13 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
 
-export function PomodoroTimerLabel({ remainingSeconds, variant }) {
-  let min = parseInt(remainingSeconds / 60);
-  let sec = parseInt(remainingSeconds % 60);
+import { convertSecondsToMinutesSting } from 'src/utils/pomodoroUtils';
 
-  if (remainingSeconds < 0) {
-    min = '−' + Math.abs(min);
-    sec = Math.abs(sec);
-  }
-  if (sec < 10 && sec > -10) {
-    sec = '0' + sec;
-  }
+export function PomodoroTimerLabel({ remainingSeconds, variant }) {
+  const timeString = convertSecondsToMinutesSting(remainingSeconds);
   return (
     <Typography variant={variant} component="div" color="textSecondary">
-      {min}:{sec}
+      {timeString}
     </Typography>
   );
 }
