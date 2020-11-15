@@ -71,8 +71,8 @@ export function TeamDetailPageTemplate() {
 
   // console.log(teamMembers);
 
-  if(!user){
-    return <ForbiddenPage />
+  if (!user) {
+    return <ForbiddenPage />;
   }
   return (
     <Container component="main">
@@ -139,13 +139,12 @@ export function TeamDetailPageTemplate() {
                 <Grid item>
                   <SharedPomodoro shareId={pomodoro.share_id} key={index} />
                 </Grid>
-<<<<<<< HEAD
               </Grid> */}
                 <Grid item>
                   <LeaveTeamButton team_id={id} />
                 </Grid>
                 <Grid item>
-                <AddUserToTeam team_id={id} />
+                  <AddUserToTeam team_id={id} />
                 </Grid>
               </Grid>
             </div>
@@ -159,15 +158,6 @@ export function TeamDetailPageTemplate() {
             </Grid>
           )}
         </Box>
-=======
-              ))}
-          </Grid>
-          <Grid item xs={12}>
-            <LeaveTeamButton team_id={id} />
-            <AddUserToTeam team_id={id} />
-          </Grid>
-        </div>
->>>>>>> b34538b874e4660f80917b9698f0376291ac0103
       </Paper>
     </Container>
   );
