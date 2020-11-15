@@ -5,7 +5,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import { Container, Paper } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import { LeaveTeamButton } from '../molecules';
+import { LeaveTeamButton, AddUserToTeam } from '../molecules';
 import { SharedPomodoro } from '../organisms';
 import { useAuth } from '../utils/auth';
 import { ForbiddenPage } from '../pages/ForbiddenPage';
@@ -96,6 +96,7 @@ export function TeamDetailPageTemplate() {
           </Grid>
           <Grid item xs={12}>
             <LeaveTeamButton team_id={id} />
+            <AddUserToTeam team_id={id} />
           </Grid>
         </div>
       </Paper>

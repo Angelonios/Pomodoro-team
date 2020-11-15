@@ -18,9 +18,8 @@ import { FormButton } from '../atoms';
 const CREATE_TEAM = gql`
   mutation CreateTeam($teamName: String!, $owner_id: Int!) {
     CreateTeam(teamName: $teamName, owner_id: $owner_id) {
-      name
       team_id
-      owner_id
+      name
     }
   }
 `;
