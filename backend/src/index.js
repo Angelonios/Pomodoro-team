@@ -26,8 +26,8 @@ const typeDefs = gql`
   }
 
   type Ids {
-    communicationId: String!
-    shareId: String!
+    communication_id: String!
+    share_id: String!
   }
 
   type User {
