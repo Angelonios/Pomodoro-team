@@ -85,6 +85,21 @@ export function PomodoroProvider({ children }) {
   ]);
 
   useEffect(() => {
+    let title = '';
+    if (state.remainingSeconds < 0) {
+      title =
+        state.remainingSeconds +
+        ' ' +
+        getPomodoroComponent(state.position).label +
+        ' ' +
+        'Team Pomodori';
+    } else {
+      {
+        title =
+          getPomodoroComponent(state.position).label + ' ' + 'Team Pomodori';
+      }
+    }
+    document.title = title;
     if (!state.running) return;
     const timer = setTimeout(() => {
       dispatch({ type: GET_REMAINING_SECONDS });
