@@ -47,6 +47,8 @@ function createContextValue({ token, user, setState }) {
     //signout: () => setState({ token: null }),
     signout: () => {
       localStorage.removeItem(LOCAL_STORAGE_AUTH_KEY);
+      localStorage.removeItem('communicationId');
+      localStorage.removeItem('shareId');
     },
   };
 }
