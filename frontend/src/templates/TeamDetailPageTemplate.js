@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { LeaveTeamButton } from '../molecules';
 import { SharedPomodoro } from '../organisms';
+import { useAuth } from '../utils/auth';
+import { ForbiddenPage } from '../pages/ForbiddenPage';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,6 +39,7 @@ const GET_TEAM_MEMBERS_POMODORO = gql`
 `;
 
 export function TeamDetailPageTemplate() {
+  const { user } = useAuth();
   const classes = useStyles();
   const location = useLocation();
   const dataSet = !(location.data === null || location.data === undefined);
@@ -56,8 +59,11 @@ export function TeamDetailPageTemplate() {
     return <div>loading...</div>;
   }
 
-  console.log(teamMembers);
+  // console.log(teamMembers);
 
+  if(!user){
+    return <ForbiddenPage />
+  }
   return (
     <Container component="main">
       <Paper elevation={3}>
