@@ -22,6 +22,8 @@ export function PomodoroTimer() {
                 remainingSeconds={state.remainingSeconds}
                 maxSeconds={state.maxSeconds}
                 color={state.color}
+                timeSize="h2"
+                circleSize={300}
               />
             </Grid>
             <Grid item xl={4} lg={4} xs={12}>

@@ -68,6 +68,8 @@ export function SharePage() {
                 remainingSeconds={state.remainingSeconds}
                 maxSeconds={getPomodoroComponent(state.position).seconds}
                 color={getPomodoroComponent(state.position).color}
+                timeSize="h2"
+                circleSize={300}
               />
             </Grid>
           </Grid>
