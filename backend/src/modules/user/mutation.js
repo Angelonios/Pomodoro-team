@@ -17,7 +17,11 @@ export const SignIn = async (_, { email, password }, { dbConnection }) => {
   }
 };
 
-export const SignUp = async (_, { email, password }, { dbConnection }) => {
+export const SignUp = async (
+  _,
+  { email, password, communicationId },
+  { dbConnection },
+) => {
   const userByEmail = (
     await dbConnection.query(`SELECT * FROM users WHERE email = ?`, [email])
   )[0];
@@ -27,12 +31,17 @@ export const SignUp = async (_, { email, password }, { dbConnection }) => {
     throw new Error('Email already registered');
   }
 
+  const pomodoro_id = await dbConnection.query(
+    `SELECT pomodoro_id FROM pomodoros WHERE communication_id = ?`,
+    [communicationId],
+  );
+
   const passwordHash = await argon2.hash(password);
 
   const dbResponse = await dbConnection.query(
-    `INSERT INTO users (email, password)
-    VALUES (?, ?);`,
-    [email, passwordHash],
+    `INSERT INTO users (email, password, pomodoro_id)
+    VALUES (?, ?, ?);`,
+    [email, passwordHash, pomodoro_id[0].pomodoro_id],
   );
 
   const token = createToken({ id: dbResponse.insertId });

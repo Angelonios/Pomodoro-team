@@ -14,6 +14,8 @@ import { Copyright, EmailField, PasswordField, FormLink } from 'src/molecules';
 import { FormButton } from 'src/atoms';
 import { route } from 'src/Routes';
 
+import { usePomodoroState } from 'src/utils/PomodoroContext';
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -35,8 +37,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SIGN_UP = gql`
-  mutation SignUp($email: String!, $password: String!) {
-    SignUp(email: $email, password: $password) {
+  mutation SignUp(
+    $email: String!
+    $password: String!
+    $communicationId: String!
+  ) {
+    SignUp(
+      email: $email
+      password: $password
+      communicationId: $communicationId
+    ) {
       user {
         user_id
         email
@@ -87,6 +97,7 @@ export function SignUpForm({
   var email;
   var rePassword;
   const history = useHistory();
+  const pomodoroState = usePomodoroState();
   const [signUp] = useMutation(SIGN_UP, {
     onCompleted: ({ SignUp: { user, token } }) => {
       //console.log('good SignUp');
@@ -141,7 +152,11 @@ export function SignUpForm({
     if (!(email || password || rePassword)) {
       //console.log(formData);
       signUp({
-        variables: { email: formData.email, password: formData.password },
+        variables: {
+          email: formData.email,
+          password: formData.password,
+          communicationId: pomodoroState.communicationId,
+        },
       });
     }
   };
