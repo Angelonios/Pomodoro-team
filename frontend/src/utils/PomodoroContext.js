@@ -11,6 +11,7 @@ import {
   initServerCommunication,
   POMODORO_QUERY,
   UPDATE_POMODORO_MUTATION,
+  GET_USER_POMODORO_IDS,
 } from 'src/utils/serverSync';
 import {
   pomodoroReducer,
@@ -20,6 +21,7 @@ import {
 } from 'src/utils/pomodoroReducer';
 
 import { convertSecondsToMinutesSting } from 'src/utils/pomodoroUtils';
+import { useAuth } from 'src/utils/auth';
 
 const PomodoroStateContext = createContext();
 const PomodoroDispatchContext = createContext();
@@ -30,6 +32,8 @@ export function PomodoroProvider({ children }) {
   const [shareUrl, setShareUrl] = useState();
   const serverPomodoro = useQuery(POMODORO_QUERY, { variables: { shareId } });
   const [updateMutation] = useMutation(UPDATE_POMODORO_MUTATION);
+  const { user } = useAuth();
+  const [userId, setUserId] = useState(0);
 
   const [state, dispatch] = useReducer(pomodoroReducer, {
     remainingSeconds: 1500,
@@ -38,6 +42,38 @@ export function PomodoroProvider({ children }) {
     position: 0,
     running: false,
   });
+
+  const userPomodoroIds = useQuery(GET_USER_POMODORO_IDS, {
+    variables: { user_id: userId },
+    skip: !user,
+  });
+
+  useEffect(() => {
+    console.log(userPomodoroIds);
+    if (!userPomodoroIds.loading && !userPomodoroIds.error && user) {
+      console.log(userPomodoroIds.data.userPomodoroIds);
+      const ids = initServerCommunication(
+        userPomodoroIds.data.userPomodoroIds.communication_id,
+        userPomodoroIds.data.userPomodoroIds.share_id,
+      );
+      console.log(ids);
+      setCommunicationId(ids.communicationId);
+      setShareId(ids.shareId);
+      setShareUrl(window.location.origin.toString() + '/share/' + ids.shareId);
+    } else if (!userPomodoroIds.loading && !user) {
+      console.log('ids', userPomodoroIds);
+      const ids = initServerCommunication();
+      setCommunicationId(ids.communicationId);
+      setShareId(ids.shareId);
+      setShareUrl(window.location.origin.toString() + '/share/' + ids.shareId);
+    }
+  }, [userPomodoroIds, user]);
+
+  useEffect(() => {
+    if (user) {
+      setUserId(user.user_id);
+    }
+  }, [user]);
 
   const clickMainButton = () => {
     dispatch({ type: CLICK_MAIN_BUTTON });
@@ -64,7 +100,7 @@ export function PomodoroProvider({ children }) {
     if (serverPomodoro.loading || serverPomodoro.error) {
       return null;
     }
-    if (serverPomodoro.data.pomodoro === null) {
+    if (!user && serverPomodoro.data.pomodoro === null) {
       //If backend returns null, then we have to send mutation with new share and communication ids
       updateMutation({
         variables: {
@@ -85,12 +121,13 @@ export function PomodoroProvider({ children }) {
     communicationId,
     shareId,
     updateMutation,
+    user,
   ]);
 
   useEffect(() => {
     let title = '';
     if (!state.running) {
-      title = 'Idle' + ' - ' + 'Team Pomodori';
+      title = 'Idle - Team Pomodori';
     } else if (state.remainingSeconds < 0) {
       title =
         '(' +
@@ -100,10 +137,7 @@ export function PomodoroProvider({ children }) {
         ' - ' +
         'Team Pomodori';
     } else {
-      {
-        title =
-          getPomodoroComponent(state.position).label + ' - ' + 'Team Pomodori';
-      }
+      title = getPomodoroComponent(state.position).label + ' - Team Pomodori';
     }
     document.title = title;
     if (!state.running) return;
@@ -116,12 +150,7 @@ export function PomodoroProvider({ children }) {
   ////////////////////////////////////////////////////////////////
   // Perform these actions after first load / reload of the page
   ////////////////////////////////////////////////////////////////
-  useEffect(() => {
-    const ids = initServerCommunication();
-    setCommunicationId(ids.communicationId);
-    setShareId(ids.shareId);
-    setShareUrl(window.location.origin.toString() + '/share/' + ids.shareId);
-  }, []);
+  useEffect(() => {}, []);
 
   useEffect(() => {
     if (cachedServerData !== null) {
