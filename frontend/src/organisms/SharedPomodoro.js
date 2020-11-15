@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import { useQuery } from '@apollo/client';
-import { Container, Paper, Box, Grid } from '@material-ui/core';
+import { TableCell } from '@material-ui/core';
 import { getPomodoroComponent } from 'src/utils/pomodoroCycle';
 import {
   pomodoroReducer,
@@ -48,15 +48,27 @@ export function SharedPomodoro({ shareId }) {
   });
 
   return (
-    <Container>
-      <Box p={2}>
-        <Grid
-          container
-          spacing={10}
-          direction="row"
-          alignItems="center"
-          justify="center"
-        >
+    <>
+      <TableCell align="center">
+        {state.isOffline
+          ? 'Offline'
+          : state.running
+          ? getPomodoroComponent(state.position).label
+          : 'Idle'}
+      </TableCell>
+      <TableCell align="center">
+        <CircularPomodoroCountdown
+          remainingSeconds={state.remainingSeconds}
+          maxSeconds={getPomodoroComponent(state.position).seconds}
+          color={getPomodoroComponent(state.position).color}
+          timeSize="h5"
+          circleSize={150}
+        />
+      </TableCell>
+    </>
+    /* <Container>
+      <Box>
+        <Grid container spacing={10} alignItems="center">
           <Grid item>
             {state.isOffline
               ? 'Offline'
@@ -75,6 +87,6 @@ export function SharedPomodoro({ shareId }) {
           </Grid>
         </Grid>
       </Box>
-    </Container>
+    </Container> */
   );
 }
