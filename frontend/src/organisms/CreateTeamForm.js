@@ -10,18 +10,22 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Copyright, TeamNameField } from 'src/molecules';
-import { FormButton } from 'src/atoms';
-import { route } from 'src/Routes';
+import { Copyright, TeamNameField, CreateTeamDialog } from 'src/molecules';
 import { useAuth } from 'src/utils/auth';
+import { FormButton } from '../atoms';
 
 //TODO: CREATE_TEAM
 const CREATE_TEAM = gql`
   mutation CreateTeam($teamName: String!, $owner_id: Int!) {
     CreateTeam(teamName: $teamName, owner_id: $owner_id) {
+<<<<<<< HEAD
       name
       team_id
       owner_id
+=======
+        team_id
+        name
+>>>>>>> 6f863b1c95347965ca24ea208db0e6e16c4db8f2
     }
   }
 `;
@@ -55,22 +59,20 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
     teamName: '',
   });
 
+  const [open, setOpen] = useState(false);
   const [formData, updateFormData] = useState(initialFormData);
   const [teamNameErrorText, setTeamNameErrorText] = useState('');
   var teamName;
-  const history = useHistory();
 
-  //TODO: Change to CREATE_TEAM
   const [createTeam] = useMutation(CREATE_TEAM, {
     onCompleted: ({ CreateTeam: { teamName, owner_id } }) => {
-      console.log('Team created!');
+
     },
     onError: () => {},
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // ... submit to API or something
     if (formData.teamName === '') {
       teamName = false;
       setTeamNameError(true);
@@ -81,7 +83,7 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
       setTeamNameErrorText('');
     }
     if (teamName) {
-      //TODO: Change to CREATE_TEAM
+      setOpen(true);
       createTeam({
         variables: { teamName: formData.teamName, owner_id: user.user_id },
       });
@@ -116,6 +118,7 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
             />
           </Grid>
           <FormButton submit={handleSubmit}>Create team</FormButton>
+          <CreateTeamDialog open={open} />
         </form>
       </div>
       <Box mt={5}>

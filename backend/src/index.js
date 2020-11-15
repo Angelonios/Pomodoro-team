@@ -15,17 +15,27 @@ const typeDefs = gql`
     teams: [Team!]!
     team(team_id: Int!): Team
     userTeams(user_id: Int!): [Team]!
+    getUsersFromTeam(team_id: Int!): [User!]!
+    teamMembersPomodoro(team_id: Int!): [UsersPomodoro!]!
+    userPomodoroIds(user_id: Int!): Ids!
   }
 
   type Pomodoro {
     position: String!
     secondsSinceStart: Int!
+    isOffline: Boolean!
     ids: Ids!
   }
 
+  type UsersPomodoro {
+    share_id: String!
+    email: String!
+    user_id: Int!
+  }
+
   type Ids {
-    communicationId: String!
-    shareId: String!
+    communication_id: String!
+    share_id: String!
   }
 
   type User {
@@ -54,9 +64,11 @@ const typeDefs = gql`
 
     AddUserToTeam(teamName: String!, email: String!): Team!
 
-    RemoveUserFromTeam(teamName: String!, email: String!): Team!
+    LeaveTeam(team_id: Int!, user_id: Int!): Boolean
 
     DeleteTeam(teamName: String!, email: String!): String!
+
+    AssignPomodoro(user_id: Int!, pomodoro_id: Int!): Pomodoro!
   }
 
   type AuthUser {

@@ -1,5 +1,14 @@
 import React from 'react';
+import { TopNavigation } from '../organisms';
+import { TeamDetailPageTemplate } from '../templates/TeamDetailPageTemplate';
 
 export function TeamDetailPage() {
-  return <div>Team detail page</div>;
+
+  return (
+    <>
+      <TopNavigation />
+      <TeamDetailPageTemplate
+      />
+    </>
+  );
 }

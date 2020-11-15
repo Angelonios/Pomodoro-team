@@ -23,7 +23,6 @@ export const route = {
 export function Routes() {
   return (
     <Switch>
-      debugger;
       <Route path={route.home()} exact component={HomePage} />
       <Route path={route.signUp()} exact component={SignUp} />
       <Route path={route.afterSignUp()} exact component={AfterSignUp} />

@@ -3,12 +3,12 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { AppBar, Toolbar, Typography } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
-import { IconButton } from '@material-ui/core';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+
 import { route } from 'src/Routes';
 import { NavLink } from 'src/atoms';
 import { useAuth } from 'src/utils/auth';
-import { TeamsViewMenu } from 'src/atoms';
+import { MenuUser } from 'src/organisms';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,15 +44,11 @@ export function TopNavigation({ currentUser }) {
                 Team Pomodori
               </NavLink>
             </Typography>
-            <Typography align="right">
-              <TeamsViewMenu user_id={user.user_id} />
-            </Typography>
-            <Typography align="right">
+            <Typography variant="body2" align="right">
               <b>Hello {user.email}!</b>{' '}
-            </Typography>{' '}
-            <IconButton color="primary" aria-label="log out" onClick={logOut}>
-              <ExitToAppIcon color="action" />
-            </IconButton>
+              <MenuUser user_id={user.user_id} logOut={logOut}/>
+            </Typography>
+
           </Toolbar>
         </AppBar>
       </div>

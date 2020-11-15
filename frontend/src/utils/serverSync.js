@@ -6,6 +6,7 @@ export const POMODORO_QUERY = gql`
     pomodoro(shareId: $shareId) {
       position
       secondsSinceStart
+      isOffline
     }
   }
 `;

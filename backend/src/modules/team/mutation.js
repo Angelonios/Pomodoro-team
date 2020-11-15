@@ -20,3 +20,16 @@ export const CreateTeam = async (
   };
   return teamObject;
 };
+
+export const LeaveTeam = async (
+  _,
+  { team_id, user_id },
+  { dbConnection },
+) => {
+  const dbResponse = await dbConnection.query(
+    `DELETE FROM in_team WHERE team_id = ? AND user_id = ?`,
+    [team_id, user_id],
+  );
+
+  return (dbResponse.warningStatus === 0);
+};
