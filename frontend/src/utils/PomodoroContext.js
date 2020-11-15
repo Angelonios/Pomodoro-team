@@ -49,19 +49,15 @@ export function PomodoroProvider({ children }) {
   });
 
   useEffect(() => {
-    console.log(userPomodoroIds);
     if (!userPomodoroIds.loading && !userPomodoroIds.error && user) {
-      console.log(userPomodoroIds.data.userPomodoroIds);
       const ids = initServerCommunication(
         userPomodoroIds.data.userPomodoroIds.communication_id,
         userPomodoroIds.data.userPomodoroIds.share_id,
       );
-      console.log(ids);
       setCommunicationId(ids.communicationId);
       setShareId(ids.shareId);
       setShareUrl(window.location.origin.toString() + '/share/' + ids.shareId);
     } else if (!userPomodoroIds.loading && !user) {
-      console.log('ids', userPomodoroIds);
       const ids = initServerCommunication();
       setCommunicationId(ids.communicationId);
       setShareId(ids.shareId);
@@ -169,6 +165,7 @@ export function PomodoroProvider({ children }) {
         type: getPomodoroComponent(state.position).type,
         color: getPomodoroComponent(state.position).color,
         shareUrl: shareUrl,
+        communicationId: communicationId,
       }}
     >
       <PomodoroDispatchContext.Provider value={clickMainButton}>
