@@ -29,16 +29,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 58,
   },
 }));
-/*
-const GET_TEAM_MEMBERS = gql`
-  query getUsersFromTeam($team_id: Int!) {
-    getUsersFromTeam(team_id: $team_id) {
-      email
-      user_id
-    }
-  }
-`;
-*/
+
 const GET_TEAM_MEMBERS_POMODORO = gql`
   query teamMembersPomodoro($team_id: Int!) {
     teamMembersPomodoro(team_id: $team_id) {
@@ -68,8 +59,6 @@ export function TeamDetailPageTemplate() {
   if (teamMembers.data === undefined) {
     return <div>loading...</div>;
   }
-
-  // console.log(teamMembers);
 
   if (!user) {
     return <ForbiddenPage />;
@@ -119,27 +108,6 @@ export function TeamDetailPageTemplate() {
                     </TableBody>
                   </Table>
                 </TableContainer>
-                {/*            <Grid
-                container
-                spacing={3}
-                key={index}
-                justify="space-around"
-                alignItems="center"
-              >
-                <Grid item xl={4} lg={4} xs={6}>
-                  <Typography
-                    align={'center'}
-                    variant={'body2'}
-                    className={classes.name}
-                    display="block"
-                  >
-                    {pomodoro.email}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <SharedPomodoro shareId={pomodoro.share_id} key={index} />
-                </Grid>
-              </Grid> */}
                 <Grid item>
                   <LeaveTeamButton team_id={id} />
                 </Grid>
