@@ -3,7 +3,6 @@ import { getPomodoroComponent, getNextIndex } from 'src/utils/pomodoroCycle';
 export const CLICK_MAIN_BUTTON = 'CLICK_MAIN_BUTTON';
 export const GET_REMAINING_SECONDS = 'GET_REMAINING_SECONDS';
 export const SET_POMODORO_STATE = 'SET_POMODORO_STATE';
-let finalTime;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Calculates final time from seconds in current pomodoro component and seconds since start
@@ -14,8 +13,8 @@ const calculateFinalTime = (state) => {
   return parseInt(Date.now() / 1000 + (secondsInComponent - secondsSinceStart));
 };
 
-const calculateRemainingSeconds = () => {
-  return parseInt(finalTime - Date.now() / 1000);
+const calculateRemainingSeconds = (state) => {
+  return parseInt(state.finalTime - Date.now() / 1000);
 };
 
 // Basic actions
@@ -37,10 +36,11 @@ const clickMainButton = (state) => {
       running: true,
       secondsSinceStart: 0,
     };
-    finalTime = calculateFinalTime(updatedState);
+    state.finalTime = calculateFinalTime(updatedState);
     return {
       ...updatedState,
-      remainingSeconds: calculateRemainingSeconds(),
+      remainingSeconds: calculateRemainingSeconds(state),
+      finalTime: state.finalTime,
     };
   }
 };
@@ -48,7 +48,7 @@ const clickMainButton = (state) => {
 const getRemainingSeconds = (state) => {
   return {
     ...state,
-    remainingSeconds: calculateRemainingSeconds(),
+    remainingSeconds: calculateRemainingSeconds(state),
   };
 };
 
@@ -64,11 +64,12 @@ const setPomodoroState = (state, newState) => {
       remainingSeconds: getPomodoroComponent(updatedState.position).seconds,
     };
   } else {
-    finalTime = calculateFinalTime(updatedState);
+    state.finalTime = calculateFinalTime(updatedState);
     return {
       ...updatedState,
       running: true,
-      remainingSeconds: calculateRemainingSeconds(),
+      remainingSeconds: calculateRemainingSeconds(state),
+      finalTime: state.finalTime,
     };
   }
 };

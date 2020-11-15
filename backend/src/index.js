@@ -17,6 +17,7 @@ const typeDefs = gql`
     userTeams(user_id: Int!): [Team]!
     getUsersFromTeam(team_id: Int!): [User!]!
     teamMembersPomodoro(team_id: Int!): [UsersPomodoro!]!
+    userPomodoroIds(user_id: Int!): Ids!
   }
 
   type Pomodoro {

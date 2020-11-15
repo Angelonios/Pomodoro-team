@@ -34,6 +34,7 @@ export function PomodoroProvider({ children }) {
   const [state, dispatch] = useReducer(pomodoroReducer, {
     remainingSeconds: 1500,
     secondsSinceStart: 0,
+    finalTime: 0,
     position: 0,
     running: false,
   });

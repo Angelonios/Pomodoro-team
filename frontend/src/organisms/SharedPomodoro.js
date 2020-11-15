@@ -14,7 +14,6 @@ export function SharedPomodoro({ shareId }) {
   const serverPomodoro = useQuery(POMODORO_QUERY, {
     variables: { shareId },
     pollInterval: 5000,
-    errorPolicy: 'all',
   });
 
   const [state, dispatch] = useReducer(pomodoroReducer, {
@@ -22,6 +21,7 @@ export function SharedPomodoro({ shareId }) {
     secondsSinceStart: 0,
     position: 0,
     running: false,
+    finalTime: 0,
   });
 
   useEffect(() => {

@@ -18,12 +18,12 @@ export function SharePage() {
   const serverPomodoro = useQuery(POMODORO_QUERY, {
     variables: { shareId },
     pollInterval: 5000,
-    errorPolicy: 'all',
   });
 
   const [state, dispatch] = useReducer(pomodoroReducer, {
     remainingSeconds: 1500,
     secondsSinceStart: 0,
+    finalTime: 0,
     position: 0,
     running: false,
   });
