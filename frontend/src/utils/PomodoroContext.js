@@ -6,7 +6,7 @@ import React, {
   createContext,
 } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import { getPomodoroComponent } from 'src/utils/pomodoroCycle';
+import { getNextIndex, getPomodoroComponent } from 'src/utils/pomodoroCycle';
 import {
   initServerCommunication,
   POMODORO_QUERY,
@@ -38,21 +38,24 @@ export function PomodoroProvider({ children }) {
 
   const clickMainButton = () => {
     dispatch({ type: CLICK_MAIN_BUTTON });
-  };
 
-  //Update database if "running" changes
-  useEffect(() => {
-    if (shareId !== '') {
-      updateMutation({
-        variables: {
-          running: state.running,
-          position: state.position,
-          communicationId: communicationId,
-          shareId: shareId,
-        },
-      });
-    }
-  }, [state.running, state.position, communicationId, shareId, updateMutation]);
+    //Prepare props for mutation
+    let running, position;
+    running = !state.running;
+    state.running
+      ? (position = getNextIndex(state.position))
+      : (position = state.position);
+
+    //Send mutation with new values
+    updateMutation({
+      variables: {
+        running: running,
+        position: position,
+        communicationId: communicationId,
+        shareId: shareId,
+      },
+    });
+  };
 
   const cachedServerData = useMemo(() => {
     if (serverPomodoro.loading || serverPomodoro.error) {

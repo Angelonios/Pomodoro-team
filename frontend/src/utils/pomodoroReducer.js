@@ -1,7 +1,4 @@
-import {
-  getPomodoroComponent,
-  getComponentTypeOrderLength,
-} from 'src/utils/pomodoroCycle';
+import { getPomodoroComponent, getNextIndex } from 'src/utils/pomodoroCycle';
 
 export const CLICK_MAIN_BUTTON = 'CLICK_MAIN_BUTTON';
 export const GET_REMAINING_SECONDS = 'GET_REMAINING_SECONDS';
@@ -21,23 +18,12 @@ const calculateRemainingSeconds = () => {
   return parseInt(finalTime - Date.now() / 1000);
 };
 
-////////////////////////////////////////////////////////////////
-// Returns next index in pomodoro cycle
-////////////////////////////////////////////////////////////////
-const nextIndex = (state) => {
-  if (state.position + 1 === getComponentTypeOrderLength()) {
-    return 0;
-  } else {
-    return state.position + 1;
-  }
-};
-
 // Basic actions
 const clickMainButton = (state) => {
   if (state.running) {
     const updatedState = {
       ...state,
-      position: nextIndex(state),
+      position: getNextIndex(state.position),
       running: false,
       secondsSinceStart: 0,
     };

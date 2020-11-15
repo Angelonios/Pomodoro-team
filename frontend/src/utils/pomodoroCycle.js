@@ -42,3 +42,11 @@ export const getPomodoroComponent = (index) => {
 export const getComponentTypeOrderLength = () => {
   return componentsOrder.length;
 };
+
+export const getNextIndex = (currentIndex) => {
+  if (currentIndex + 1 === getComponentTypeOrderLength()) {
+    return 0;
+  } else {
+    return currentIndex + 1;
+  }
+};
