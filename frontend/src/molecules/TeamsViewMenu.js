@@ -7,14 +7,14 @@ import { useHistory } from 'react-router-dom';
 import { route } from 'src/Routes';
 import { MenuItems } from 'src/atoms';
 
-  const USER_TEAMS = gql`
-    query userTeams($user_id: Int!) {
-      userTeams(user_id: $user_id) {
-        name
-        team_id
-      }
+const USER_TEAMS = gql`
+  query userTeams($user_id: Int!) {
+    userTeams(user_id: $user_id) {
+      name
+      team_id
     }
-  `;
+  }
+`;
 
 export function TeamsViewMenu({ user_id }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -31,19 +31,19 @@ export function TeamsViewMenu({ user_id }) {
   const handleCreate = () => {
     history.replace(route.createTeam());
   };
-  
+
   const handleClickItem = (e) => {
-      history.push({
-        pathname: route.teamDetail(),
-        data: {
-          name: e.target.innerText,
-          id: e.target.id
-        }
-      });
-      console.log(e.target);
-      console.log(e.target.tagName);
-      console.log(e.target.innerText);
-      console.log(e.target.id);
+    history.push({
+      pathname: route.teamDetail(),
+      data: {
+        name: e.target.innerText,
+        id: e.target.id,
+      },
+    });
+    console.log(e.target);
+    console.log(e.target.tagName);
+    console.log(e.target.innerText);
+    console.log(e.target.id);
   };
 
   const { loading, data } = useQuery(USER_TEAMS, {
@@ -72,8 +72,7 @@ export function TeamsViewMenu({ user_id }) {
         </Menu>
       </>
     );
-  }
-  else {
+  } else {
     return (
       <>
         <Button
@@ -90,7 +89,7 @@ export function TeamsViewMenu({ user_id }) {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItems data={data} onClick={handleClickItem}/>
+          <MenuItems data={data} onClick={handleClickItem} />
           <MenuItem onClick={handleCreate}>Create Team</MenuItem>
         </Menu>
       </>

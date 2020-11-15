@@ -5,7 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuIcon from '@material-ui/icons/Menu';
 import { IconButton } from '@material-ui/core';
 
-import { TeamsViewMenu } from 'src/atoms';
+import { TeamsViewMenu } from 'src/molecules';
 import { LogOut } from 'src/atoms';
 
 export function MenuUser({ user_id, logOut }) {
@@ -18,31 +18,30 @@ export function MenuUser({ user_id, logOut }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  
-    return (
-      <>
-        <IconButton
-          aria-controls="simple-menu"
-          aria-haspopup="true"
-          onClick={handleClick}
-        >
-          <MenuIcon color="action" />
-        </IconButton>
-        <Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          <MenuItem>
-            <LogOut logOut={logOut}/>
-          </MenuItem>
-          <MenuItem>
-            <TeamsViewMenu user_id={user_id}/>
-          </MenuItem>
-        </Menu>
-      </>
-    );
- 
+
+  return (
+    <>
+      <IconButton
+        aria-controls="simple-menu"
+        aria-haspopup="true"
+        onClick={handleClick}
+      >
+        <MenuIcon color="action" />
+      </IconButton>
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem>
+          <LogOut logOut={logOut} />
+        </MenuItem>
+        <MenuItem>
+          <TeamsViewMenu user_id={user_id} />
+        </MenuItem>
+      </Menu>
+    </>
+  );
 }
