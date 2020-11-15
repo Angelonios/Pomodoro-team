@@ -7,6 +7,8 @@ export function CircularPomodoroCountdown({
   remainingSeconds,
   maxSeconds,
   color,
+  timeSize,
+  circleSize,
 }) {
   let progressValue = 0;
   remainingSeconds >= 0
@@ -17,7 +19,7 @@ export function CircularPomodoroCountdown({
       <CircularProgress
         variant="static"
         value={progressValue}
-        size={300}
+        size={circleSize}
         color={color}
       />
       <Box
@@ -30,7 +32,10 @@ export function CircularPomodoroCountdown({
         alignItems="center"
         justifyContent="center"
       >
-        <PomodoroTimerLabel remainingSeconds={remainingSeconds} variant="h2" />
+        <PomodoroTimerLabel
+          remainingSeconds={remainingSeconds}
+          variant={timeSize}
+        />
       </Box>
     </Box>
   );
