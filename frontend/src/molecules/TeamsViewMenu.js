@@ -40,10 +40,6 @@ export function TeamsViewMenu({ user_id }) {
         id: e.target.id,
       },
     });
-    console.log(e.target);
-    console.log(e.target.tagName);
-    console.log(e.target.innerText);
-    console.log(e.target.id);
   };
 
   const { loading, data } = useQuery(USER_TEAMS, {

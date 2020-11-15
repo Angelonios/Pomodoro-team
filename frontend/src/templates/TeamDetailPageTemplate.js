@@ -63,7 +63,7 @@ export function TeamDetailPageTemplate() {
             </Grid>
             {dataSet &&
               teamMembers.data.getUsersFromTeam.map((tm) => (
-                <Grid container xs={12} spacing={3} key={tm.user_id}>
+                <Grid container spacing={3} key={tm.user_id}>
                   <Grid item xl={4} lg={4} xs={6} align="center">
                     <Typography
                       align={'center'}
