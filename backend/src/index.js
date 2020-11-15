@@ -71,8 +71,6 @@ const typeDefs = gql`
     LeaveTeam(team_id: Int!, user_id: Int!): Boolean
 
     DeleteTeam(teamName: String!, email: String!): String!
-
-    AssignPomodoro(user_id: Int!, pomodoro_id: Int!): Pomodoro!
   }
 
   type AuthUser {
