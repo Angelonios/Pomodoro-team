@@ -43,7 +43,7 @@ export function CreateTeamDialog({
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{'HELLO'}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{'Info'}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           {text} {''}!
