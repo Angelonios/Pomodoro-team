@@ -26,9 +26,6 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     backgroundColor: theme.palette.background.paper,
   },
-  name: {
-    marginTop: 58,
-  },
 }));
 
 const GET_TEAM_MEMBERS_POMODORO = gql`
