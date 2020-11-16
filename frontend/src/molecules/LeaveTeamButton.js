@@ -17,22 +17,13 @@ const LEAVE_TEAM = gql`
   }
 `;
 
-const useStyles = makeStyles((theme) => ({
-  button: {
-    color: '#3f51b5',
-    backgroundColor: '#ffffff',
-  },
-}));
-
 export function LeaveTeamButton({ team_id }) {
   const { user } = useAuth();
   const history = useHistory();
-  const [leaveTeam] = useMutation(LEAVE_TEAM,
-    {
-      onCompleted: () =>
-        history.push(route.home()),
-    });
-  const classes = useStyles();
+  const [leaveTeam] = useMutation(LEAVE_TEAM, {
+    onCompleted: () => history.push(route.home()),
+  });
+
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -46,14 +37,15 @@ export function LeaveTeamButton({ team_id }) {
   const handleYes = () => {
     leaveTeam({
       variables: {
-        team_id: team_id, user_id: user.user_id,
+        team_id: team_id,
+        user_id: user.user_id,
       },
     });
   };
 
   return (
     <div>
-      <Button className={classes.button} variant="outlined" onClick={handleClickOpen}>
+      <Button color="primary" variant="contained" onClick={handleClickOpen}>
         Leave Team
       </Button>
       <Dialog

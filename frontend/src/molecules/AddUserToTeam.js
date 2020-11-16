@@ -16,15 +16,7 @@ const ADD_USER = gql`
   }
 `;
 
-const useStyles = makeStyles((theme) => ({
-  button: {
-    color: '#3f51b5',
-    backgroundColor: '#ffffff',
-  },
-}));
-
 export function AddUserToTeam({ team_id, team_name }) {
-  const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [emailErrorText, updateEmailErrorText] = useState('');
@@ -87,11 +79,7 @@ export function AddUserToTeam({ team_id, team_name }) {
 
   return (
     <div>
-      <Button
-        variant="outlined"
-        className={classes.button}
-        onClick={handleClickOpen}
-      >
+      <Button variant="contained" color="primary" onClick={handleClickOpen}>
         Add team member
       </Button>
       <Dialog
