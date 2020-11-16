@@ -120,9 +120,8 @@ export function AddUserToTeam({ team_id, team_name }) {
         </DialogActions>
       </Dialog>
       <CreateTeamDialog
-        open={open}
+        open={open2}
         setOpen={setOpen}
-        open2={open2}
         setOpen2={setOpen2}
         text={
           badEmail

@@ -111,6 +111,7 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
           <FormButton submit={handleSubmit}>Create team</FormButton>
           <CreateTeamDialog
             open={open}
+            setOpen={setOpen}
             text={'You have successfully created team'}
             path={'/'}
             teamName={formData.teamName}

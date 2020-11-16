@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -9,7 +9,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { route } from '../Routes';
 
 export function CreateTeamDialog({
-  open2,
+  open,
   text,
   path,
   teamName,
@@ -20,20 +20,25 @@ export function CreateTeamDialog({
   const history = useHistory();
 
   const handleClose = () => {
-    history.push({
-      pathname: path,
-      data: {
-        name: teamName,
-        id: id,
-      },
-    });
-    setOpen(false);
-    setOpen2(false);
+    if (path === '/') {
+      setOpen(false);
+      history.push(path);
+    } else {
+      setOpen(false);
+      setOpen2(false);
+      /*history.push({
+        pathname: path,
+        data: {
+          name: teamName,
+          id: id,
+        },
+      }); */
+    }
   };
 
   return (
     <Dialog
-      open={open2}
+      open={open}
       onClose={handleClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
