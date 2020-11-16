@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Container, Grid, Paper, Typography } from '@material-ui/core';
-import sadTomato from 'src/assets/sadTomato.svg';
+import angryTomato from 'src/assets/angryTomato.svg';
 
 export function ForbiddenPage() {
   return (
@@ -22,7 +22,7 @@ export function ForbiddenPage() {
                 </Typography>
               </Grid>
               <Grid item xl={4} md={4} sm={6} xs={10}>
-                <img src={sadTomato} alt="Sad tomato" width="90%" />
+                <img src={angryTomato} alt="Angry tomato" width="90%" />
               </Grid>
             </Grid>
           </Box>
