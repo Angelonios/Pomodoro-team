@@ -39,7 +39,11 @@ export function MenuUser({ user_id, logOut }) {
           <LogOut logOut={logOut} />
         </MenuItem>
         <MenuItem>
-          <TeamsViewMenu user_id={user_id} />
+          <TeamsViewMenu
+            user_id={user_id}
+            anchor={anchorEl}
+            setAnchor={setAnchorEl}
+          />
         </MenuItem>
       </Menu>
     </>

@@ -16,12 +16,12 @@ const USER_TEAMS = gql`
   }
 `;
 
-export function TeamsViewMenu({ user_id }) {
+export function TeamsViewMenu({ user_id, anchor, setAnchor }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const history = useHistory();
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleClick = (e) => {
+    setAnchorEl(e.currentTarget);
   };
 
   const handleClose = () => {
@@ -33,6 +33,8 @@ export function TeamsViewMenu({ user_id }) {
   };
 
   const handleClickItem = (e) => {
+    setAnchor(null);
+    setAnchorEl(null);
     history.push({
       pathname: route.teamDetail(),
       data: {
