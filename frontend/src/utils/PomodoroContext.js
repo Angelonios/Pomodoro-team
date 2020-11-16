@@ -1,83 +1,117 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import {
-  getPomodoroComponent,
-  getComponentTypeOrderLength,
-} from './pomodoroCycle';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useReducer,
+  createContext,
+} from 'react';
+import { useQuery, useMutation } from '@apollo/client';
+import { getNextIndex, getPomodoroComponent } from 'src/utils/pomodoroCycle';
 import {
   initServerCommunication,
   POMODORO_QUERY,
   UPDATE_POMODORO_MUTATION,
-} from './serverSync';
-import { pomodoroReducer } from './pomodoroReducer';
-import { useQuery, useMutation } from '@apollo/client';
+  GET_USER_POMODORO_IDS,
+} from 'src/utils/serverSync';
+import {
+  pomodoroReducer,
+  CLICK_MAIN_BUTTON,
+  GET_REMAINING_SECONDS,
+  SET_POMODORO_STATE,
+} from 'src/utils/pomodoroReducer';
 
-const PomodoroStateContext = React.createContext();
-const PomodoroDispatchContext = React.createContext();
+import { convertSecondsToMinutesSting } from 'src/utils/pomodoroUtils';
+import { useAuth } from 'src/utils/auth';
+
+const PomodoroStateContext = createContext();
+const PomodoroDispatchContext = createContext();
 
 export function PomodoroProvider({ children }) {
-  const [finalTime, setFinalTime] = useState();
-  const [pomodoroRunning, setPomodoroRunning] = useState(false);
-  const [currentPositionInCycle, setCurrentPositionInCycle] = useState(0);
   const [communicationId, setCommunicationId] = useState('');
   const [shareId, setShareId] = useState('');
   const [shareUrl, setShareUrl] = useState();
-
-  const [remainingSeconds, setRemainingSeconds] = React.useReducer(
-    pomodoroReducer,
-    getPomodoroComponent(currentPositionInCycle).seconds,
-  );
-
   const serverPomodoro = useQuery(POMODORO_QUERY, { variables: { shareId } });
   const [updateMutation] = useMutation(UPDATE_POMODORO_MUTATION);
+  const { user } = useAuth();
+  const [userId, setUserId] = useState(0);
 
-  ////////////////////////////
-  // Timer initialization
-  ////////////////////////////
-  const initializeTimer = useCallback(
-    (props) => {
-      setCurrentPositionInCycle(props.position);
+  const [state, dispatch] = useReducer(pomodoroReducer, {
+    remainingSeconds: 1500,
+    secondsSinceStart: 0,
+    finalTime: 0,
+    position: 0,
+    running: false,
+  });
 
-      setPomodoroRunning(props.running);
+  const userPomodoroIds = useQuery(GET_USER_POMODORO_IDS, {
+    variables: { user_id: userId },
+    skip: !user,
+  });
 
-      setFinalTime(
-        calculateFinalTime(
-          getPomodoroComponent(props.position).seconds,
-          props.secondsSinceStart,
-        ),
+  useEffect(() => {
+    if (!userPomodoroIds.loading && !userPomodoroIds.error && user) {
+      const ids = initServerCommunication(
+        userPomodoroIds.data.userPomodoroIds.communication_id,
+        userPomodoroIds.data.userPomodoroIds.share_id,
       );
+      setCommunicationId(ids.communicationId);
+      setShareId(ids.shareId);
+      setShareUrl(window.location.origin.toString() + '/share/' + ids.shareId);
+    } else if (!userPomodoroIds.loading && !user) {
+      const ids = initServerCommunication();
+      setCommunicationId(ids.communicationId);
+      setShareId(ids.shareId);
+      setShareUrl(window.location.origin.toString() + '/share/' + ids.shareId);
+    }
+  }, [userPomodoroIds, user]);
 
-      setRemainingSeconds({
-        finalTime: calculateFinalTime(
-          getPomodoroComponent(props.position).seconds,
-          props.secondsSinceStart,
-        ),
-      });
+  useEffect(() => {
+    if (user) {
+      setUserId(user.user_id);
+    }
+  }, [user]);
 
-      //console.log(updateMutation.data);
-      // mutate data here
+  const clickMainButton = () => {
+    dispatch({ type: CLICK_MAIN_BUTTON });
 
+    //Prepare props for mutation
+    let running, position;
+    running = !state.running;
+    state.running
+      ? (position = getNextIndex(state.position))
+      : (position = state.position);
+
+    //Send mutation with new values
+    updateMutation({
+      variables: {
+        running: running,
+        position: position,
+        communicationId: communicationId,
+        shareId: shareId,
+      },
+    });
+  };
+
+  const cachedServerData = useMemo(() => {
+    if (serverPomodoro.loading || serverPomodoro.error) {
+      return null;
+    }
+    if (!user && serverPomodoro.data.pomodoro === null) {
+      //If backend returns null, then we have to send mutation with new share and communication ids
       updateMutation({
         variables: {
-          running: props.running,
-          position: props.position,
+          running: false,
+          position: 0,
           communicationId: communicationId,
           shareId: shareId,
         },
       });
-      // Here comes the mutation to the server
-    },
-    [shareId, communicationId, updateMutation],
-  );
-
-  const cachedServerData = useMemo(() => {
-    if (serverPomodoro.loading || serverPomodoro.error) return null;
-    if (serverPomodoro.data.pomodoro === null) {
-      //If backend returns null, then we have to initialize timer in order to send mutation with new share and communication ids
-      initializeTimer({
-        position: 0,
-        running: false,
-        secondsSinceStart: 0,
-      });
+      return null;
+    }
+    if (user && serverPomodoro.data.pomodoro === null) {
+      //If backend returns null for a logged in user, it means error. TODO: handle error
+      console.log('Error fetching pomodoro data for logged in user.');
+      return null;
     }
     //return query result here
     return serverPomodoro.data;
@@ -85,55 +119,31 @@ export function PomodoroProvider({ children }) {
     serverPomodoro.loading,
     serverPomodoro.error,
     serverPomodoro.data,
-    initializeTimer,
+    communicationId,
+    shareId,
+    updateMutation,
+    user,
   ]);
 
-  ////////////////////////////////////////////////////////////////////
-  // Perform these actions every time a user clicks on the main button
-  ////////////////////////////////////////////////////////////////////
-  const switchPomodoroRunningState = () => {
-    if (pomodoroRunning) {
-      initializeTimer({
-        position: nextIndex(),
-        running: false,
-        secondsSinceStart: 0,
-      });
-    } else {
-      initializeTimer({
-        position: currentPositionInCycle,
-        running: true,
-        secondsSinceStart: 0,
-      });
-    }
-  };
-
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  // Calculates final time from seconds in current pomodoro component and seconds since start
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  const calculateFinalTime = (secondsInComponent, secondsSinceStart) => {
-    return parseInt(
-      Date.now() / 1000 + (secondsInComponent - secondsSinceStart),
-    );
-  };
-
-  ////////////////////////////////////////////////////////////////
-  // Returns next index in pomodoro cycle
-  ////////////////////////////////////////////////////////////////
-  const nextIndex = () => {
-    if (currentPositionInCycle + 1 === getComponentTypeOrderLength()) {
-      return 0;
-    } else {
-      return currentPositionInCycle + 1;
-    }
-  };
-
-  ////////////////////////////////////////////////////////////////
-  // If timer === running, refresh remaining seconds every second
-  ////////////////////////////////////////////////////////////////
   useEffect(() => {
-    if (!pomodoroRunning) return;
+    let title = '';
+    if (!state.running) {
+      title = 'Idle - Team Pomodori';
+    } else if (state.remainingSeconds < 0) {
+      title =
+        '(' +
+        convertSecondsToMinutesSting(state.remainingSeconds) +
+        ') ' +
+        getPomodoroComponent(state.position).label +
+        ' - ' +
+        'Team Pomodori';
+    } else {
+      title = getPomodoroComponent(state.position).label + ' - Team Pomodori';
+    }
+    document.title = title;
+    if (!state.running) return;
     const timer = setTimeout(() => {
-      setRemainingSeconds({ finalTime: finalTime });
+      dispatch({ type: GET_REMAINING_SECONDS });
     }, 1000);
     return () => clearTimeout(timer);
   });
@@ -141,50 +151,29 @@ export function PomodoroProvider({ children }) {
   ////////////////////////////////////////////////////////////////
   // Perform these actions after first load / reload of the page
   ////////////////////////////////////////////////////////////////
-  useEffect(() => {
-    const ids = initServerCommunication();
-    setCommunicationId(ids.communicationId);
-    setShareId(ids.shareId);
-    setShareUrl(window.location.origin.toString() + '/share/' + ids.shareId);
-    //handleServerConfiguration(3, 40);
-  }, []);
+  useEffect(() => {}, []);
 
   useEffect(() => {
     if (cachedServerData !== null) {
-      if (cachedServerData.pomodoro !== null) {
-        let position = parseInt(cachedServerData.pomodoro.position);
-        let secondsSinceStart = cachedServerData.pomodoro.secondsSinceStart;
-        if (secondsSinceStart === 0) {
-          initializeTimer({
-            position: position,
-            running: false,
-            secondsSinceStart: 0,
-          });
-        } else {
-          initializeTimer({
-            position: position,
-            running: true,
-            secondsSinceStart: secondsSinceStart,
-          });
-        }
-      }
+      dispatch({ type: SET_POMODORO_STATE, newState: cachedServerData });
     }
-  }, [cachedServerData, initializeTimer]);
+  }, [cachedServerData]);
 
   return (
     <PomodoroStateContext.Provider
       value={{
-        remainingSeconds: remainingSeconds,
-        pomodoroRunning: pomodoroRunning,
-        maxSeconds: getPomodoroComponent(currentPositionInCycle).seconds,
-        buttonText: getPomodoroComponent(currentPositionInCycle).buttonText,
-        label: getPomodoroComponent(currentPositionInCycle).label,
-        type: getPomodoroComponent(currentPositionInCycle).type,
-        color: getPomodoroComponent(currentPositionInCycle).color,
+        remainingSeconds: state.remainingSeconds,
+        pomodoroRunning: state.running,
+        maxSeconds: getPomodoroComponent(state.position).seconds,
+        buttonText: getPomodoroComponent(state.position).buttonText,
+        label: getPomodoroComponent(state.position).label,
+        type: getPomodoroComponent(state.position).type,
+        color: getPomodoroComponent(state.position).color,
         shareUrl: shareUrl,
+        communicationId: communicationId,
       }}
     >
-      <PomodoroDispatchContext.Provider value={switchPomodoroRunningState}>
+      <PomodoroDispatchContext.Provider value={clickMainButton}>
         {children}
       </PomodoroDispatchContext.Provider>
     </PomodoroStateContext.Provider>

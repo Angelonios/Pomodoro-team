@@ -2,13 +2,13 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 
-export function EmailField({
-  formData,
-  handleChange,
-  formErrors,
-  helperText,
-  data,
-}) {
+export function TeamNameField({
+                             formData,
+                             handleChange,
+                             formErrors,
+                             helperText,
+                             data,
+                           }) {
   return (
     <Grid item xs={12}>
       <TextField
@@ -16,10 +16,9 @@ export function EmailField({
         variant="outlined"
         required
         fullWidth
-        id="email"
-        label="Email Address"
-        name="email"
-        autoComplete="email"
+        id="teamName"
+        label="Team Name"
+        name="teamName"
         defaultValue={data}
         onChange={handleChange}
         helperText={helperText}

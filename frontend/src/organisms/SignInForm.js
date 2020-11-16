@@ -1,5 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
+import { gql, useMutation } from '@apollo/client';
 import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
@@ -8,11 +10,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Copyright, EmailField, PasswordField, FormLink } from '../molecules';
-import { FormButton } from '../atoms';
-import { useHistory, useLocation } from 'react-router-dom';
+import { Copyright, EmailField, PasswordField, FormLink } from 'src/molecules';
+import { FormButton } from 'src/atoms';
 import { route } from 'src/Routes';
-import { gql, useMutation } from '@apollo/client';
 import { useAuth } from 'src/utils/auth';
 
 const useStyles = makeStyles((theme) => ({
@@ -32,6 +32,11 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  error: {
+    backgroundColor: '#1b0f0f',
+    borderRadius: 50,
+    marginTop: 15,
   },
 }));
 
@@ -95,45 +100,95 @@ export function SignInForm({ props }) {
     });
   };
 
-  return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <EmailField
-              data={email}
-              formData={formData}
-              formErrors={error}
-              helperText={errorText}
-              handleChange={handleChange}
-            />
-            <PasswordField
-              id="password"
-              name="password"
-              formData={formData}
-              formErrors={error}
-              helperText={errorText}
-              handleChange={handleChange}
+  if (error) {
+    return (
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <Container maxWidth="xs" className={classes.error}>
+            <Typography
+              component="h5"
+              variant="caption"
+              color="error"
+              display="inline"
             >
-              Password
-            </PasswordField>
-          </Grid>
-          <FormButton submit={handleSubmit}>Sign in</FormButton>
-          <FormLink link={route.signUp()}>
-            Don't have an account? Sign Up
-          </FormLink>
-        </form>
-      </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-    </Container>
-  );
+              <b>{errorText}</b>
+            </Typography>
+          </Container>
+          <form className={classes.form} noValidate>
+            <Grid container spacing={2}>
+              <EmailField
+                data={email}
+                formData={formData}
+                formErrors={error}
+                handleChange={handleChange}
+              />
+              <PasswordField
+                id="password"
+                name="password"
+                formData={formData}
+                formErrors={error}
+                handleChange={handleChange}
+              >
+                Password
+              </PasswordField>
+            </Grid>
+            <FormButton submit={handleSubmit}>Sign in</FormButton>
+            <FormLink link={route.signUp()}>
+              Don't have an account? Sign Up
+            </FormLink>
+          </form>
+        </div>
+        <Box mt={8}>
+          <Copyright />
+        </Box>
+      </Container>
+    );
+  } else {
+    return (
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <form className={classes.form} noValidate>
+            <Grid container spacing={2}>
+              <EmailField
+                data={email}
+                formData={formData}
+                formErrors={error}
+                handleChange={handleChange}
+              />
+              <PasswordField
+                id="password"
+                name="password"
+                formData={formData}
+                formErrors={error}
+                handleChange={handleChange}
+              >
+                Password
+              </PasswordField>
+            </Grid>
+            <FormButton submit={handleSubmit}>Sign in</FormButton>
+            <FormLink link={route.signUp()}>
+              Don't have an account? Sign Up
+            </FormLink>
+          </form>
+        </div>
+        <Box mt={8}>
+          <Copyright />
+        </Box>
+      </Container>
+    );
+  }
 }

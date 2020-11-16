@@ -1,102 +1,55 @@
-import React, { useEffect, useState, useReducer, useMemo } from 'react';
-import { useParams } from 'react-router';
-import { Container, Paper, Box, Grid } from '@material-ui/core';
-import { POMODORO_QUERY } from '../utils/serverSync';
+import React, { useEffect, useReducer } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { getPomodoroComponent } from '../utils/pomodoroCycle';
-import { pomodoroReducer } from '../utils/pomodoroReducer';
-import { CircularPomodoroCountdown, ShareUrl } from '../molecules';
-import { PageNotFound } from './PageNotFound';
+import { Container, Paper, Box, Grid } from '@material-ui/core';
+import { getPomodoroComponent } from 'src/utils/pomodoroCycle';
+import {
+  pomodoroReducer,
+  GET_REMAINING_SECONDS,
+  SET_POMODORO_STATE,
+} from 'src/utils/pomodoroReducer';
+import { CircularPomodoroCountdown, ShareUrl } from 'src/molecules';
+import { POMODORO_QUERY } from 'src/utils/serverSync';
 
 export function SharePage() {
   const urlParams = useParams('shareId');
-  let shareId = urlParams.shareId;
+  const shareId = urlParams.shareId;
 
-  const timerUpdate = useQuery(POMODORO_QUERY, { variables: { shareId } });
+  const serverPomodoro = useQuery(POMODORO_QUERY, {
+    variables: { shareId },
+    pollInterval: 5000,
+  });
 
-  const [finalTime, setFinalTime] = useState();
-  const [running, setRunning] = useState(true);
-  const [position, setPosition] = useState(0);
-  const [secondsSinceStart, setSecondsSinceStart] = useState(0);
+  const [state, dispatch] = useReducer(pomodoroReducer, {
+    remainingSeconds: 1500,
+    secondsSinceStart: 0,
+    finalTime: 0,
+    position: 0,
+    running: false,
+  });
 
-  const cache = useMemo(() => {
-    if (timerUpdate.loading || timerUpdate.error)
-      return {
-        pomodoro: { position: position, secondsSinceStart: secondsSinceStart },
-      };
-    if (timerUpdate.data.pomodoro === null) {
-      return (window.location.href = '/*');
-    }
-
-    return timerUpdate.data;
-  }, [
-    timerUpdate.loading,
-    timerUpdate.error,
-    timerUpdate.data,
-    position,
-    secondsSinceStart,
-  ]);
-
-  const [remainingSeconds, setRemainingSeconds] = useReducer(
-    pomodoroReducer,
-    getPomodoroComponent(position).seconds,
-  );
-
-  /** loading data from server ---*/
-  /*  useEffect(() => {
-    if (timerUpdate.loading) return;
-    const refreshTimeout = setTimeout(() => {
-      console.log('refetch');
-      timerUpdate.refetch();
-    }, 5000);
-    clearTimeout(refreshTimeout);
-  }, [timerUpdate.loading]); */
-
+  const history = useHistory();
   useEffect(() => {
-    if (timerUpdate.loading) {
-      return;
-    }
-
-    const timeoutId = setTimeout(() => {
-      timerUpdate.refetch();
-    }, 10000);
-
-    setSecondsSinceStart(timerUpdate.data.pomodoro.secondsSinceStart);
-    setPosition(timerUpdate.data.pomodoro.position);
-
-    return () => {
-      // this code will be called when component unmounts:
-      clearTimeout(timeoutId);
-    };
-  }, [timerUpdate.loading, timerUpdate]);
-
-  useEffect(() => {
-    if (cache.pomodoro.secondsSinceStart === 0) {
-      setRunning(false);
-    } else setRunning(true);
-
-    setFinalTime(
-      parseInt(
-        Date.now() / 1000 +
-          (getPomodoroComponent(cache.pomodoro.position).seconds -
-            cache.pomodoro.secondsSinceStart),
-      ),
-    );
-  }, [cache]);
-
-  useEffect(() => {
-    if (running) {
-      const timer = setTimeout(() => {
-        setRemainingSeconds({
-          finalTime: finalTime,
+    if (!serverPomodoro.error && !serverPomodoro.loading) {
+      if (serverPomodoro.data.pomodoro === null) {
+        history.push({
+          pathname: '/error404',
         });
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else {
-      setRemainingSeconds({
-        finalTime: finalTime,
-      });
+      } else {
+        dispatch({ type: SET_POMODORO_STATE, newState: serverPomodoro.data });
+      }
     }
+  }, [serverPomodoro, history]);
+
+  ////////////////////////////////////////////////////////////////
+  // If timer === running, refresh remaining seconds every second
+  ////////////////////////////////////////////////////////////////
+  useEffect(() => {
+    if (!state.running) return;
+    const timer = setTimeout(() => {
+      dispatch({ type: GET_REMAINING_SECONDS });
+    }, 1000);
+    return () => clearTimeout(timer);
   });
 
   return (
@@ -112,11 +65,11 @@ export function SharePage() {
           >
             <Grid item xl={4} lg={4} xs={12} align="center">
               <CircularPomodoroCountdown
-                remainingSeconds={remainingSeconds}
-                maxSeconds={
-                  getPomodoroComponent(cache.pomodoro.position).seconds
-                }
-                color={getPomodoroComponent(cache.pomodoro.position).color}
+                remainingSeconds={state.remainingSeconds}
+                maxSeconds={getPomodoroComponent(state.position).seconds}
+                color={getPomodoroComponent(state.position).color}
+                timeSize="h2"
+                circleSize={300}
               />
             </Grid>
           </Grid>

@@ -1,12 +1,10 @@
 import React from 'react';
 import { Box, Container, Grid, Paper, Typography } from '@material-ui/core';
-import { TopNavigation } from 'src/organisms';
-import sadTomato from 'src/assets/sadTomato.svg';
+import angryTomato from 'src/assets/angryTomato.svg';
 
-export function PageNotFound() {
+export function ForbiddenPage() {
   return (
     <>
-      <TopNavigation />
       <Container component="main">
         <Paper elevation={3}>
           <Box p={6}>
@@ -18,13 +16,13 @@ export function PageNotFound() {
               justify="space-evenly"
             >
               <Grid item xl={4} md={4} sm={6} xs={10}>
-                <Typography variant="h1">404</Typography>
+                <Typography variant="h1">403</Typography>
                 <Typography variant="h6" component="p">
-                  Oops! We couldn't find the page.
+                  It looks like you don't have permission to access this page.
                 </Typography>
               </Grid>
               <Grid item xl={4} md={4} sm={6} xs={10}>
-                <img src={sadTomato} alt="Sad tomato" width="90%" />
+                <img src={angryTomato} alt="Angry tomato" width="90%" />
               </Grid>
             </Grid>
           </Box>
