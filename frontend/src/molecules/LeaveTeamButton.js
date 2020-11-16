@@ -61,10 +61,10 @@ export function LeaveTeamButton({ team_id }) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancel} color="secondary">
+          <Button onClick={handleCancel} color="secondary" variant="contained">
             Cancel
           </Button>
-          <Button onClick={handleYes} color="primary" autoFocus>
+          <Button onClick={handleYes} color="primary" variant="contained">
             Yes, leave
           </Button>
         </DialogActions>
