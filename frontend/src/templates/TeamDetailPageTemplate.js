@@ -16,6 +16,7 @@ import {
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { LeaveTeamButton, AddUserToTeam } from '../molecules';
+import { RefreshButton } from 'src/atoms';
 import { SharedPomodoro } from '../organisms';
 import { useAuth } from '../utils/auth';
 import { ForbiddenPage } from '../pages/ForbiddenPage';
@@ -46,6 +47,10 @@ export function TeamDetailPageTemplate() {
   const dataSet = !(location.data === null || location.data === undefined);
   const name = dataSet ? location.data.name : 'No team set!';
   const id = dataSet ? parseInt(location.data.id) : 0;
+
+  const onClick = () => {
+    teamMembers.refetch();
+  };
 
   const teamMembers = useQuery(GET_TEAM_MEMBERS_POMODORO, {
     variables: {
@@ -78,6 +83,7 @@ export function TeamDetailPageTemplate() {
                 <Grid item xs={12}>
                   <Typography align={'center'} variant={'h3'}>
                     {dataSet ? name : 'No team selected!'}
+                    <RefreshButton onClick={onClick} />
                   </Typography>
                 </Grid>
                 <TableContainer component={Paper}>
