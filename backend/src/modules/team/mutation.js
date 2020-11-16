@@ -40,9 +40,6 @@ export const AddUserToTeam = async (
     [email],
   );
   if (dbResponse !== null) {
-    console.log(dbResponse.user_id);
-    console.log(dbResponse[0]);
-    console.log(dbResponse[0].user_id);
     const dbResponse2 = await dbConnection.query(
       `INSERT INTO in_team (user_id, team_id)
     VALUES (?, ?);`,
