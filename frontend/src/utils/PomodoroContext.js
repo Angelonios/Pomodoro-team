@@ -108,6 +108,11 @@ export function PomodoroProvider({ children }) {
       });
       return null;
     }
+    if (user && serverPomodoro.data.pomodoro === null) {
+      //If backend returns null for a logged in user, it means error. TODO: handle error
+      console.log('Error fetching pomodoro data for logged in user.');
+      return null;
+    }
     //return query result here
     return serverPomodoro.data;
   }, [
