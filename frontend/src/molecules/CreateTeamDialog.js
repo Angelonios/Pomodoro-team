@@ -50,7 +50,7 @@ export function CreateTeamDialog({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary" autoFocus>
+        <Button onClick={handleClose} color="primary" variant="contained">
           Ok
         </Button>
       </DialogActions>
