@@ -5,7 +5,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import makeStyles from '@material-ui/core/styles/makeStyles';
 import { EmailField } from 'src/molecules';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { CreateTeamDialog } from 'src/molecules';
