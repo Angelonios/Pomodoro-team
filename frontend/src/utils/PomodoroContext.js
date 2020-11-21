@@ -22,7 +22,7 @@ import {
 
 import { convertSecondsToMinutesSting } from 'src/utils/pomodoroUtils';
 import { useAuth } from 'src/utils/auth';
-import sound1 from 'src/assets/sound1.mp3';
+import sound1 from 'src/assets/nuclear.mp3';
 import useSound from 'use-sound';
 
 const PomodoroStateContext = createContext();
@@ -36,7 +36,7 @@ export function PomodoroProvider({ children }) {
   const [updateMutation] = useMutation(UPDATE_POMODORO_MUTATION);
   const { user } = useAuth();
   const [userId, setUserId] = useState(0);
-  const [play] = useSound(sound1, { volume: 0.2 });
+  const [play] = useSound(sound1, { volume: 0.5, playbackRate: 1.5 });
 
   const [state, dispatch] = useReducer(pomodoroReducer, {
     remainingSeconds: 1500,
