@@ -13,6 +13,7 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core';
+import Gravatar from 'react-gravatar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { LeaveTeamButton, AddUserToTeam } from '../molecules';
@@ -99,6 +100,13 @@ export function TeamDetailPageTemplate() {
                           (pomodoro, index) => (
                             <TableRow key={index}>
                               <TableCell component="th" scope="row">
+                                <div>
+                                  <Gravatar
+                                    email={pomodoro.email}
+                                    size={35}
+                                    style={{ padding: 2 }}
+                                  />
+                                </div>
                                 {pomodoro.email}
                               </TableCell>
                               <SharedPomodoro
