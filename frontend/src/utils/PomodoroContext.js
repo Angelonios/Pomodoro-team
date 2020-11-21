@@ -141,13 +141,18 @@ export function PomodoroProvider({ children }) {
         ' - ' +
         'Team Pomodori';
 
-      if (state.remainingSeconds % 10 === 0 && state.running) {
+      if (state.remainingSeconds % 300 === 0 && state.running) {
         console.log(state.remainingSeconds);
         //play sound
         play();
       }
     } else {
       title = getPomodoroComponent(state.position).label + ' - Team Pomodori';
+      if (Object.is(state.remainingSeconds, +0)) {
+        console.log(state.remainingSeconds);
+        //play sound
+        play();
+      }
     }
     document.title = title;
     if (!state.running) return;
@@ -155,7 +160,7 @@ export function PomodoroProvider({ children }) {
       dispatch({ type: GET_REMAINING_SECONDS });
     }, 1000);
     return () => clearTimeout(timer);
-  });
+  }, [state.running, state.remainingSeconds]);
 
   ////////////////////////////////////////////////////////////////
   // Perform these actions after first load / reload of the page
