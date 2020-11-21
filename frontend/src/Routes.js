@@ -9,6 +9,7 @@ import { SignIn } from 'src/pages/SignIn';
 import { SharePage } from 'src/pages/SharePage';
 import { CreateTeam } from 'src/pages/CreateTeam';
 import { TeamDetailPage } from 'src/pages/TeamDetailPage';
+import { ProfilePage } from 'src/pages/ProfilePage';
 
 export const route = {
   home: () => `/`,
@@ -18,6 +19,7 @@ export const route = {
   share: () => `/share/:shareId`,
   createTeam: () => `/teamform`,
   teamDetail: () => `/teamdetail`,
+  profile: () => `/profile`,
 };
 
 export function Routes() {
@@ -30,6 +32,7 @@ export function Routes() {
       <Route path={route.share()} exact component={SharePage} />
       <Route path={route.createTeam()} exact component={CreateTeam} />
       <Route path={route.teamDetail()} exact component={TeamDetailPage} />
+      <Route path={route.profile()} exact component={ProfilePage} />
       <Route path="*" component={PageNotFound} />
     </Switch>
   );
