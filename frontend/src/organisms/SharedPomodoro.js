@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import { useQuery } from '@apollo/client';
-import { TableCell } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { getPomodoroComponent } from 'src/utils/pomodoroCycle';
 import {
   pomodoroReducer,
@@ -47,16 +47,75 @@ export function SharedPomodoro({ shareId }) {
     return () => clearTimeout(timer);
   });
 
+  if (window.innerWidth < 740) {
+    return (
+      <>
+        <Box
+          align="center"
+          style={{
+            width: '33%',
+            marginBottom: '15px',
+            alignSelf: 'center',
+          }}
+        >
+          {state.isOffline
+            ? 'Offline'
+            : state.running
+            ? getPomodoroComponent(state.position).label
+            : 'Idle'}
+        </Box>
+        <Box
+          align="center"
+          style={{
+            width: '33%',
+            marginBottom: '15px',
+            alignSelf: 'center',
+            marginRight: '32px',
+          }}
+        >
+          <CircularPomodoroCountdown
+            remainingSeconds={state.remainingSeconds}
+            maxSeconds={getPomodoroComponent(state.position).seconds}
+            color={getPomodoroComponent(state.position).color}
+            timeSize="h5"
+            circleSize={150}
+          />
+        </Box>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <Box align="center" style={{ width: '33%', margin: 'auto' }}>
+          {state.isOffline
+            ? 'Offline'
+            : state.running
+            ? getPomodoroComponent(state.position).label
+            : 'Idle'}
+        </Box>
+        <Box align="center" style={{ width: '33%', margin: 'auto' }}>
+          <CircularPomodoroCountdown
+            remainingSeconds={state.remainingSeconds}
+            maxSeconds={getPomodoroComponent(state.position).seconds}
+            color={getPomodoroComponent(state.position).color}
+            timeSize="h5"
+            circleSize={150}
+          />
+        </Box>
+      </>
+    );
+  }
+
   return (
     <>
-      <TableCell align="center">
+      <Box align="center" style={{ width: '33%', margin: 'auto' }}>
         {state.isOffline
           ? 'Offline'
           : state.running
           ? getPomodoroComponent(state.position).label
           : 'Idle'}
-      </TableCell>
-      <TableCell align="center">
+      </Box>
+      <Box align="center" style={{ width: '33%', margin: 'auto' }}>
         <CircularPomodoroCountdown
           remainingSeconds={state.remainingSeconds}
           maxSeconds={getPomodoroComponent(state.position).seconds}
@@ -64,7 +123,7 @@ export function SharedPomodoro({ shareId }) {
           timeSize="h5"
           circleSize={150}
         />
-      </TableCell>
+      </Box>
     </>
     /* <Container>
       <Box>
