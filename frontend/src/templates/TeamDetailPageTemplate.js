@@ -98,21 +98,20 @@ export function TeamDetailPageTemplate() {
                     teamMembersSet &&
                     teamMembers.data.teamMembersPomodoro.map(
                       (pomodoro, index) => (
-                        <>
-                          <Grid
-                            container
-                            spacing={3}
-                            style={{
-                              alignItems: 'center',
-                              marginBottom: '20px',
-                            }}
-                          >
-                            <TeamPageName email={pomodoro.email} />
-                            <SharedPomodoro
-                              key={index}
-                              shareId={pomodoro.share_id}
-                            />
-                          </Grid>
+                        <Grid
+                          key={index}
+                          container
+                          spacing={3}
+                          style={{
+                            alignItems: 'center',
+                            marginBottom: '20px',
+                          }}
+                        >
+                          <TeamPageName email={pomodoro.email} />
+                          <SharedPomodoro
+                            key={index}
+                            shareId={pomodoro.share_id}
+                          />
                           <div
                             style={{
                               border: '1px solid white',
@@ -120,7 +119,7 @@ export function TeamDetailPageTemplate() {
                               marginBottom: '20px',
                             }}
                           ></div>
-                        </>
+                        </Grid>
                       ),
                     )}
                 </Grid>
