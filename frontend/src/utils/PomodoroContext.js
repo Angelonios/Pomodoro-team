@@ -127,11 +127,13 @@ export function PomodoroProvider({ children }) {
     updateMutation,
     user,
   ]);
-
+  const favicon = document.getElementById('favicon');
   useEffect(() => {
     let title = '';
+    let faviconHref = '';
     if (!state.running) {
       title = 'Idle - Team Pomodori';
+      faviconHref = '/grey-tomato.svg';
     } else if (state.remainingSeconds < 0) {
       title =
         '(' +
@@ -140,6 +142,7 @@ export function PomodoroProvider({ children }) {
         getPomodoroComponent(state.position).label +
         ' - ' +
         'Team Pomodori';
+      faviconHref = '/red-tomato.svg';
 
       if (state.remainingSeconds % 300 === 0 && state.running) {
         console.log(state.remainingSeconds);
@@ -153,7 +156,16 @@ export function PomodoroProvider({ children }) {
         //play sound
         play();
       }
+      if (getPomodoroComponent(state.position).label === 'Break') {
+        faviconHref = '/yellow-tomato.svg';
+      } else {
+        {
+          faviconHref = '/green-tomato.svg';
+        }
+      }
     }
+    console.log(faviconHref);
+    favicon.href = faviconHref;
     document.title = title;
     if (!state.running) return;
     const timer = setTimeout(() => {
