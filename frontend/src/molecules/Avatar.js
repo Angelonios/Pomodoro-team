@@ -29,7 +29,7 @@ export function Avatar({ email }) {
             </Typography>
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={12} md={6}>
           <Paper className={classes.paper}>
             <Gravatar email={email} size={150} default="retro" />
             <Typography variant="h5" className={classes.text}>
@@ -37,10 +37,8 @@ export function Avatar({ email }) {
             </Typography>
           </Paper>
         </Grid>
-        <Grid item container spacing={3} xs={12} sm={6}>
-          <Grid item xs={12} sm={12}>
-            <Paper className={classes.paper}></Paper>
-          </Grid>
+        <Grid item xs={12} sm={12} md={6}>
+          <Paper className={classes.paper}></Paper>
         </Grid>
       </Grid>
     </Container>

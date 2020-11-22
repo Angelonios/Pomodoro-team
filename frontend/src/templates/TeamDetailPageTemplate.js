@@ -2,20 +2,8 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import {
-  Container,
-  Paper,
-  Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@material-ui/core';
-import Gravatar from 'react-gravatar';
-import Typography from '@material-ui/core/Typography';
-import { Grid, Divider } from '@material-ui/core';
+import { Container, Paper, Box, Grid, Typography } from '@material-ui/core';
+
 import { LeaveTeamButton, AddUserToTeam } from '../molecules';
 import { RefreshButton, TeamPageName } from 'src/atoms';
 import { SharedPomodoro } from '../organisms';
@@ -26,6 +14,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     backgroundColor: theme.palette.background.paper,
+  },
+  header: {
+    textAlign: 'center',
   },
 }));
 
@@ -63,8 +54,6 @@ export function TeamDetailPageTemplate() {
     return <div>loading...</div>;
   }
 
-  console.log(window.innerWidth);
-
   if (!user) {
     return <ForbiddenPage />;
   }
@@ -80,87 +69,61 @@ export function TeamDetailPageTemplate() {
                 direction="column"
                 alignItems="center"
               >
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ textAlign: 'center' }}>
                   <Typography align={'center'} variant={'h3'}>
                     {dataSet ? name : 'No team selected!'}
-                    <RefreshButton onClick={onClick} />
                   </Typography>
+                  <RefreshButton onClick={onClick} />
                 </Grid>
-                <Box style={{ width: '100%' }}>
-                  <Box
-                    display="flex"
-                    style={{ width: '100%', marginBottom: '15px' }}
-                  >
-                    <Box style={{ margin: 'auto' }}>
-                      <Typography>Email</Typography>
-                    </Box>
-                    <Box style={{ margin: 'auto' }}>
-                      <Typography>State</Typography>
-                    </Box>
-                    <Box style={{ margin: 'auto' }}>
-                      <Typography>Timer</Typography>
-                    </Box>
-                  </Box>
+                <Grid item container>
+                  <Grid container spacing={3} style={{ marginBottom: '20px' }}>
+                    <Grid item xs={12} md={4}>
+                      <Typography className={classes.header}>Email</Typography>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                      <Typography className={classes.header}>State</Typography>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                      <Typography className={classes.header}>Timer</Typography>
+                    </Grid>
+                  </Grid>
+                  <div
+                    style={{
+                      border: '1px solid white',
+                      width: '100%',
+                      marginBottom: '20px',
+                    }}
+                  ></div>
                   {dataSet &&
                     teamMembersSet &&
                     teamMembers.data.teamMembersPomodoro.map(
-                      (pomodoro, index) => {
-                        if (window.innerWidth < 740) {
-                          return (
-                            <>
-                              <Box
-                                display="flex"
-                                key={index}
-                                style={{
-                                  width: '100%',
-                                  flexDirection: 'column',
-                                }}
-                              >
-                                <TeamPageName
-                                  email={pomodoro.email}
-                                  style={{
-                                    marginBottom: '10px',
-                                    alignSelf: 'flex-start',
-                                  }}
-                                />
-                                <SharedPomodoro
-                                  shareId={pomodoro.share_id}
-                                  style={{ marginBottom: '10px' }}
-                                  key={index}
-                                />
-                              </Box>
-                              <Divider
-                                style={{ margin: '15px 0' }}
-                                key={index}
-                              />
-                            </>
-                          );
-                        } else {
-                          return (
-                            <>
-                              <Box
-                                display="flex"
-                                key={index}
-                                style={{
-                                  width: '100%',
-                                }}
-                              >
-                                <TeamPageName email={pomodoro.email} />
-                                <SharedPomodoro
-                                  shareId={pomodoro.share_id}
-                                  key={index}
-                                />
-                              </Box>
-                              <Divider
-                                style={{ margin: '15px 0' }}
-                                key={index}
-                              />
-                            </>
-                          );
-                        }
-                      },
+                      (pomodoro, index) => (
+                        <>
+                          <Grid
+                            container
+                            spacing={3}
+                            style={{
+                              alignItems: 'center',
+                              marginBottom: '20px',
+                            }}
+                          >
+                            <TeamPageName email={pomodoro.email} />
+                            <SharedPomodoro
+                              key={index}
+                              shareId={pomodoro.share_id}
+                            />
+                          </Grid>
+                          <div
+                            style={{
+                              border: '1px solid white',
+                              width: '100%',
+                              marginBottom: '20px',
+                            }}
+                          ></div>
+                        </>
+                      ),
                     )}
-                </Box>
+                </Grid>
                 <Grid item>
                   <LeaveTeamButton team_id={id} />
                 </Grid>
