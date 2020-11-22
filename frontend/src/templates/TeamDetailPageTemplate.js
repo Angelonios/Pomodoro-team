@@ -17,7 +17,7 @@ import Gravatar from 'react-gravatar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { LeaveTeamButton, AddUserToTeam } from '../molecules';
-import { RefreshButton } from 'src/atoms';
+import { RefreshButton, TeamPageName } from 'src/atoms';
 import { SharedPomodoro } from '../organisms';
 import { useAuth } from '../utils/auth';
 import { ForbiddenPage } from '../pages/ForbiddenPage';
@@ -100,14 +100,7 @@ export function TeamDetailPageTemplate() {
                           (pomodoro, index) => (
                             <TableRow key={index}>
                               <TableCell component="th" scope="row">
-                                <div>
-                                  <Gravatar
-                                    email={pomodoro.email}
-                                    size={35}
-                                    style={{ padding: 2 }}
-                                  />
-                                </div>
-                                {pomodoro.email}
+                                <TeamPageName email={pomodoro.email} />
                               </TableCell>
                               <SharedPomodoro
                                 shareId={pomodoro.share_id}

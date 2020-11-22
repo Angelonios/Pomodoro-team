@@ -1,12 +1,11 @@
 import React from 'react';
 
 import { useHistory } from 'react-router-dom';
-import { AppBar, Toolbar, Typography } from '@material-ui/core/';
+import { AppBar, Box, Toolbar, Typography } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
-import Gravatar from 'react-gravatar';
 
 import { route } from 'src/Routes';
-import { NavLink } from 'src/atoms';
+import { NavLink, NavBarName } from 'src/atoms';
 import { useAuth } from 'src/utils/auth';
 import { MenuUser } from 'src/organisms';
 
@@ -44,13 +43,10 @@ export function TopNavigation({ currentUser }) {
                 Team Pomodori
               </NavLink>
             </Typography>
-            <div>
-              <Gravatar email={user.email} size={35} style={{ padding: 2 }} />
-            </div>
-            <Typography variant="body2" align="right">
-              <b>Hello {user.email}!</b>{' '}
+            <Box display="flex">
+              <NavBarName email={user.email} />
               <MenuUser user_id={user.user_id} logOut={logOut} />
-            </Typography>
+            </Box>
           </Toolbar>
         </AppBar>
       </div>

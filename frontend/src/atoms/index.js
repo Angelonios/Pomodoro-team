@@ -6,3 +6,5 @@ export { Link } from './Link';
 export { MenuItems } from './MenuItems';
 export { LogOut } from './LogOut';
 export { RefreshButton } from './RefreshButton';
+export { NavBarName } from './NavBarName';
+export { TeamPageName } from './TeamPageName';
