@@ -2,7 +2,16 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { Container, Paper, Box, Grid, Typography } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import {
+  Container,
+  Paper,
+  Box,
+  Grid,
+  Typography,
+  Hidden,
+  withWidth,
+} from '@material-ui/core';
 
 import { LeaveTeamButton, AddUserToTeam } from '../molecules';
 import { RefreshButton, TeamPageName } from 'src/atoms';
@@ -29,13 +38,14 @@ const GET_TEAM_MEMBERS_POMODORO = gql`
   }
 `;
 
-export function TeamDetailPageTemplate() {
+export function TeamDetailPageTemplate(props) {
   const { user } = useAuth();
   const classes = useStyles();
   const location = useLocation();
   const dataSet = !(location.data === null || location.data === undefined);
   const name = dataSet ? location.data.name : 'No team set!';
   const id = dataSet ? parseInt(location.data.id) : 0;
+  const { width } = props;
 
   const onClick = () => {
     teamMembers.refetch();
@@ -77,15 +87,27 @@ export function TeamDetailPageTemplate() {
                 </Grid>
                 <Grid item container>
                   <Grid container spacing={3} style={{ marginBottom: '20px' }}>
-                    <Grid item xs={12} md={4}>
-                      <Typography className={classes.header}>Email</Typography>
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                      <Typography className={classes.header}>State</Typography>
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                      <Typography className={classes.header}>Timer</Typography>
-                    </Grid>
+                    <Hidden smDown>
+                      <Grid item xs={12} md={4}>
+                        <Typography className={classes.header}>
+                          Email
+                        </Typography>
+                      </Grid>
+                    </Hidden>
+                    <Hidden smDown>
+                      <Grid item xs={12} md={4}>
+                        <Typography className={classes.header}>
+                          State
+                        </Typography>
+                      </Grid>
+                    </Hidden>
+                    <Hidden smDown>
+                      <Grid item xs={12} md={4}>
+                        <Typography className={classes.header}>
+                          Timer
+                        </Typography>
+                      </Grid>
+                    </Hidden>
                   </Grid>
                   <div
                     style={{
@@ -145,3 +167,9 @@ export function TeamDetailPageTemplate() {
     </Container>
   );
 }
+
+TeamDetailPageTemplate.propTypes = {
+  width: PropTypes.oneOf(['lg', 'md', 'sm', 'xl', 'xs']).isRequired,
+};
+
+export default withWidth()(TeamDetailPageTemplate);
