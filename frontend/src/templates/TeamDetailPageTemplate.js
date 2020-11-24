@@ -2,7 +2,6 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import PropTypes from 'prop-types';
 import {
   Container,
   Paper,
@@ -10,7 +9,6 @@ import {
   Grid,
   Typography,
   Hidden,
-  withWidth,
 } from '@material-ui/core';
 
 import { LeaveTeamButton, AddUserToTeam } from '../molecules';
@@ -128,6 +126,13 @@ export function TeamDetailPageTemplate() {
                             marginBottom: '20px',
                           }}
                         >
+                          <Hidden mdUp>
+                            <Grid item xs={2}>
+                              <Typography className={classes.header}>
+                                Email
+                              </Typography>
+                            </Grid>
+                          </Hidden>
                           <TeamPageName email={pomodoro.email} />
                           <SharedPomodoro
                             key={index}

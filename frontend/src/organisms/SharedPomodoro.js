@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer } from 'react';
 import { useQuery } from '@apollo/client';
-import { Grid } from '@material-ui/core';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import { Grid, Typography, Hidden } from '@material-ui/core';
 import { getPomodoroComponent } from 'src/utils/pomodoroCycle';
 import {
   pomodoroReducer,
@@ -10,7 +11,18 @@ import {
 import { CircularPomodoroCountdown } from 'src/molecules';
 import { POMODORO_QUERY } from 'src/utils/serverSync';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+    backgroundColor: theme.palette.background.paper,
+  },
+  header: {
+    textAlign: 'center',
+  },
+}));
+
 export function SharedPomodoro({ shareId }) {
+  const classes = useStyles();
   const serverPomodoro = useQuery(POMODORO_QUERY, {
     variables: { shareId },
     pollInterval: 5000,
@@ -49,14 +61,24 @@ export function SharedPomodoro({ shareId }) {
 
   return (
     <>
-      <Grid item xs={12} md={4} style={{ textAlign: 'center' }}>
+      <Hidden mdUp>
+        <Grid item xs={2}>
+          <Typography className={classes.header}>State</Typography>
+        </Grid>
+      </Hidden>
+      <Grid item xs={10} md={4} style={{ textAlign: 'center' }}>
         {state.isOffline
           ? 'Offline'
           : state.running
           ? getPomodoroComponent(state.position).label
           : 'Idle'}
       </Grid>
-      <Grid item xs={12} md={4} style={{ textAlign: 'center' }}>
+      <Hidden mdUp>
+        <Grid item xs={2}>
+          <Typography className={classes.header}>Timer</Typography>
+        </Grid>
+      </Hidden>
+      <Grid item xs={10} md={4} style={{ textAlign: 'center' }}>
         <CircularPomodoroCountdown
           remainingSeconds={state.remainingSeconds}
           maxSeconds={getPomodoroComponent(state.position).seconds}

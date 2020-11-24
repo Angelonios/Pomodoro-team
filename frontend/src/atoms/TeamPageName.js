@@ -4,7 +4,7 @@ import Gravatar from 'react-gravatar';
 
 export function TeamPageName({ email }) {
   return (
-    <Grid item xs={12} md={4} style={{ textAlign: 'center' }}>
+    <Grid item xs={10} md={4} style={{ textAlign: 'center' }}>
       <div style={{ display: 'inline-flex' }}>
         <Gravatar
           email={email}
