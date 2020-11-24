@@ -35,7 +35,7 @@ export function TopNavigation({ currentUser }) {
       <div className={classes.root}>
         <AppBar position="relative">
           <Toolbar>
-            <Grid container>
+            <Grid container style={{ maxWidth: 'max-content' }}>
               <Grid item>
                 <Typography variant="h6" className={classes.title}>
                   <NavLink
