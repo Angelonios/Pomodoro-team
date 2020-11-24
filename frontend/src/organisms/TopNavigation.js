@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useHistory } from 'react-router-dom';
-import { AppBar, Box, Toolbar, Typography } from '@material-ui/core/';
+import { AppBar, Box, Grid, Toolbar, Typography } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { route } from 'src/Routes';
@@ -43,10 +43,14 @@ export function TopNavigation({ currentUser }) {
                 Team Pomodori
               </NavLink>
             </Typography>
-            <Box display="flex">
-              <NavBarName email={user.email} />
-              <MenuUser user_id={user.user_id} logOut={logOut} />
-            </Box>
+            <Grid container>
+              <Grid item xs={12} style={{ textAlign: 'end' }}>
+                <NavBarName email={user.email} />
+              </Grid>
+              <Grid item xs={12} style={{ textAlign: 'end' }}>
+                <MenuUser user_id={user.user_id} logOut={logOut} />
+              </Grid>
+            </Grid>
           </Toolbar>
         </AppBar>
       </div>

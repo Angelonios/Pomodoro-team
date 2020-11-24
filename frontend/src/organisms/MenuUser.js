@@ -25,6 +25,7 @@ export function MenuUser({ user_id, logOut }) {
       <IconButton
         aria-controls="simple-menu"
         aria-haspopup="true"
+        style={{ padding: '6px' }}
         onClick={handleClick}
       >
         <MenuIcon color="action" />
