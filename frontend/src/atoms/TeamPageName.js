@@ -11,7 +11,10 @@ export function TeamPageName({ email }) {
           size={45}
           style={{ verticalAlign: 'sub', padding: '5px' }}
         />{' '}
-        <Typography component="div" style={{ alignSelf: 'center' }}>
+        <Typography
+          component="div"
+          style={{ alignSelf: 'center', wordBreak: 'break-word' }}
+        >
           {' '}
           {email}
         </Typography>
