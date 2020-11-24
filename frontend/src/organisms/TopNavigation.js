@@ -35,14 +35,18 @@ export function TopNavigation({ currentUser }) {
       <div className={classes.root}>
         <AppBar position="relative">
           <Toolbar>
-            <Typography variant="h6" className={classes.title}>
-              <NavLink
-                to={route.home()}
-                style={{ textDecoration: 'none', color: 'white' }}
-              >
-                Team Pomodori
-              </NavLink>
-            </Typography>
+            <Grid container>
+              <Grid item>
+                <Typography variant="h6" className={classes.title}>
+                  <NavLink
+                    to={route.home()}
+                    style={{ textDecoration: 'none', color: 'white' }}
+                  >
+                    Team Pomodori
+                  </NavLink>
+                </Typography>
+              </Grid>
+            </Grid>
             <Grid container>
               <Grid item xs={12} style={{ textAlign: 'end' }}>
                 <NavBarName email={user.email} />
