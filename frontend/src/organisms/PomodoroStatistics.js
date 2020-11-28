@@ -28,25 +28,10 @@ export function PomodoroStatistics() {
     },
   });
 
-  const tableActionsStyle = makeStyles((theme) => ({
-    root: {
-      flexShrink: 0,
-      marginLeft: theme.spacing(2.5),
-    },
-  }));
-
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(7);
 
-  const tableActions = () => TablePaginationActions(tableActionsStyle());
 
-  /* Typechecking setting for table actions */
-  tableActions.propTypes = {
-    count: PropTypes.number.isRequired,
-    onChangePage: PropTypes.func.isRequired,
-    page: PropTypes.number.isRequired,
-    rowsPerPage: PropTypes.number.isRequired,
-  };
 
   // const { loading, data } = useQuery(POMODORO_STATISTICS, {
   //   variables: { user_id: auth.user.user_id },
@@ -76,6 +61,23 @@ export function PomodoroStatistics() {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+  };
+
+  const paginationData = {
+    count: rows.length,
+    page: page,
+    rowsPerPage: rowsPerPage,
+    onChangePage: handleChangePage,
+  }
+
+  const tableActions = () => TablePaginationActions(paginationData);
+
+  /* Typechecking setting for table actions */
+  tableActions.propTypes = {
+    count: PropTypes.number.isRequired,
+    onChangePage: PropTypes.func.isRequired,
+    page: PropTypes.number.isRequired,
+    rowsPerPage: PropTypes.number.isRequired,
   };
 
   // debugger;

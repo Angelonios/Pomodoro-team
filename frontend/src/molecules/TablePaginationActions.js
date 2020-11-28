@@ -6,7 +6,7 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
-export function TablePaginationActions({props}) {
+export function TablePaginationActions(paginationData) {
   const tableActionsStyle = makeStyles((theme) => ({
     root: {
       flexShrink: 0,
@@ -16,8 +16,8 @@ export function TablePaginationActions({props}) {
 
   const classes = tableActionsStyle();
   const theme = useTheme();
-  const { count, page, rowsPerPage, onChangePage } = props;
-debugger;
+  debugger;
+  const { count, page, rowsPerPage, onChangePage } = paginationData;
   const handleFirstPageButtonClick = (event) => {
     onChangePage(event, 0);
   };
