@@ -1,4 +1,5 @@
 import { getPomodoroComponent, getNextIndex } from 'src/utils/pomodoroCycle';
+import { timerStates } from 'src/utils/serverSync';
 
 export const CLICK_MAIN_BUTTON = 'CLICK_MAIN_BUTTON';
 export const GET_REMAINING_SECONDS = 'GET_REMAINING_SECONDS';
@@ -19,11 +20,11 @@ const calculateRemainingSeconds = (state) => {
 
 // Basic actions
 const clickMainButton = (state) => {
-  if (state.running) {
+  if (state.timerState === timerStates.running) {
     const updatedState = {
       ...state,
       position: getNextIndex(state.position),
-      running: false,
+      timerState: timerStates.idle,
       secondsSinceStart: 0,
     };
     return {
@@ -33,7 +34,7 @@ const clickMainButton = (state) => {
   } else {
     const updatedState = {
       ...state,
-      running: true,
+      timerState: timerStates.running,
       secondsSinceStart: 0,
     };
     state.finalTime = calculateFinalTime(updatedState);
@@ -61,14 +62,14 @@ const setPomodoroState = (state, newState) => {
   if (newState.secondsSinceStart === 0) {
     return {
       ...updatedState,
-      running: false,
+      timerState: timerStates.idle,
       remainingSeconds: getPomodoroComponent(updatedState.position).seconds,
     };
   } else {
     state.finalTime = calculateFinalTime(updatedState);
     return {
       ...updatedState,
-      running: true,
+      timerState: timerStates.running,
       remainingSeconds: calculateRemainingSeconds(state),
       finalTime: state.finalTime,
     };

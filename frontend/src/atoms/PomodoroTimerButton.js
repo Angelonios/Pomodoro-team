@@ -1,21 +1,23 @@
 import React from 'react';
 
+import { Button } from '@material-ui/core';
+import PlayArrowTwoToneIcon from '@material-ui/icons/PlayArrowTwoTone';
+import FlagIcon from '@material-ui/icons/Flag';
+import FreeBreakfastTwoToneIcon from '@material-ui/icons/FreeBreakfastTwoTone';
+
 import {
   usePomodoroDispatch,
   usePomodoroState,
 } from 'src/utils/PomodoroContext';
 
-import { Button } from '@material-ui/core';
-import PlayArrowTwoToneIcon from '@material-ui/icons/PlayArrowTwoTone';
-import FlagIcon from '@material-ui/icons/Flag';
-import FreeBreakfastTwoToneIcon from '@material-ui/icons/FreeBreakfastTwoTone';
+import { timerStates } from 'src/utils/serverSync';
 
 export function PomodoroTimerButton({ text, size }) {
   const dispatch = usePomodoroDispatch();
   const state = usePomodoroState();
 
   const getStartIcon = () => {
-    if (state.pomodoroRunning) {
+    if (state.pomodoroTimerState === timerStates.running) {
       return <FlagIcon />;
     } else {
       switch (state.type) {
@@ -32,7 +34,7 @@ export function PomodoroTimerButton({ text, size }) {
   };
 
   let buttonText = '';
-  state.pomodoroRunning
+  state.pomodoroTimerState === timerStates.running
     ? (buttonText = 'Finish')
     : (buttonText = state.buttonText);
 

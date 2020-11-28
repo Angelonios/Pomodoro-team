@@ -6,23 +6,23 @@ export const POMODORO_QUERY = gql`
     pomodoro(shareId: $shareId) {
       position
       secondsSinceStart
-      isOffline
+      state
     }
   }
 `;
 
 export const UPDATE_POMODORO_MUTATION = gql`
   mutation UpdatePomodoro(
-    $running: Boolean!
     $position: Int!
     $communicationId: String!
     $shareId: String!
+    $state: State!
   ) {
     updatePomodoro(
-      running: $running
       position: $position
       communicationId: $communicationId
       shareId: $shareId
+      state: $state
     )
   }
 `;
@@ -35,6 +35,13 @@ export const GET_USER_POMODORO_IDS = gql`
     }
   }
 `;
+
+export const timerStates = {
+  idle: 'IDLE',
+  running: 'RUNNING',
+  paused: 'PAUSED',
+  offline: 'OFFLINE',
+};
 
 const getUdid = () => {
   return uuidv4();

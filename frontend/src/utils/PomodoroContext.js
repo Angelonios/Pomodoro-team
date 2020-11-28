@@ -12,6 +12,7 @@ import {
   POMODORO_QUERY,
   UPDATE_POMODORO_MUTATION,
   GET_USER_POMODORO_IDS,
+  timerStates,
 } from 'src/utils/serverSync';
 import {
   pomodoroReducer,
@@ -43,7 +44,7 @@ export function PomodoroProvider({ children }) {
     secondsSinceStart: 0,
     finalTime: 0,
     position: 0,
-    running: false,
+    timerState: timerStates.idle,
   });
 
   const userPomodoroIds = useQuery(GET_USER_POMODORO_IDS, {
@@ -78,17 +79,25 @@ export function PomodoroProvider({ children }) {
     dispatch({ type: CLICK_MAIN_BUTTON });
 
     //Prepare props for mutation
-    let running, position;
-    running = !state.running;
-    state.running
-      ? (position = getNextIndex(state.position))
-      : (position = state.position);
+    let newTimerState, newPosition;
+    if (
+      state.timerState ===
+      (timerStates.running || timerStates.paused || timerStates.offline)
+    ) {
+      newTimerState = timerStates.idle;
+    } else {
+      newTimerState = timerStates.running;
+    }
+    state.timerState === timerStates.running
+      ? (newPosition = getNextIndex(state.position))
+      : (newPosition = state.position);
 
+    console.log(newTimerState);
     //Send mutation with new values
     updateMutation({
       variables: {
-        running: running,
-        position: position,
+        state: newTimerState,
+        position: newPosition,
         communicationId: communicationId,
         shareId: shareId,
       },
@@ -103,7 +112,7 @@ export function PomodoroProvider({ children }) {
       //If backend returns null, then we have to send mutation with new share and communication ids
       updateMutation({
         variables: {
-          running: false,
+          state: timerStates.idle,
           position: 0,
           communicationId: communicationId,
           shareId: shareId,
@@ -131,7 +140,7 @@ export function PomodoroProvider({ children }) {
   useEffect(() => {
     let title = '';
     let faviconHref = '';
-    if (!state.running) {
+    if (state.timerState === timerStates.idle) {
       title = 'Idle - Team Pomodori';
       faviconHref = '/grey-tomato.svg';
     } else if (state.remainingSeconds < 0) {
@@ -144,7 +153,10 @@ export function PomodoroProvider({ children }) {
         'Team Pomodori';
       faviconHref = '/red-tomato.svg';
 
-      if (state.remainingSeconds % 300 === 0 && state.running) {
+      if (
+        state.remainingSeconds % 300 === 0 &&
+        state.timerState === timerStates.running
+      ) {
         console.log(state.remainingSeconds);
         //play sound
         play();
@@ -167,12 +179,12 @@ export function PomodoroProvider({ children }) {
     console.log(faviconHref);
     favicon.href = faviconHref;
     document.title = title;
-    if (!state.running) return;
+    if (state.timerState === timerStates.idle) return;
     const timer = setTimeout(() => {
       dispatch({ type: GET_REMAINING_SECONDS });
     }, 1000);
     return () => clearTimeout(timer);
-  }, [state.running, state.remainingSeconds]);
+  }, [state.timerState, state.remainingSeconds]);
 
   ////////////////////////////////////////////////////////////////
   // Perform these actions after first load / reload of the page
@@ -189,7 +201,7 @@ export function PomodoroProvider({ children }) {
     <PomodoroStateContext.Provider
       value={{
         remainingSeconds: state.remainingSeconds,
-        pomodoroRunning: state.running,
+        pomodoroTimerState: state.timerState,
         maxSeconds: getPomodoroComponent(state.position).seconds,
         buttonText: getPomodoroComponent(state.position).buttonText,
         label: getPomodoroComponent(state.position).label,
