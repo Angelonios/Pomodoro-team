@@ -33,9 +33,10 @@ export const updatePomodoro = async (
 
 export const savePomodoroDuration = async (
   _,
-  { userId, finishedAt, duration },
+  { user_id, finished_at, duration },
   { dbConnection },
 ) => {
+  const date = (new Date(parseInt(finished_at)));
   await dbConnection.query(
     `INSERT INTO pomodoro_statistics
     (
@@ -45,8 +46,8 @@ export const savePomodoroDuration = async (
         (?, ?, ?);
 `,
     [
-      userId,
-      finishedAt,
+      user_id,
+      date,
       duration,
     ],
   );

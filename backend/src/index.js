@@ -53,7 +53,7 @@ const typeDefs = gql`
     id: Int!
     user_id: Int!
     finished_at: String!
-    duration: String!
+    duration: Int!
   }
 
   type Mutation {
@@ -83,7 +83,7 @@ const typeDefs = gql`
     savePomodoroDuration(
       user_id: Int!
       finished_at: String! 
-      duration: String!
+      duration: Int!
     ): String!
   }
 
