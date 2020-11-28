@@ -1,3 +1,20 @@
+const actions = {
+  switchToNext: { label: 'Finish', icon: 'flag' },
+  switchToPomodoro: {
+    label: 'Begin work',
+  },
+  switchToShortBreak: {
+    label: 'Take a break',
+  },
+  switchToLongBreak: {
+    label: 'Take a long break',
+  },
+  start: { icon: 'play' },
+  pause: { icon: 'pause' },
+  resume: { icon: 'play' },
+  restart: { icon: 'restart' },
+};
+
 const pomodoroCycleProps = {
   components: {
     pomodoro: {
@@ -6,6 +23,22 @@ const pomodoroCycleProps = {
       label: 'Work',
       buttonText: 'Begin work',
       color: 'primary',
+      actions: {
+        idle: {
+          primary: actions.start,
+          secondary: (actions.switchToShortBreak, actions.switchToLongBreak),
+        },
+        running: {
+          primary: actions.switchToNext,
+          pause: actions.pause,
+          restart: actions.restart,
+        },
+        paused: {
+          primary: actions.switchToNext,
+          resume: actions.resume,
+          restart: actions.restart,
+        },
+      },
     },
     shortBreak: {
       type: 2,
@@ -13,6 +46,22 @@ const pomodoroCycleProps = {
       label: 'Break',
       buttonText: 'Take a break',
       color: 'secondary',
+      actions: {
+        idle: {
+          primary: actions.start,
+          secondary: (actions.switchToPomodoro, actions.switchToLongBreak),
+        },
+        running: {
+          primary: actions.switchToNext,
+          pause: actions.pause,
+          restart: actions.restart,
+        },
+        paused: {
+          primary: actions.switchToNext,
+          resume: actions.resume,
+          restart: actions.restart,
+        },
+      },
     },
     longBreak: {
       type: 3,
@@ -20,6 +69,22 @@ const pomodoroCycleProps = {
       label: 'Break',
       buttonText: 'Take a long break',
       color: 'secondary',
+      actions: {
+        idle: {
+          primary: actions.start,
+          secondary: (actions.switchToPomodoro, actions.switchToShortBreak),
+        },
+        running: {
+          primary: actions.switchToNext,
+          pause: actions.pause,
+          restart: actions.restart,
+        },
+        paused: {
+          primary: actions.switchToNext,
+          resume: actions.resume,
+          restart: actions.restart,
+        },
+      },
     },
   },
 };
