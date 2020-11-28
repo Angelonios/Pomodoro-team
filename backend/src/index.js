@@ -84,7 +84,7 @@ const typeDefs = gql`
       user_id: Int!
       finished_at: String! 
       duration: String!
-    )
+    ): String!
   }
 
   type AuthUser {

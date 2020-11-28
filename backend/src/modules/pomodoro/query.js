@@ -60,7 +60,7 @@ async function getDbTime(dbConnection) {
   return result[0];
 }
 
-export const pomodoro_statistics = async (_, { userId }, { dbConnection }) => {
+export const pomodoroStatistics = async (_, { userId }, { dbConnection }) => {
   if(!userId){
     return;
   }
