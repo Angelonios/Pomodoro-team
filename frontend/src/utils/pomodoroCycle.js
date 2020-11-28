@@ -1,3 +1,5 @@
+import timerStates from 'src/utils/serverSync';
+
 const actions = {
   switchToNext: { label: 'Finish', icon: 'flag' },
   switchToPomodoro: {
@@ -9,10 +11,10 @@ const actions = {
   switchToLongBreak: {
     label: 'Take a long break',
   },
+  restart: { label: 'Restart' },
   start: { icon: 'play' },
   pause: { icon: 'pause' },
   resume: { icon: 'play' },
-  restart: { icon: 'restart' },
 };
 
 const pomodoroCycleProps = {
@@ -24,19 +26,19 @@ const pomodoroCycleProps = {
       buttonText: 'Begin work',
       color: 'primary',
       actions: {
-        idle: {
+        IDLE: {
           primary: actions.start,
-          secondary: (actions.switchToShortBreak, actions.switchToLongBreak),
+          secondary: [actions.switchToShortBreak, actions.switchToLongBreak],
         },
-        running: {
+        RUNNING: {
           primary: actions.switchToNext,
+          secondary: [actions.restart],
           pause: actions.pause,
-          restart: actions.restart,
         },
-        paused: {
+        PAUSED: {
           primary: actions.switchToNext,
-          resume: actions.resume,
-          restart: actions.restart,
+          secondary: [actions.restart],
+          pauseControls: actions.resume,
         },
       },
     },
@@ -47,19 +49,19 @@ const pomodoroCycleProps = {
       buttonText: 'Take a break',
       color: 'secondary',
       actions: {
-        idle: {
+        IDLE: {
           primary: actions.start,
-          secondary: (actions.switchToPomodoro, actions.switchToLongBreak),
+          secondary: [actions.switchToPomodoro, actions.switchToLongBreak],
         },
-        running: {
+        RUNNING: {
           primary: actions.switchToNext,
-          pause: actions.pause,
-          restart: actions.restart,
+          secondary: [actions.restart],
+          pauseControls: actions.pause,
         },
-        paused: {
+        PAUSED: {
           primary: actions.switchToNext,
-          resume: actions.resume,
-          restart: actions.restart,
+          secondary: [actions.restart],
+          pauseControls: actions.resume,
         },
       },
     },
@@ -70,19 +72,19 @@ const pomodoroCycleProps = {
       buttonText: 'Take a long break',
       color: 'secondary',
       actions: {
-        idle: {
+        IDLE: {
           primary: actions.start,
-          secondary: (actions.switchToPomodoro, actions.switchToShortBreak),
+          secondary: [actions.switchToPomodoro, actions.switchToShortBreak],
         },
-        running: {
+        RUNNING: {
           primary: actions.switchToNext,
-          pause: actions.pause,
-          restart: actions.restart,
+          secondary: [actions.restart],
+          pauseControls: actions.pause,
         },
-        paused: {
+        PAUSED: {
           primary: actions.switchToNext,
-          resume: actions.resume,
-          restart: actions.restart,
+          secondary: [actions.restart],
+          pauseControls: actions.resume,
         },
       },
     },

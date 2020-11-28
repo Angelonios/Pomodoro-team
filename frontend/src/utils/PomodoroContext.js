@@ -209,6 +209,7 @@ export function PomodoroProvider({ children }) {
         color: getPomodoroComponent(state.position).color,
         shareUrl: shareUrl,
         communicationId: communicationId,
+        actions: getPomodoroComponent(state.position).actions[state.timerState],
       }}
     >
       <PomodoroDispatchContext.Provider value={clickMainButton}>
