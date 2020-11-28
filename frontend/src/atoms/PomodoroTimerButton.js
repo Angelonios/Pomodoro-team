@@ -44,7 +44,6 @@ export function PomodoroTimerButton({ text, size }) {
   };
 
   const dropDownOptions = state.actions.secondary;
-  console.log(dropDownOptions);
 
   let buttonText = '';
   state.pomodoroTimerState === timerStates.running
@@ -53,15 +52,12 @@ export function PomodoroTimerButton({ text, size }) {
 
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
-
-  const handleClick = () => {
-    console.info(`You clicked ${dropDownOptions[selectedIndex]}`);
-  };
+  const [selectedIndex, setSelectedIndex] = React.useState(null);
 
   const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index);
     setOpen(false);
+    state.performAction({ type: 'secondary', index: index });
   };
 
   const handleToggle = () => {
@@ -85,10 +81,14 @@ export function PomodoroTimerButton({ text, size }) {
         size={size}
         aria-label="split button"
       >
-        <Button startIcon={getStartIcon()} onClick={() => dispatch()}>
+        <Button
+          startIcon={getStartIcon()}
+          onClick={() => state.performAction({ type: 'primary' })}
+        >
           {buttonText}
         </Button>
         <Button
+          size="small"
           aria-controls={open ? 'split-button-menu' : undefined}
           aria-expanded={open ? 'true' : undefined}
           aria-label="select merge strategy"
@@ -119,7 +119,6 @@ export function PomodoroTimerButton({ text, size }) {
                   {dropDownOptions.map((option, index) => (
                     <MenuItem
                       key={option.label}
-                      disabled={index === 2}
                       selected={index === selectedIndex}
                       onClick={(event) => handleMenuItemClick(event, index)}
                     >

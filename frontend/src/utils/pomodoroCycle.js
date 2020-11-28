@@ -3,15 +3,18 @@ import timerStates from 'src/utils/serverSync';
 const actions = {
   switchToNext: { label: 'Finish', icon: 'flag' },
   switchToPomodoro: {
+    type: 'SWITCH_TO_POMODORO',
     label: 'Begin work',
   },
   switchToShortBreak: {
+    type: 'SWITCH_TO_SHORT_BREAK',
     label: 'Take a break',
   },
   switchToLongBreak: {
+    type: 'SWITCH_TO_LONG_BREAK',
     label: 'Take a long break',
   },
-  restart: { label: 'Restart' },
+  restart: { type: 'RESTART', label: 'Restart' },
   start: { icon: 'play' },
   pause: { icon: 'pause' },
   resume: { icon: 'play' },

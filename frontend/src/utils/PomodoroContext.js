@@ -75,24 +75,89 @@ export function PomodoroProvider({ children }) {
     }
   }, [user]);
 
-  const clickMainButton = () => {
-    dispatch({ type: CLICK_MAIN_BUTTON });
-
-    //Prepare props for mutation
-    let newTimerState, newPosition;
-    if (
-      state.timerState ===
-      (timerStates.running || timerStates.paused || timerStates.offline)
+  const handleSecondaryActions = (index) => {
+    let newTimerState = timerStates.running;
+    let newPosition = 0;
+    switch (
+      getPomodoroComponent(state.position).actions[state.timerState].secondary[
+        index
+      ].type
     ) {
-      newTimerState = timerStates.idle;
-    } else {
-      newTimerState = timerStates.running;
+      case 'SWITCH_TO_POMODORO':
+        dispatch({
+          type: SET_POMODORO_STATE,
+          newState: {
+            position: newPosition,
+            state: newTimerState,
+            secondsSinceStart: 0,
+          },
+        });
+        return { newTimerState, newPosition };
+      case 'SWITCH_TO_SHORT_BREAK':
+        newTimerState = timerStates.running;
+        newPosition = 1;
+        dispatch({
+          type: SET_POMODORO_STATE,
+          newState: {
+            position: newPosition,
+            state: newTimerState,
+            secondsSinceStart: 0,
+          },
+        });
+        return { newTimerState, newPosition };
+      case 'SWITCH_TO_LONG_BREAK':
+        newTimerState = timerStates.running;
+        newPosition = 7;
+        dispatch({
+          type: SET_POMODORO_STATE,
+          newState: {
+            position: newPosition,
+            state: newTimerState,
+            secondsSinceStart: 0,
+          },
+        });
+        return { newTimerState, newPosition };
+      case 'RESTART':
+        newTimerState = timerStates.running;
+        newPosition = state.position;
+        dispatch({
+          type: SET_POMODORO_STATE,
+          newState: {
+            position: newPosition,
+            state: newTimerState,
+            secondsSinceStart: 0,
+          },
+        });
+        return { newTimerState, newPosition };
     }
-    state.timerState === timerStates.running
-      ? (newPosition = getNextIndex(state.position))
-      : (newPosition = state.position);
+  };
 
-    console.log(newTimerState);
+  const performAction = ({ type, index }) => {
+    let newTimerState, newPosition;
+    switch (type) {
+      case 'primary':
+        dispatch({ type: CLICK_MAIN_BUTTON });
+        if (
+          state.timerState ===
+          (timerStates.running || timerStates.paused || timerStates.offline)
+        ) {
+          newTimerState = timerStates.idle;
+        } else {
+          newTimerState = timerStates.running;
+        }
+        state.timerState === timerStates.running
+          ? (newPosition = getNextIndex(state.position))
+          : (newPosition = state.position);
+        break;
+      case 'secondary':
+        ({ newTimerState, newPosition } = handleSecondaryActions(index));
+
+        break;
+      case 'pause':
+        console.log('Pause');
+        break;
+    }
+
     //Send mutation with new values
     updateMutation({
       variables: {
@@ -136,6 +201,9 @@ export function PomodoroProvider({ children }) {
     updateMutation,
     user,
   ]);
+
+  //Favicon, title and sound
+  //TODO: Move somewhere else
   const favicon = document.getElementById('favicon');
   useEffect(() => {
     let title = '';
@@ -157,14 +225,12 @@ export function PomodoroProvider({ children }) {
         state.remainingSeconds % 300 === 0 &&
         state.timerState === timerStates.running
       ) {
-        console.log(state.remainingSeconds);
         //play sound
         play();
       }
     } else {
       title = getPomodoroComponent(state.position).label + ' - Team Pomodori';
       if (Object.is(state.remainingSeconds, +0)) {
-        console.log(state.remainingSeconds);
         //play sound
         play();
       }
@@ -176,9 +242,11 @@ export function PomodoroProvider({ children }) {
         }
       }
     }
-    console.log(faviconHref);
     favicon.href = faviconHref;
     document.title = title;
+    //End of favicon, title and sound
+
+    //Refresh context every second
     if (state.timerState === timerStates.idle) return;
     const timer = setTimeout(() => {
       dispatch({ type: GET_REMAINING_SECONDS });
@@ -186,14 +254,12 @@ export function PomodoroProvider({ children }) {
     return () => clearTimeout(timer);
   }, [state.timerState, state.remainingSeconds]);
 
-  ////////////////////////////////////////////////////////////////
-  // Perform these actions after first load / reload of the page
-  ////////////////////////////////////////////////////////////////
-  useEffect(() => {}, []);
-
   useEffect(() => {
     if (cachedServerData !== null) {
-      dispatch({ type: SET_POMODORO_STATE, newState: cachedServerData });
+      dispatch({
+        type: SET_POMODORO_STATE,
+        newState: cachedServerData.pomodoro,
+      });
     }
   }, [cachedServerData]);
 
@@ -210,9 +276,10 @@ export function PomodoroProvider({ children }) {
         shareUrl: shareUrl,
         communicationId: communicationId,
         actions: getPomodoroComponent(state.position).actions[state.timerState],
+        performAction: performAction,
       }}
     >
-      <PomodoroDispatchContext.Provider value={clickMainButton}>
+      <PomodoroDispatchContext.Provider value={dispatch}>
         {children}
       </PomodoroDispatchContext.Provider>
     </PomodoroStateContext.Provider>

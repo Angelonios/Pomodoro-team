@@ -4,6 +4,8 @@ import { timerStates } from 'src/utils/serverSync';
 export const CLICK_MAIN_BUTTON = 'CLICK_MAIN_BUTTON';
 export const GET_REMAINING_SECONDS = 'GET_REMAINING_SECONDS';
 export const SET_POMODORO_STATE = 'SET_POMODORO_STATE';
+export const PAUSE = 'PAUSE';
+export const RESUME = 'RESUME';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Calculates final time from seconds in current pomodoro component and seconds since start
@@ -54,22 +56,21 @@ const getRemainingSeconds = (state) => {
 };
 
 const setPomodoroState = (state, newState) => {
+  console.log(newState);
   const updatedState = {
     position: parseInt(newState.position),
     secondsSinceStart: newState.secondsSinceStart,
-    isOffline: newState.isOffline,
+    timerState: newState.state,
   };
-  if (newState.secondsSinceStart === 0) {
+  if (newState.state === timerStates.idle) {
     return {
       ...updatedState,
-      timerState: timerStates.idle,
       remainingSeconds: getPomodoroComponent(updatedState.position).seconds,
     };
   } else {
     state.finalTime = calculateFinalTime(updatedState);
     return {
       ...updatedState,
-      timerState: timerStates.running,
       remainingSeconds: calculateRemainingSeconds(state),
       finalTime: state.finalTime,
     };
@@ -83,7 +84,7 @@ export function pomodoroReducer(state, action) {
     case GET_REMAINING_SECONDS:
       return getRemainingSeconds(state);
     case SET_POMODORO_STATE:
-      return setPomodoroState(state, action.newState.pomodoro);
+      return setPomodoroState(state, action.newState);
     default:
       return state;
   }
