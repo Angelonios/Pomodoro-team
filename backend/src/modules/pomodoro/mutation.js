@@ -30,3 +30,26 @@ export const updatePomodoro = async (
   ); */
   return 'ok';
 };
+
+export const savePomodoroDuration = async (
+  _,
+  { userId, finishedAt, duration },
+  { dbConnection },
+) => {
+  await dbConnection.query(
+    `INSERT INTO pomodoro_statistics
+    (
+        user_id, finished_at, duration
+    )
+    VALUES
+        (?, ?, ?);
+`,
+    [
+      userId,
+      finishedAt,
+      duration,
+    ],
+  );
+
+  return 'ok';
+};

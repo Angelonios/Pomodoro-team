@@ -8,6 +8,7 @@ import { Button, IconButton } from '@material-ui/core';
 import { TeamsViewMenu } from 'src/molecules';
 import { LogOut } from 'src/atoms';
 import { useHistory } from 'react-router-dom';
+import { route } from '../Routes';
 
 export function MenuUser({ user_id, logOut }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -46,6 +47,9 @@ export function MenuUser({ user_id, logOut }) {
             anchor={anchorEl}
             setAnchor={setAnchorEl}
           />
+        </MenuItem>
+        <MenuItem>
+          <Button onClick={() => history.push(route.statistics())}>Statistics</Button>
         </MenuItem>
         <MenuItem>
           <LogOut logOut={logOut} />
