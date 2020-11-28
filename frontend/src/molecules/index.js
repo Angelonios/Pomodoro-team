@@ -10,3 +10,4 @@ export { TeamsViewMenu } from './TeamsViewMenu';
 export { CreateTeamDialog } from './CreateTeamDialog';
 export { AddUserToTeam } from './AddUserToTeam';
 export { Avatar } from './Avatar';
+export { NameField } from './NameField';
