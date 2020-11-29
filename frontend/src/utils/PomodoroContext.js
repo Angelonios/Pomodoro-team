@@ -116,6 +116,10 @@ export function PomodoroProvider({ children }) {
           state.timerState !== timerStates.offline
         ) {
           newTimerState = timerStates.idle;
+          //statistics
+          if (getPomodoroComponent(state.position).type === 1) {
+            console.log('Mutation statistics');
+          }
         } else {
           newTimerState = timerStates.running;
         }
