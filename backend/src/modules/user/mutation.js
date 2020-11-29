@@ -1,6 +1,13 @@
 import * as argon2 from 'argon2';
 import { createToken } from '../../libs/token';
 
+export const NameChange = async (_, { name, user_id }, { dbConnection }) => {
+  const dbResponse = await dbConnection.query(
+    `UPDATE users SET display_name = ? WHERE user_id = ?;`,
+    [name, user_id],
+  );
+};
+
 export const SignIn = async (_, { email, password }, { dbConnection }) => {
   const dbResponse = await dbConnection.query(
     `SELECT * FROM users WHERE email = ? LIMIT 1;`,

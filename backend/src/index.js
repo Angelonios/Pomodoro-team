@@ -49,7 +49,7 @@ const typeDefs = gql`
     user_id: Int!
     teams: [Team!]!
   }
-  
+
   type PomodoroStatistic {
     id: Int!
     user_id: Int!
@@ -65,6 +65,8 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    NameChange(name: String!, user_id: Int!): Boolean
+
     SignIn(email: String!, password: String!): AuthInfo!
 
     SignUp(
@@ -87,10 +89,10 @@ const typeDefs = gql`
     LeaveTeam(team_id: Int!, user_id: Int!): Boolean
 
     DeleteTeam(teamName: String!, email: String!): String!
-    
+
     savePomodoroDuration(
       user_id: Int!
-      finished_at: String! 
+      finished_at: String!
       duration: Int!
     ): String!
   }
