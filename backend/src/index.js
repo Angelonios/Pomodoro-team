@@ -18,6 +18,7 @@ const typeDefs = gql`
     getUsersFromTeam(team_id: Int!): [User!]!
     teamMembersPomodoro(team_id: Int!): [UsersPomodoro!]!
     userPomodoroIds(user_id: Int!): Ids!
+    pomodoroStatistics(user_id: Int!): [PomodoroStatistic]!
   }
 
   type Pomodoro {
@@ -47,6 +48,13 @@ const typeDefs = gql`
   type userTeams {
     user_id: Int!
     teams: [Team!]!
+  }
+  
+  type PomodoroStatistic {
+    id: Int!
+    user_id: Int!
+    finished_at: String!
+    duration: Int!
   }
 
   enum State {
@@ -79,6 +87,12 @@ const typeDefs = gql`
     LeaveTeam(team_id: Int!, user_id: Int!): Boolean
 
     DeleteTeam(teamName: String!, email: String!): String!
+    
+    savePomodoroDuration(
+      user_id: Int!
+      finished_at: String! 
+      duration: Int!
+    ): String!
   }
 
   type AuthUser {

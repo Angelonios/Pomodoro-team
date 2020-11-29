@@ -1,3 +1,5 @@
+import { user, userPomodoroIds } from '../user/query';
+
 export const pomodoro = async (_, { shareId }, { dbConnection }) => {
   if (shareId !== '' && shareId !== undefined) {
     const pomodoro = await getPomodoro({ shareId, dbConnection });
@@ -63,4 +65,21 @@ async function getPomodoro({ shareId, dbConnection }) {
 async function getDbTime(dbConnection) {
   const result = await dbConnection.query(`SELECT CURRENT_TIMESTAMP()`, []);
   return result[0];
+}
+
+export const pomodoroStatistics = async (_, { userId }, { dbConnection }) => {
+  if(!userId){
+    return;
+  }
+
+  const pomodoroStatistics = await getPomodoroStatistics(userId, dbConnection);
+
+  return pomodoroStatistics;
+}
+
+async function getPomodoroStatistics(userId, dbConnection) {
+  const result = await dbConnection.query(
+    `SELECT * FROM pomodoro_statistics WHERE user_id = ?`, [userId]
+  );
+  return result;
 }

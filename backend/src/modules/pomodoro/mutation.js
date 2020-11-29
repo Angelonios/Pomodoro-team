@@ -61,6 +61,7 @@ export const updatePomodoro = async (
   return 'Pomodoro updated successfully!';
 };
 
+
 async function getPomodoro({ shareId, dbConnection }) {
   const result = await dbConnection.query(
     `SELECT * FROM pomodoros WHERE share_id = ?`,
@@ -73,3 +74,28 @@ async function getDbTime(dbConnection) {
   const result = await dbConnection.query(`SELECT CURRENT_TIMESTAMP()`, []);
   return result[0];
 }
+
+export const savePomodoroDuration = async (
+  _,
+  { user_id, finished_at, duration },
+  { dbConnection },
+) => {
+  const date = (new Date(parseInt(finished_at)));
+  await dbConnection.query(
+    `INSERT INTO pomodoro_statistics
+    (
+        user_id, finished_at, duration
+    )
+    VALUES
+        (?, ?, ?);
+`,
+    [
+      user_id,
+      date,
+      duration,
+    ],
+  );
+
+  return 'ok';
+};
+
