@@ -225,7 +225,10 @@ export function PomodoroProvider({ children }) {
   useEffect(() => {
     let title = '';
     let faviconHref = '';
-    if (state.timerState === timerStates.idle) {
+    if (
+      state.timerState === timerStates.idle ||
+      state.timerState === timerStates.offline
+    ) {
       title = 'Idle - Team Pomodori';
       faviconHref = '/grey-tomato.svg';
     } else if (state.remainingSeconds < 0) {
