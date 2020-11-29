@@ -111,15 +111,13 @@ export function PomodoroProvider({ children }) {
     switch (type) {
       case 'primary':
         dispatch({ type: CLICK_MAIN_BUTTON });
-        if (
-          state.timerState ===
-          (timerStates.running || timerStates.paused || timerStates.offline)
-        ) {
+        if (state.timerState !== timerStates.idle) {
           newTimerState = timerStates.idle;
         } else {
           newTimerState = timerStates.running;
         }
-        state.timerState === timerStates.running
+        state.timerState === timerStates.running ||
+        state.timerState === timerStates.paused
           ? (newPosition = getNextIndex(state.position))
           : (newPosition = state.position);
         break;

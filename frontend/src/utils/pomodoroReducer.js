@@ -17,7 +17,7 @@ const calculateFinalTime = (state) => {
 };
 
 const calculateRemainingSeconds = (state) => {
-  return parseInt(state.finalTime - Date.now() / 1000);
+  return parseInt(state.finalTime - Date.now() / 1000 + 1);
 };
 
 // Basic actions
@@ -40,7 +40,7 @@ const clickMainButton = (state) => {
   const updatedState = {
     ...state,
     timerState: timerStates.running,
-    secondsSinceStart: 0,
+    secondsSinceStart: 1,
   };
   state.finalTime = calculateFinalTime(updatedState);
   return {
@@ -58,7 +58,7 @@ const getRemainingSeconds = (state) => {
 };
 
 const setPomodoroState = (state, newState) => {
-  console.log(newState);
+  console.log('newStateInReducer', newState);
   const updatedState = {
     position: parseInt(newState.position),
     secondsSinceStart: newState.secondsSinceStart,

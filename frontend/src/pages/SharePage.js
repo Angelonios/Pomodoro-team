@@ -9,7 +9,7 @@ import {
   SET_POMODORO_STATE,
 } from 'src/utils/pomodoroReducer';
 import { CircularPomodoroCountdown, ShareUrl } from 'src/molecules';
-import { POMODORO_QUERY } from 'src/utils/serverSync';
+import { POMODORO_QUERY, timerStates } from 'src/utils/serverSync';
 
 export function SharePage() {
   const urlParams = useParams('shareId');
@@ -25,7 +25,7 @@ export function SharePage() {
     secondsSinceStart: 0,
     finalTime: 0,
     position: 0,
-    running: false,
+    timerState: timerStates.idle,
   });
 
   const history = useHistory();
@@ -36,7 +36,11 @@ export function SharePage() {
           pathname: '/error404',
         });
       } else {
-        dispatch({ type: SET_POMODORO_STATE, newState: serverPomodoro.data });
+        console.log('syncdata', serverPomodoro.data);
+        dispatch({
+          type: SET_POMODORO_STATE,
+          newState: serverPomodoro.data.pomodoro,
+        });
       }
     }
   }, [serverPomodoro, history]);
@@ -45,7 +49,7 @@ export function SharePage() {
   // If timer === running, refresh remaining seconds every second
   ////////////////////////////////////////////////////////////////
   useEffect(() => {
-    if (!state.running) return;
+    if (state.timerState !== timerStates.running) return;
     const timer = setTimeout(() => {
       dispatch({ type: GET_REMAINING_SECONDS });
     }, 1000);
