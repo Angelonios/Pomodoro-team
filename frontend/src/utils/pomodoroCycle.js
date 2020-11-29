@@ -33,6 +33,10 @@ const pomodoroCycleProps = {
           primary: actions.start,
           secondary: [actions.switchToShortBreak, actions.switchToLongBreak],
         },
+        OFFLINE: {
+          primary: actions.start,
+          secondary: [actions.switchToShortBreak, actions.switchToLongBreak],
+        },
         RUNNING: {
           primary: actions.switchToNext,
           secondary: [actions.restart],
@@ -56,6 +60,10 @@ const pomodoroCycleProps = {
           primary: actions.start,
           secondary: [actions.switchToPomodoro, actions.switchToLongBreak],
         },
+        OFFLINE: {
+          primary: actions.start,
+          secondary: [actions.switchToShortBreak, actions.switchToLongBreak],
+        },
         RUNNING: {
           primary: actions.switchToNext,
           secondary: [actions.restart],
@@ -78,6 +86,10 @@ const pomodoroCycleProps = {
         IDLE: {
           primary: actions.start,
           secondary: [actions.switchToPomodoro, actions.switchToShortBreak],
+        },
+        OFFLINE: {
+          primary: actions.start,
+          secondary: [actions.switchToShortBreak, actions.switchToLongBreak],
         },
         RUNNING: {
           primary: actions.switchToNext,

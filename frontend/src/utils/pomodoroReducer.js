@@ -58,13 +58,15 @@ const getRemainingSeconds = (state) => {
 };
 
 const setPomodoroState = (state, newState) => {
-  console.log('newStateInReducer', newState);
   const updatedState = {
-    position: parseInt(newState.position),
+    position: newState.position,
     secondsSinceStart: newState.secondsSinceStart,
     timerState: newState.state,
   };
-  if (newState.state === timerStates.idle) {
+  if (
+    newState.state === timerStates.idle ||
+    newState.state === timerStates.offline
+  ) {
     return {
       ...updatedState,
       remainingSeconds: getPomodoroComponent(updatedState.position).seconds,

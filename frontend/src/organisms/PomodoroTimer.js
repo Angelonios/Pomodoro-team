@@ -43,7 +43,7 @@ export function PomodoroTimer() {
             </Grid>
           </Grid>
         </Box>
-        <Box p={4}>
+        <Box p={8}>
           <Grid container alignItems="center" justify="center">
             <Grid item lg={8} xs={12}>
               <ShareUrl shareUrl={state.shareUrl} />

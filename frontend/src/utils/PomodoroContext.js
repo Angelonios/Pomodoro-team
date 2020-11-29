@@ -111,7 +111,10 @@ export function PomodoroProvider({ children }) {
     switch (type) {
       case 'primary':
         dispatch({ type: CLICK_MAIN_BUTTON });
-        if (state.timerState !== timerStates.idle) {
+        if (
+          state.timerState !== timerStates.idle &&
+          state.timerState !== timerStates.offline
+        ) {
           newTimerState = timerStates.idle;
         } else {
           newTimerState = timerStates.running;
@@ -250,7 +253,8 @@ export function PomodoroProvider({ children }) {
     //Refresh context every second
     if (
       state.timerState === timerStates.idle ||
-      state.timerState === timerStates.paused
+      state.timerState === timerStates.paused ||
+      state.timerState === timerStates.offline
     )
       return;
     const timer = setTimeout(() => {
