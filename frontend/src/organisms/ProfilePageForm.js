@@ -2,7 +2,8 @@ import React from 'react';
 import Gravatar from 'react-gravatar';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Container, Paper, Grid } from '@material-ui/core';
-import { NameField } from 'src/molecules';
+import { NameField, NameChangeButton } from 'src/molecules';
+import { useAuth } from '../utils/auth';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,14 +20,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function ProfilePageForm({ email }) {
+  const { user } = useAuth();
   const classes = useStyles();
+  console.log('user.display_name:', user.display_name);
+
   return (
     <Container component="main">
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
           <Paper className={classes.paper}>
             <Typography variant="h2" align="center" className={classes.text}>
-              <NameField />
+              <NameField name={user.display_name} />
+
+              <NameChangeButton user_id={user.user_id} />
             </Typography>
           </Paper>
         </Grid>

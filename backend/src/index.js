@@ -42,6 +42,7 @@ const typeDefs = gql`
 
   type User {
     user_id: Int!
+    display_name: String!
     email: String!
   }
 
@@ -99,6 +100,7 @@ const typeDefs = gql`
 
   type AuthUser {
     user_id: Int!
+    display_name: String
     email: String!
   }
 

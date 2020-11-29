@@ -13,3 +13,4 @@ export { Avatar } from './Avatar';
 export { NameField } from './NameField';
 export { StatisticsTable } from './StatisticsTable';
 export { TablePaginationActions } from './TablePaginationActions';
+export { NameChangeButton } from './NameChangeButton';
