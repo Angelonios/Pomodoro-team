@@ -84,20 +84,20 @@ export function PomodoroProvider({ children }) {
       ].type
     ) {
       case 'SWITCH_TO_POMODORO':
-        newTimerState = timerStates.running;
+        newTimerState = timerStates.idle;
         newPosition = 0;
 
         return { newTimerState, newPosition };
       case 'SWITCH_TO_SHORT_BREAK':
-        newTimerState = timerStates.running;
+        newTimerState = timerStates.idle;
         newPosition = 1;
         return { newTimerState, newPosition };
       case 'SWITCH_TO_LONG_BREAK':
-        newTimerState = timerStates.running;
+        newTimerState = timerStates.idle;
         newPosition = 7;
         return { newTimerState, newPosition };
       case 'RESTART':
-        newTimerState = timerStates.running;
+        newTimerState = timerStates.idle;
         newPosition = state.position;
         return { newTimerState, newPosition };
       default:
