@@ -18,8 +18,6 @@ export function CircularPomodoroCountdown({
   remainingSeconds >= 0
     ? (progressValue = (remainingSeconds / maxSeconds) * 100)
     : (progressValue = 0);
-
-  console.log(pauseControls);
   return (
     <Box position="relative" display="inline-flex">
       <CircularProgress

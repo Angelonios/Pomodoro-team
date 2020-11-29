@@ -1,4 +1,4 @@
-import timerStates from 'src/utils/serverSync';
+import { timerStates } from 'src/utils/serverSync';
 
 const actions = {
   switchToNext: { label: 'Finish', icon: 'flag' },
@@ -118,5 +118,18 @@ export const getNextIndex = (currentIndex) => {
     return 0;
   } else {
     return currentIndex + 1;
+  }
+};
+
+export const getTimerStateFriendlyName = ({ timerState, position }) => {
+  switch (timerState) {
+    case timerStates.offline:
+      return 'Offline';
+    case timerStates.idle:
+      return 'Idle';
+    case timerStates.paused:
+      return `${getPomodoroComponent(position).label} (paused)`;
+    case timerStates.running:
+      return getPomodoroComponent(position).label;
   }
 };
