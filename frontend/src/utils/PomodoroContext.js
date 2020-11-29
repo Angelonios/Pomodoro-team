@@ -76,64 +76,38 @@ export function PomodoroProvider({ children }) {
   }, [user]);
 
   const handleSecondaryActions = (index) => {
-    let newTimerState = timerStates.running;
-    let newPosition = 0;
+    let newTimerState = state.timerState;
+    let newPosition = state.position;
     switch (
       getPomodoroComponent(state.position).actions[state.timerState].secondary[
         index
       ].type
     ) {
       case 'SWITCH_TO_POMODORO':
-        dispatch({
-          type: SET_POMODORO_STATE,
-          newState: {
-            position: newPosition,
-            state: newTimerState,
-            secondsSinceStart: 0,
-          },
-        });
+        newTimerState = timerStates.running;
+        newPosition = 0;
+
         return { newTimerState, newPosition };
       case 'SWITCH_TO_SHORT_BREAK':
         newTimerState = timerStates.running;
         newPosition = 1;
-        dispatch({
-          type: SET_POMODORO_STATE,
-          newState: {
-            position: newPosition,
-            state: newTimerState,
-            secondsSinceStart: 0,
-          },
-        });
         return { newTimerState, newPosition };
       case 'SWITCH_TO_LONG_BREAK':
         newTimerState = timerStates.running;
         newPosition = 7;
-        dispatch({
-          type: SET_POMODORO_STATE,
-          newState: {
-            position: newPosition,
-            state: newTimerState,
-            secondsSinceStart: 0,
-          },
-        });
         return { newTimerState, newPosition };
       case 'RESTART':
         newTimerState = timerStates.running;
         newPosition = state.position;
-        dispatch({
-          type: SET_POMODORO_STATE,
-          newState: {
-            position: newPosition,
-            state: newTimerState,
-            secondsSinceStart: 0,
-          },
-        });
         return { newTimerState, newPosition };
+      default:
+        console.log('Unknown action type!');
     }
   };
 
   const performAction = ({ type, index }) => {
-    let newTimerState, newPosition;
+    let newTimerState;
+    let newPosition;
     switch (type) {
       case 'primary':
         dispatch({ type: CLICK_MAIN_BUTTON });
@@ -151,11 +125,40 @@ export function PomodoroProvider({ children }) {
         break;
       case 'secondary':
         ({ newTimerState, newPosition } = handleSecondaryActions(index));
-
+        dispatch({
+          type: SET_POMODORO_STATE,
+          newState: {
+            position: newPosition,
+            state: newTimerState,
+            secondsSinceStart: 0,
+          },
+        });
         break;
       case 'pause':
-        console.log('Pause');
+        newTimerState = timerStates.running;
+        newPosition = state.position;
+        let newSecondsSinceStart = state.secondsSinceStart;
+        if (state.timerState !== timerStates.paused) {
+          newTimerState = timerStates.paused;
+          newSecondsSinceStart =
+            getPomodoroComponent(state.position).seconds -
+            state.remainingSeconds;
+        }
+        console.log('New state', newTimerState);
+        dispatch({
+          type: SET_POMODORO_STATE,
+          newState: {
+            ...state,
+            position: newPosition,
+            state: newTimerState,
+            secondsSinceStart: newSecondsSinceStart,
+          },
+        });
         break;
+      default:
+        newTimerState = state.timerState;
+        newPosition = state.position;
+        console.log('Unknown action category type!');
     }
 
     //Send mutation with new values
@@ -247,7 +250,11 @@ export function PomodoroProvider({ children }) {
     //End of favicon, title and sound
 
     //Refresh context every second
-    if (state.timerState === timerStates.idle) return;
+    if (
+      state.timerState === timerStates.idle ||
+      state.timerState === timerStates.paused
+    )
+      return;
     const timer = setTimeout(() => {
       dispatch({ type: GET_REMAINING_SECONDS });
     }, 1000);
@@ -277,6 +284,9 @@ export function PomodoroProvider({ children }) {
         communicationId: communicationId,
         actions: getPomodoroComponent(state.position).actions[state.timerState],
         performAction: performAction,
+        pauseControls: getPomodoroComponent(state.position).actions[
+          state.timerState
+        ].pauseControls?.icon,
       }}
     >
       <PomodoroDispatchContext.Provider value={dispatch}>

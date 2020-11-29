@@ -22,7 +22,10 @@ const calculateRemainingSeconds = (state) => {
 
 // Basic actions
 const clickMainButton = (state) => {
-  if (state.timerState === timerStates.running) {
+  if (
+    state.timerState === timerStates.running ||
+    state.timerState === timerStates.paused
+  ) {
     const updatedState = {
       ...state,
       position: getNextIndex(state.position),
@@ -33,19 +36,18 @@ const clickMainButton = (state) => {
       ...updatedState,
       remainingSeconds: getPomodoroComponent(updatedState.position).seconds,
     };
-  } else {
-    const updatedState = {
-      ...state,
-      timerState: timerStates.running,
-      secondsSinceStart: 0,
-    };
-    state.finalTime = calculateFinalTime(updatedState);
-    return {
-      ...updatedState,
-      remainingSeconds: calculateRemainingSeconds(state),
-      finalTime: state.finalTime,
-    };
   }
+  const updatedState = {
+    ...state,
+    timerState: timerStates.running,
+    secondsSinceStart: 0,
+  };
+  state.finalTime = calculateFinalTime(updatedState);
+  return {
+    ...updatedState,
+    remainingSeconds: calculateRemainingSeconds(state),
+    finalTime: state.finalTime,
+  };
 };
 
 const getRemainingSeconds = (state) => {
@@ -67,14 +69,22 @@ const setPomodoroState = (state, newState) => {
       ...updatedState,
       remainingSeconds: getPomodoroComponent(updatedState.position).seconds,
     };
-  } else {
-    state.finalTime = calculateFinalTime(updatedState);
+  }
+  if (newState.state === timerStates.paused) {
+    console.log(updatedState.secondsSinceStart);
     return {
       ...updatedState,
-      remainingSeconds: calculateRemainingSeconds(state),
-      finalTime: state.finalTime,
+      remainingSeconds:
+        getPomodoroComponent(updatedState.position).seconds -
+        updatedState.secondsSinceStart,
     };
   }
+  state.finalTime = calculateFinalTime(updatedState);
+  return {
+    ...updatedState,
+    remainingSeconds: calculateRemainingSeconds(state),
+    finalTime: state.finalTime,
+  };
 };
 
 export function pomodoroReducer(state, action) {

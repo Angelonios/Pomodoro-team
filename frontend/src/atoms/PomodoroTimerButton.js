@@ -27,7 +27,10 @@ export function PomodoroTimerButton({ text, size }) {
   const state = usePomodoroState();
 
   const getStartIcon = () => {
-    if (state.pomodoroTimerState === timerStates.running) {
+    if (
+      state.pomodoroTimerState === timerStates.running ||
+      state.pomodoroTimerState === timerStates.paused
+    ) {
       return <FlagIcon />;
     } else {
       switch (state.type) {
@@ -46,7 +49,8 @@ export function PomodoroTimerButton({ text, size }) {
   const dropDownOptions = state.actions.secondary;
 
   let buttonText = '';
-  state.pomodoroTimerState === timerStates.running
+  state.pomodoroTimerState === timerStates.running ||
+  state.pomodoroTimerState === timerStates.paused
     ? (buttonText = 'Finish')
     : (buttonText = state.buttonText);
 

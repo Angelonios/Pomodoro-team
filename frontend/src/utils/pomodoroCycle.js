@@ -36,7 +36,7 @@ const pomodoroCycleProps = {
         RUNNING: {
           primary: actions.switchToNext,
           secondary: [actions.restart],
-          pause: actions.pause,
+          pauseControls: actions.pause,
         },
         PAUSED: {
           primary: actions.switchToNext,

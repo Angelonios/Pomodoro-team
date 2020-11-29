@@ -1,7 +1,9 @@
 import React from 'react';
 
-import { Box, CircularProgress } from '@material-ui/core';
+import { Box, CircularProgress, Grid, IconButton } from '@material-ui/core';
 import { PomodoroTimerLabel } from 'src/atoms';
+import PauseIcon from '@material-ui/icons/Pause';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
 export function CircularPomodoroCountdown({
   remainingSeconds,
@@ -9,11 +11,15 @@ export function CircularPomodoroCountdown({
   color,
   timeSize,
   circleSize,
+  pauseControls,
+  performAction,
 }) {
   let progressValue = 0;
   remainingSeconds >= 0
     ? (progressValue = (remainingSeconds / maxSeconds) * 100)
     : (progressValue = 0);
+
+  console.log(pauseControls);
   return (
     <Box position="relative" display="inline-flex">
       <CircularProgress
@@ -36,6 +42,20 @@ export function CircularPomodoroCountdown({
           remainingSeconds={remainingSeconds}
           variant={timeSize}
         />
+        {pauseControls ? (
+          <Box position="absolute" bottom={60}>
+            <IconButton
+              aria-label="pause"
+              onClick={() => {
+                performAction({ type: 'pause' });
+              }}
+            >
+              {pauseControls === 'pause' ? <PauseIcon /> : <PlayArrowIcon />}
+            </IconButton>
+          </Box>
+        ) : (
+          ''
+        )}
       </Box>
     </Box>
   );
