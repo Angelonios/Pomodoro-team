@@ -22,7 +22,8 @@ const typeDefs = gql`
   }
 
   type Pomodoro {
-    position: String!
+    state: State
+    position: Int!
     secondsSinceStart: Int!
     isOffline: Boolean!
     ids: Ids!
@@ -56,6 +57,13 @@ const typeDefs = gql`
     duration: Int!
   }
 
+  enum State {
+    IDLE
+    RUNNING
+    PAUSED
+    OFFLINE
+  }
+
   type Mutation {
     SignIn(email: String!, password: String!): AuthInfo!
 
@@ -66,7 +74,7 @@ const typeDefs = gql`
     ): AuthInfo!
 
     updatePomodoro(
-      running: Boolean!
+      state: State!
       position: Int!
       communicationId: String!
       shareId: String!
