@@ -143,5 +143,7 @@ export const getTimerStateFriendlyName = ({ timerState, position }) => {
       return `${getPomodoroComponent(position).label} (paused)`;
     case timerStates.running:
       return getPomodoroComponent(position).label;
+    default:
+      return '';
   }
 };

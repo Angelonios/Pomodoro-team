@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useHistory } from 'react-router-dom';
-import { AppBar, Box, Grid, Toolbar, Typography } from '@material-ui/core/';
+import { AppBar, Grid, Toolbar, Typography } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { route } from 'src/Routes';

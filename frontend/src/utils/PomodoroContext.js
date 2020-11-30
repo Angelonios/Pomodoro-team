@@ -130,14 +130,14 @@ export function PomodoroProvider({ children }) {
         ) {
           newTimerState = timerStates.idle;
           //statistics
-          (getPomodoroComponent(state.position).type === 1) &&
-          savePomodoroDuration({
-            variables: {
-              user_id: user.user_id,
-              finished_at: Date.now().toString(),
-              duration: calcDuration(),
-            },
-          });
+          getPomodoroComponent(state.position).type === 1 &&
+            savePomodoroDuration({
+              variables: {
+                user_id: user.user_id,
+                finished_at: Date.now().toString(),
+                duration: calcDuration(),
+              },
+            });
         } else {
           newTimerState = timerStates.running;
         }
@@ -266,9 +266,7 @@ export function PomodoroProvider({ children }) {
       if (getPomodoroComponent(state.position).label === 'Break') {
         faviconHref = '/yellow-tomato.svg';
       } else {
-        {
-          faviconHref = '/green-tomato.svg';
-        }
+        faviconHref = '/green-tomato.svg';
       }
     }
     favicon.href = faviconHref;
@@ -286,7 +284,13 @@ export function PomodoroProvider({ children }) {
       dispatch({ type: GET_REMAINING_SECONDS });
     }, 1000);
     return () => clearTimeout(timer);
-  }, [state.timerState, state.remainingSeconds]);
+  }, [
+    state.timerState,
+    state.remainingSeconds,
+    favicon.href,
+    play,
+    state.position,
+  ]);
 
   useEffect(() => {
     if (cachedServerData !== null) {
