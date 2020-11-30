@@ -9,7 +9,7 @@ export function PomodoroTimer() {
   return (
     <Container component="main">
       <Paper elevation={3}>
-        <Box p={2}>
+        <Box p={2} pt={6}>
           <Grid
             container
             spacing={10}

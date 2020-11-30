@@ -1,5 +1,4 @@
 import React from 'react';
-import Gravatar from 'react-gravatar';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Container, Paper, Grid } from '@material-ui/core';
 import { NameField, NameChangeForm } from 'src/molecules';

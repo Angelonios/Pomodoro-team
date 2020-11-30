@@ -12,6 +12,7 @@ import {
   POMODORO_QUERY,
   UPDATE_POMODORO_MUTATION,
   GET_USER_POMODORO_IDS,
+  SAVE_POMODORO_DURATION,
   timerStates,
 } from 'src/utils/serverSync';
 import {
@@ -35,6 +36,7 @@ export function PomodoroProvider({ children }) {
   const [shareUrl, setShareUrl] = useState();
   const serverPomodoro = useQuery(POMODORO_QUERY, { variables: { shareId } });
   const [updateMutation] = useMutation(UPDATE_POMODORO_MUTATION);
+  const [savePomodoroDuration] = useMutation(SAVE_POMODORO_DURATION);
   const { user } = useAuth();
   const [userId, setUserId] = useState(0);
   const [play] = useSound(sound1, { volume: 0.5, playbackRate: 1.5 });
@@ -105,6 +107,17 @@ export function PomodoroProvider({ children }) {
     }
   };
 
+  function calcDuration() {
+    const remainingSeconds = state.remainingSeconds;
+    const pomodoroDuration = getPomodoroComponent(state.position).seconds;
+    const DURATION_LIMIT = -900;
+    const MAX_DURATION = 2400;
+    if (remainingSeconds <= DURATION_LIMIT) {
+      return MAX_DURATION;
+    }
+    return pomodoroDuration - remainingSeconds;
+  }
+
   const performAction = ({ type, index }) => {
     let newTimerState;
     let newPosition;
@@ -117,18 +130,14 @@ export function PomodoroProvider({ children }) {
         ) {
           newTimerState = timerStates.idle;
           //statistics
-          if (getPomodoroComponent(state.position).type === 1) {
-            console.log(
-              'Mutation statistics',
-              'seconds of component',
-              getPomodoroComponent(state.position).seconds,
-              'remainingSeconds',
-              state.remainingSeconds,
-              'elapsedSeconds',
-              getPomodoroComponent(state.position).seconds -
-                state.remainingSeconds,
-            );
-          }
+          getPomodoroComponent(state.position).type === 1 &&
+            savePomodoroDuration({
+              variables: {
+                user_id: user.user_id,
+                finished_at: Date.now().toString(),
+                duration: calcDuration(),
+              },
+            });
         } else {
           newTimerState = timerStates.running;
         }
@@ -254,12 +263,13 @@ export function PomodoroProvider({ children }) {
         //play sound
         play();
       }
-      if (getPomodoroComponent(state.position).label === 'Break') {
+      if (
+        getPomodoroComponent(state.position).type === 2 ||
+        getPomodoroComponent(state.position).type === 3
+      ) {
         faviconHref = '/yellow-tomato.svg';
       } else {
-        {
-          faviconHref = '/green-tomato.svg';
-        }
+        faviconHref = '/green-tomato.svg';
       }
     }
     favicon.href = faviconHref;
@@ -277,7 +287,13 @@ export function PomodoroProvider({ children }) {
       dispatch({ type: GET_REMAINING_SECONDS });
     }, 1000);
     return () => clearTimeout(timer);
-  }, [state.timerState, state.remainingSeconds]);
+  }, [
+    state.timerState,
+    state.remainingSeconds,
+    favicon.href,
+    play,
+    state.position,
+  ]);
 
   useEffect(() => {
     if (cachedServerData !== null) {

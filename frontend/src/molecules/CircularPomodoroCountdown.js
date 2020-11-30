@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, CircularProgress, Grid, IconButton } from '@material-ui/core';
+import { Box, CircularProgress, IconButton } from '@material-ui/core';
 import { PomodoroTimerLabel } from 'src/atoms';
 import PauseIcon from '@material-ui/icons/Pause';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
