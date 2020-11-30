@@ -55,7 +55,7 @@ export function PomodoroStatistics() {
         duration: s.duration,
       }))
       .sort((s1, s2) => (
-        s1.finished_at < s2.finished_at ? 1 : -1
+        s1.finished_at < s2.finished_at ? -1 : 1
       ))
       .map(s => ({
         finished_at: (new Date(s.finished_at)).toLocaleString('en-us', {year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' }),

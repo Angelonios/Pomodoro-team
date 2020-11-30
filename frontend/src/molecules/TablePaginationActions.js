@@ -65,7 +65,7 @@ export function TablePaginationActions(paginationData) {
         // disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="last page"
       >
-        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+        {/*{theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}*/}
       </IconButton>
     </div>
   );

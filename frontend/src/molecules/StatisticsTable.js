@@ -36,8 +36,8 @@ export function StatisticsTable({classes,
   }
 
   function formatTime(seconds){
-    const hours = seconds / SECONDS_IN_HOUR;
-    const minutes = (seconds % SECONDS_IN_HOUR) / SECONDS_IN_MINUTE;
+    const hours = Math.floor(seconds / SECONDS_IN_HOUR);
+    const minutes = Math.floor((seconds % SECONDS_IN_HOUR) / SECONDS_IN_MINUTE);
 
     const hour_text = (hours === 1) ? hours + " hour " : (hours < 1) ? "" : hours + " hours ";
     const minute_text = (minutes === 1) ? minutes + " minute " : (minutes < 1) ? "" : minutes + " minutes ";
@@ -80,6 +80,7 @@ export function StatisticsTable({classes,
               colSpan={3}
               count={rows.length}
               rowsPerPage={rowsPerPage}
+              labelDisplayedRows={() => {''}}
               page={page}
               SelectProps={{
                 inputProps: { 'aria-label': 'rows per page' },
