@@ -131,6 +131,7 @@ export function PomodoroProvider({ children }) {
           newTimerState = timerStates.idle;
           //statistics
           getPomodoroComponent(state.position).type === 1 &&
+            user &&
             savePomodoroDuration({
               variables: {
                 user_id: user.user_id,
