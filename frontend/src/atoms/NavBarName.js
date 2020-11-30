@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Box, Tooltip, Typography } from '@material-ui/core';
 import Gravatar from 'react-gravatar';
 
 export function NavBarName({ email, name }) {
@@ -7,7 +7,9 @@ export function NavBarName({ email, name }) {
     <Box style={{ margin: 'auto' }}>
       Logged in as:{' '}
       <Gravatar email={email} size={20} style={{ verticalAlign: 'sub' }} />{' '}
-      {name}
+      <Tooltip title={email}>
+        <b>{name}</b>
+      </Tooltip>
     </Box>
   );
 }

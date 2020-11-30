@@ -51,7 +51,6 @@ export function NameChangeForm({ name }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData.name.trim());
     if (formData.name.trim() === '') {
       name = false;
       setNameError(true);
@@ -66,10 +65,9 @@ export function NameChangeForm({ name }) {
       changeName({
         variables: { name: formData.name.trim(), user_id: user.user_id },
       });
-      /* window.localStorage.setItem(
-        'app-auth.user.display_name',
-        formData.name.trim(),
-      ); */
+      var storage = JSON.parse(window.localStorage.getItem('app-auth'));
+      storage.user.display_name = formData.name.trim();
+      window.localStorage.setItem('app-auth', JSON.stringify(storage));
     }
   };
 
