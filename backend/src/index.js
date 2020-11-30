@@ -33,6 +33,7 @@ const typeDefs = gql`
     share_id: String!
     email: String!
     user_id: Int!
+    display_name: String!
   }
 
   type Ids {

@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 
 export function NameField({
-  name,
+  data,
   formData,
   handleChange,
   formErrors,
@@ -13,16 +13,15 @@ export function NameField({
     <Grid item xs={12}>
       <TextField
         error={formErrors}
+        name="name"
         required
         fullWidth
         id="name"
         label="Display name"
-        autoComplete="name"
-        defaultValue={name}
         variant="outlined"
         onChange={handleChange}
         helperText={helperText}
-        value={name}
+        defaultValue={data}
       />
     </Grid>
   );

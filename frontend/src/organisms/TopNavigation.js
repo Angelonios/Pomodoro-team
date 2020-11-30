@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useHistory } from 'react-router-dom';
-import { AppBar, Box, Grid, Toolbar, Typography } from '@material-ui/core/';
+import { AppBar, Grid, Toolbar, Typography } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { route } from 'src/Routes';
@@ -49,7 +49,7 @@ export function TopNavigation({ currentUser }) {
             </Grid>
             <Grid container>
               <Grid item xs={12} style={{ textAlign: 'end' }}>
-                <NavBarName email={user.email} />
+                <NavBarName email={user.email} name={user.display_name} />
               </Grid>
               <Grid item xs={12} style={{ textAlign: 'end' }}>
                 <MenuUser user_id={user.user_id} logOut={logOut} />

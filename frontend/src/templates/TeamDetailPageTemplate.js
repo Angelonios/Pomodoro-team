@@ -32,6 +32,7 @@ const GET_TEAM_MEMBERS_POMODORO = gql`
     teamMembersPomodoro(team_id: $team_id) {
       share_id
       email
+      display_name
     }
   }
 `;
@@ -86,9 +87,7 @@ export function TeamDetailPageTemplate() {
                   <Grid container spacing={3} style={{ marginBottom: '20px' }}>
                     <Hidden smDown>
                       <Grid item xs={12} md={4}>
-                        <Typography className={classes.header}>
-                          Email
-                        </Typography>
+                        <Typography className={classes.header}>Name</Typography>
                       </Grid>
                     </Hidden>
                     <Hidden smDown>
@@ -129,11 +128,14 @@ export function TeamDetailPageTemplate() {
                           <Hidden mdUp>
                             <Grid item xs={2}>
                               <Typography className={classes.header}>
-                                Email
+                                Name
                               </Typography>
                             </Grid>
                           </Hidden>
-                          <TeamPageName email={pomodoro.email} />
+                          <TeamPageName
+                            email={pomodoro.email}
+                            name={pomodoro.display_name}
+                          />
                           <SharedPomodoro
                             key={index}
                             shareId={pomodoro.share_id}

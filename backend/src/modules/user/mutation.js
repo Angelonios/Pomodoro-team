@@ -46,9 +46,9 @@ export const SignUp = async (
   const passwordHash = await argon2.hash(password);
 
   const dbResponse = await dbConnection.query(
-    `INSERT INTO users (email, password, pomodoro_id)
-    VALUES (?, ?, ?);`,
-    [email, passwordHash, pomodoro_id[0].pomodoro_id],
+    `INSERT INTO users (email, password, pomodoro_id, display_name)
+    VALUES (?, ?, ?, ?);`,
+    [email, passwordHash, pomodoro_id[0].pomodoro_id, email],
   );
 
   const token = createToken({ id: dbResponse.insertId });
@@ -56,6 +56,7 @@ export const SignUp = async (
   const userObject = {
     user_id: dbResponse.insertId,
     email: email,
+    display_name: email,
   };
 
   return { user: userObject, token: token };

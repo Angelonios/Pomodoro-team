@@ -50,6 +50,7 @@ const SIGN_UP = gql`
       user {
         user_id
         email
+        display_name
       }
       token
     }
