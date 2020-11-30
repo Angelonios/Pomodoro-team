@@ -66,6 +66,10 @@ export function NameChangeForm({ name }) {
       changeName({
         variables: { name: formData.name.trim(), user_id: user.user_id },
       });
+      /* window.localStorage.setItem(
+        'app-auth.user.display_name',
+        formData.name.trim(),
+      ); */
     }
   };
 

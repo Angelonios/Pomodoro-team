@@ -60,7 +60,7 @@ export const getUsersFromTeam = async (_, { team_id }, { dbConnection }) => {
 
 export const teamMembersPomodoro = async (_, { team_id }, { dbConnection }) => {
   const teamMembersPomodoro = await dbConnection.query(
-    `SELECT users.email, users.user_id, pomodoros.share_id FROM in_team 
+    `SELECT users.email, users.user_id, pomodoros.share_id, users.display_name FROM in_team
     JOIN users ON in_team.user_id = users.user_id JOIN pomodoros ON users.pomodoro_id = pomodoros.pomodoro_id WHERE in_team.team_id = ?`,
     [team_id],
   );

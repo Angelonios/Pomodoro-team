@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import Gravatar from 'react-gravatar';
 
-export function TeamPageName({ email }) {
+export function TeamPageName({ email, name }) {
   return (
     <Grid item xs={10} md={4} style={{ textAlign: 'center' }}>
       <div style={{ display: 'inline-flex' }}>
@@ -16,7 +16,7 @@ export function TeamPageName({ email }) {
           style={{ alignSelf: 'center', wordBreak: 'break-word' }}
         >
           {' '}
-          {email}
+          {name}
         </Typography>
       </div>
     </Grid>

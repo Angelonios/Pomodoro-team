@@ -49,7 +49,7 @@ export function TopNavigation({ currentUser }) {
             </Grid>
             <Grid container>
               <Grid item xs={12} style={{ textAlign: 'end' }}>
-                <NavBarName email={user.email} />
+                <NavBarName email={user.email} name={user.display_name} />
               </Grid>
               <Grid item xs={12} style={{ textAlign: 'end' }}>
                 <MenuUser user_id={user.user_id} logOut={logOut} />
