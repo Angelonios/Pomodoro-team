@@ -24,7 +24,7 @@ export function CreateTeamDialog({
       history.push(path);
     } else {
       setOpen(false);
-      setOpen2(false);
+      /*setOpen2(false);*/
       /*history.push({
         pathname: path,
         data: {

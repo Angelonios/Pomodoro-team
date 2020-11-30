@@ -46,6 +46,7 @@ const SIGN_IN = gql`
       user {
         user_id
         email
+        display_name
       }
       token
     }
