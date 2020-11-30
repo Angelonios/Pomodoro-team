@@ -13,36 +13,66 @@ export function StatisticsTable({classes,
                                 rows,
                                 page,
                                 emptyRows,
+                                setRowsPerPage,
                                 handleChangePage,
                                 TablePaginationActions}) {
-  // debugger;
+
+
+  const SECONDS_IN_HOUR = 3600;
+  const SECONDS_IN_MINUTE = 60;
+
+  function ISO8601_week_no(dt)
+  {
+    const tdt = new Date(dt.valueOf());
+    const dayn = (dt.getDay() + 6) % 7;
+    tdt.setDate(tdt.getDate() - dayn + 3);
+    const firstThursday = tdt.valueOf();
+    tdt.setMonth(0, 1);
+    if (tdt.getDay() !== 4)
+    {
+      tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
+    }
+    return 1 + Math.ceil((firstThursday - tdt) / 604800000);
+  }
+
+  function formatTime(seconds){
+    const hours = seconds / SECONDS_IN_HOUR;
+    const minutes = (seconds % SECONDS_IN_HOUR) / SECONDS_IN_MINUTE;
+
+    const hour_text = (hours === 1) ? hours + " hour " : (hours < 1) ? "" : hours + " hours ";
+    const minute_text = (minutes === 1) ? minutes + " minute " : (minutes < 1) ? "" : minutes + " minutes ";
+    const result = (hour_text.length === 0 && minute_text.length === 0) ? "less than a minute" :  hour_text + minute_text;
+
+    return result;
+  }
+
+  // const distinctBy = (prop, arr) => [...new Set(arr.map(o => o[prop]))];
+  // const distinct_weeks = distinctBy('week_no', rows);
+  const max_week_no = ISO8601_week_no(new Date());
+  const current_rows = rows.filter(r => r.week_no === (max_week_no - page));
+
   return (
     <TableContainer component={Paper}>
 
       <Table className={classes.table} aria-label="custom pagination table">
         <TableBody>
-          {(rowsPerPage > 0
-              ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : rows
-          ).map((row) => (
-            <TableRow key={row.name}>
+          {rows.filter(r => r.week_no === (max_week_no - page))
+            .map((row) => (
+            <TableRow key={row.finished_at}>
               <TableCell component="th" scope="row">
-                {row.name}
+                {row.finished_at}
               </TableCell>
               <TableCell style={{ width: 160 }} align="right">
-                {row.calories}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.fat}
+                {formatTime(row.duration)}
               </TableCell>
             </TableRow>
           ))}
 
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
-            </TableRow>
-          )}
+          {/*{emptyRows > 0 && (*/}
+          {/*  <TableRow style={{ height: 53 * emptyRows }}>*/}
+          {/*    <TableCell colSpan={6} />*/}
+          {/*  </TableRow>*/}
+          {/*)}*/}
         </TableBody>
         <TableFooter>
           <TableRow>
@@ -55,6 +85,7 @@ export function StatisticsTable({classes,
                 inputProps: { 'aria-label': 'rows per page' },
                 native: true,
               }}
+              rowsPerPageOptions={[]}
               onChangePage={handleChangePage}
               ActionsComponent={TablePaginationActions}
             />

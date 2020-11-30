@@ -16,7 +16,7 @@ export function TablePaginationActions(paginationData) {
 
   const classes = tableActionsStyle();
   const theme = useTheme();
-  debugger;
+
   const { count, page, rowsPerPage, onChangePage } = paginationData;
   const handleFirstPageButtonClick = (event) => {
     onChangePage(event, 0);
@@ -43,19 +43,26 @@ export function TablePaginationActions(paginationData) {
       >
         {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
       </IconButton>
-      <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
+
+      <IconButton
+        onClick={handleBackButtonClick}
+        disabled={page === 0}
+        aria-label="previous page">
         {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
       </IconButton>
+
       <IconButton
         onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        // disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="next page"
       >
         {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
       </IconButton>
+
+
       <IconButton
         onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        // disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="last page"
       >
         {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}

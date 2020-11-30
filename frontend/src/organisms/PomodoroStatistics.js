@@ -34,6 +34,20 @@ export function PomodoroStatistics() {
     variables: { user_id: auth.user.user_id }
   });
 
+  function ISO8601_week_no(dt)
+  {
+    const tdt = new Date(dt.valueOf());
+    const dayn = (dt.getDay() + 6) % 7;
+    tdt.setDate(tdt.getDate() - dayn + 3);
+    const firstThursday = tdt.valueOf();
+    tdt.setMonth(0, 1);
+    if (tdt.getDay() !== 4)
+    {
+      tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
+    }
+    return 1 + Math.ceil((firstThursday - tdt) / 604800000);
+  }
+
   function parseData(data){
     const sorted =  data.pomodoroStatistics
       .map(s => ({
@@ -41,7 +55,7 @@ export function PomodoroStatistics() {
         duration: s.duration,
       }))
       .sort((s1, s2) => (
-        s1.finished_at < s2.finished_at ? -1 : 1
+        s1.finished_at < s2.finished_at ? 1 : -1
       ))
       .map(s => ({
         finished_at: (new Date(s.finished_at)).toLocaleString('en-us', {year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' }),
@@ -49,9 +63,9 @@ export function PomodoroStatistics() {
       }));
 
     const distinctBy = (prop, arr) => [...new Set(arr.map(o => o[prop]))];
-    const dates = distinctBy('finished_at', sorted);
+    const distinct_dates = distinctBy('finished_at', sorted);
 
-    const result = dates.map(d => {
+    const aggregated = distinct_dates.map(d => {
       let sum = 0;
       sorted.forEach(s => {
         if(s.finished_at === d){
@@ -63,22 +77,17 @@ export function PomodoroStatistics() {
         }
       });
       return ({
+        week_no: ISO8601_week_no(new Date(d)),
         finished_at: d,
         duration: sum
       })
     });
-    console.log("result: " + result);
 
-    return result;
+    return aggregated;
   }
 
-  const rows = (loading) ?
-    [] :
-    parseData(data);
-
-    console.log(rows);
-  debugger;
-
+  const rows = (loading) ? [] : parseData(data);
+  // debugger;
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   const handleChangePage = (event, newPage) => {
@@ -108,6 +117,7 @@ export function PomodoroStatistics() {
                           rows={rows}
                           page={page}
                           emptyRows={emptyRows}
+                          setRowsPerPage={setRowsPerPage}
                           handleChangePage={handleChangePage}
                           TablePaginationActions={tableActions}
   />;
