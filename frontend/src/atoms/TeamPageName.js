@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography, Tooltip } from '@material-ui/core';
 import Gravatar from 'react-gravatar';
 
 export function TeamPageName({ email, name }) {
@@ -11,13 +11,15 @@ export function TeamPageName({ email, name }) {
           size={45}
           style={{ verticalAlign: 'sub', padding: '5px' }}
         />{' '}
-        <Typography
-          component="div"
-          style={{ alignSelf: 'center', wordBreak: 'break-word' }}
-        >
-          {' '}
-          {name}
-        </Typography>
+        <Tooltip title={email}>
+          <Typography
+            component="div"
+            style={{ alignSelf: 'center', wordBreak: 'break-word' }}
+          >
+            {' '}
+            {name}
+          </Typography>
+        </Tooltip>
       </div>
     </Grid>
   );

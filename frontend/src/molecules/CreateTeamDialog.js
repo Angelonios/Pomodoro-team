@@ -24,6 +24,7 @@ export function CreateTeamDialog({
       history.push(path);
     } else {
       setOpen(false);
+      window.location.reload();
       /*setOpen2(false);*/
       /*history.push({
         pathname: path,
