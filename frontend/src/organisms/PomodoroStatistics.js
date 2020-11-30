@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useAuth } from '../utils/auth';
 import { TablePaginationActions } from 'src/molecules/TablePaginationActions';
 import { StatisticsTable } from 'src/molecules/StatisticsTable';
+import { Box, Container, Paper } from '@material-ui/core';
 
 const POMODORO_STATISTICS = gql`
   query pomodoroStatistics($user_id: Int!) {
@@ -31,25 +32,23 @@ export function PomodoroStatistics() {
 
 
   const { loading, data } = useQuery(POMODORO_STATISTICS, {
-    variables: { user_id: auth.user.user_id }
+    variables: { user_id: auth.user.user_id },
   });
 
-  function ISO8601_week_no(dt)
-  {
+  function ISO8601_week_no(dt) {
     const tdt = new Date(dt.valueOf());
     const dayn = (dt.getDay() + 6) % 7;
     tdt.setDate(tdt.getDate() - dayn + 3);
     const firstThursday = tdt.valueOf();
     tdt.setMonth(0, 1);
-    if (tdt.getDay() !== 4)
-    {
+    if (tdt.getDay() !== 4) {
       tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
     }
     return 1 + Math.ceil((firstThursday - tdt) / 604800000);
   }
 
-  function parseData(data){
-    const sorted =  data.pomodoroStatistics
+  function parseData(data) {
+    const sorted = data.pomodoroStatistics
       .map(s => ({
         finished_at: parseInt(s.finished_at),
         duration: s.duration,
@@ -58,7 +57,12 @@ export function PomodoroStatistics() {
         s1.finished_at < s2.finished_at ? -1 : 1
       ))
       .map(s => ({
-        finished_at: (new Date(s.finished_at)).toLocaleString('en-us', {year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' }),
+        finished_at: (new Date(s.finished_at)).toLocaleString('en-us', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          weekday: 'long',
+        }),
         duration: s.duration,
       }));
 
@@ -68,9 +72,9 @@ export function PomodoroStatistics() {
     const aggregated = distinct_dates.map(d => {
       let sum = 0;
       sorted.forEach(s => {
-        if(s.finished_at === d){
+        if (s.finished_at === d) {
           for (let property in s) {
-            if(property === "finished_at"){
+            if (property === 'finished_at') {
               sum += s.duration;
             }
           }
@@ -79,8 +83,8 @@ export function PomodoroStatistics() {
       return ({
         week_no: ISO8601_week_no(new Date(d)),
         finished_at: d,
-        duration: sum
-      })
+        duration: sum,
+      });
     });
 
     return aggregated;
@@ -112,13 +116,17 @@ export function PomodoroStatistics() {
   };
 
   // debugger;
-  return <StatisticsTable classes={tableStyle()}
-                          rowsPerPage={rowsPerPage}
-                          rows={rows}
-                          page={page}
-                          emptyRows={emptyRows}
-                          setRowsPerPage={setRowsPerPage}
-                          handleChangePage={handleChangePage}
-                          TablePaginationActions={tableActions}
-  />;
+  return <>
+    <Container component="main">
+      <StatisticsTable classes={tableStyle()}
+                       rowsPerPage={rowsPerPage}
+                       rows={rows}
+                       page={page}
+                       emptyRows={emptyRows}
+                       setRowsPerPage={setRowsPerPage}
+                       handleChangePage={handleChangePage}
+                       TablePaginationActions={tableActions}
+      />
+    </Container>
+  </>;
 }
