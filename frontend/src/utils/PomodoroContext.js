@@ -263,7 +263,10 @@ export function PomodoroProvider({ children }) {
         //play sound
         play();
       }
-      if (getPomodoroComponent(state.position).label === 'Break') {
+      if (
+        getPomodoroComponent(state.position).type === 2 ||
+        getPomodoroComponent(state.position).type === 3
+      ) {
         faviconHref = '/yellow-tomato.svg';
       } else {
         faviconHref = '/green-tomato.svg';
