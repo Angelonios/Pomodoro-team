@@ -48,7 +48,11 @@ export function CircularPomodoroCountdown({
                 performAction({ type: 'pause' });
               }}
             >
-              {pauseControls === 'pause' ? <PauseIcon /> : <PlayArrowIcon />}
+              {pauseControls === 'pause' ? (
+                <PauseIcon color="primary" />
+              ) : (
+                <PlayArrowIcon color="primary" />
+              )}
             </IconButton>
           </Box>
         ) : (
