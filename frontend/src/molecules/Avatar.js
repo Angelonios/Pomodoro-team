@@ -19,7 +19,12 @@ export function Avatar({ email }) {
   return (
     <Grid item xs={12} sm={12} md={6} style={{ minHeight: '245px' }}>
       <Paper className={classes.paper} style={{ minHeight: '225px' }}>
-        <Gravatar email={email} size={150} default="retro" />
+        <Gravatar
+          email={email}
+          size={150}
+          default="retro"
+          style={{ border: '2px solid' }}
+        />
         <Typography variant="h5" className={classes.text}>
           {email}
         </Typography>

@@ -6,7 +6,11 @@ export function NavBarName({ email, name }) {
   return (
     <Box style={{ margin: 'auto' }}>
       Logged in as:{' '}
-      <Gravatar email={email} size={20} style={{ verticalAlign: 'sub' }} />{' '}
+      <Gravatar
+        email={email}
+        size={20}
+        style={{ verticalAlign: 'sub', border: '1px solid' }}
+      />{' '}
       <Tooltip title={email}>
         <b>{name}</b>
       </Tooltip>
