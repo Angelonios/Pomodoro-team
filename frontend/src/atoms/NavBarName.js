@@ -17,11 +17,7 @@ export function NavBarName({ email, name }) {
       Logged in as:{' '}
       <div style={{ display: 'inline-block', verticalAlign: 'top' }}>
         <Avatar className={classes.small}>
-          <Gravatar
-            email={email}
-            size={20}
-            style={{ verticalAlign: 'sub', border: '1px solid' }}
-          />
+          <Gravatar email={email} size={20} style={{ verticalAlign: 'sub' }} />
         </Avatar>
       </div>{' '}
       <Tooltip title={email}>

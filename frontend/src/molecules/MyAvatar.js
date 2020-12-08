@@ -23,7 +23,7 @@ export function MyAvatar({ email }) {
   return (
     <Grid item xs={12} sm={12} md={6} style={{ minHeight: '245px' }}>
       <Paper className={classes.paper} style={{ minHeight: '225px' }}>
-        <div style={{ textAlign: '-webkit-center' }}>
+        <div style={{ display: 'inline-flex' }}>
           <Avatar className={classes.large} variant="circle">
             <Gravatar email={email} size={150} default="retro" />
           </Avatar>
