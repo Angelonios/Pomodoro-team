@@ -5,7 +5,7 @@ import { AppBar, Grid, Toolbar, Typography } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { route } from 'src/Routes';
-import { NavLink, NavBarName } from 'src/atoms';
+import { NavLink, NavBarName, ThemeChange } from 'src/atoms';
 import { useAuth } from 'src/utils/auth';
 import { MenuUser } from 'src/organisms';
 
@@ -52,6 +52,7 @@ export function TopNavigation({ currentUser }) {
                 <NavBarName email={user.email} name={user.display_name} />
               </Grid>
               <Grid item xs={12} style={{ textAlign: 'end' }}>
+                <ThemeChange />
                 <MenuUser user_id={user.user_id} logOut={logOut} />
               </Grid>
             </Grid>

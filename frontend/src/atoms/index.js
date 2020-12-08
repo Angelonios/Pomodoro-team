@@ -8,3 +8,4 @@ export { LogOut } from './LogOut';
 export { RefreshButton } from './RefreshButton';
 export { NavBarName } from './NavBarName';
 export { TeamPageName } from './TeamPageName';
+export { ThemeChange } from './ThemeChange';
