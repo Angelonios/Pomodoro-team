@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Container, Paper, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Avatar } from 'src/molecules';
+import { MyAvatar } from 'src/molecules';
 import { TopNavigation, ProfilePageForm } from 'src/organisms';
 
 const useStyles = makeStyles((theme) => ({
@@ -30,7 +30,7 @@ export function ProfilePageTemplate({ email }) {
               </Typography>
             </Paper>
           </Grid>
-          <Avatar email={email} />
+          <MyAvatar email={email} />
           <ProfilePageForm />
         </Grid>
       </Container>

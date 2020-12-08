@@ -1,7 +1,7 @@
 import React from 'react';
 import Gravatar from 'react-gravatar';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Container, Paper, Grid } from '@material-ui/core';
+import { Typography, Paper, Grid, Avatar } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -12,19 +12,22 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
+  large: {
+    width: theme.spacing(17),
+    height: theme.spacing(17),
+  },
 }));
 
-export function Avatar({ email }) {
+export function MyAvatar({ email }) {
   const classes = useStyles();
   return (
     <Grid item xs={12} sm={12} md={6} style={{ minHeight: '245px' }}>
       <Paper className={classes.paper} style={{ minHeight: '225px' }}>
-        <Gravatar
-          email={email}
-          size={150}
-          default="retro"
-          style={{ border: '2px solid' }}
-        />
+        <div style={{ textAlign: '-webkit-center' }}>
+          <Avatar className={classes.large} variant="circle">
+            <Gravatar email={email} size={150} default="retro" />
+          </Avatar>
+        </div>
         <Typography variant="h5" className={classes.text}>
           {email}
         </Typography>

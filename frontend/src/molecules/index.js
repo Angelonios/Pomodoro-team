@@ -9,7 +9,7 @@ export { LeaveTeamButton } from './LeaveTeamButton';
 export { TeamsViewMenu } from './TeamsViewMenu';
 export { CreateTeamDialog } from './CreateTeamDialog';
 export { AddUserToTeam } from './AddUserToTeam';
-export { Avatar } from './Avatar';
+export { MyAvatar } from './MyAvatar';
 export { NameField } from './NameField';
 export { StatisticsTable } from './StatisticsTable';
 export { TablePaginationActions } from './TablePaginationActions';

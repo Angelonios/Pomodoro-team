@@ -13,6 +13,7 @@ import Container from '@material-ui/core/Container';
 import { Copyright, TeamNameField, CreateTeamDialog } from 'src/molecules';
 import { useAuth } from 'src/utils/auth';
 import { FormButton } from '../atoms';
+import { Paper } from '@material-ui/core';
 
 //TODO: CREATE_TEAM
 const CREATE_TEAM = gql`
@@ -26,7 +27,7 @@ const CREATE_TEAM = gql`
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -91,34 +92,35 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Create Team
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <TeamNameField
-              formData={formData}
-              handleChange={handleChange}
-              formErrors={teamNameError}
-              helperText={teamNameErrorText}
+      <Paper style={{ padding: '20px', marginTop: '20px' }}>
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Create Team
+          </Typography>
+          <form className={classes.form} noValidate>
+            <Grid container spacing={2}>
+              <TeamNameField
+                formData={formData}
+                handleChange={handleChange}
+                formErrors={teamNameError}
+                helperText={teamNameErrorText}
+              />
+            </Grid>
+            <FormButton submit={handleSubmit}>Create team</FormButton>
+            <CreateTeamDialog
+              open={open}
+              setOpen={setOpen}
+              text={'You have successfully created team'}
+              path={'/'}
+              teamName={formData.teamName}
+              id={user.user_id}
             />
-          </Grid>
-          <FormButton submit={handleSubmit}>Create team</FormButton>
-          <CreateTeamDialog
-            open={open}
-            setOpen={setOpen}
-            text={'You have successfully created team'}
-            path={'/'}
-            teamName={formData.teamName}
-            id={user.user_id}
-          />
-        </form>
-      </div>
+          </form>
+        </div>
+      </Paper>
       <Box mt={5}>
         <Copyright />
       </Box>
