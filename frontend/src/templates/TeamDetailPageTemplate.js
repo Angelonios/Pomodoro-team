@@ -107,7 +107,8 @@ export function TeamDetailPageTemplate() {
                   </Grid>
                   <div
                     style={{
-                      border: '1px solid white',
+                      border: '1px solid ',
+                      borderColor: 'action',
                       width: '100%',
                       marginBottom: '20px',
                     }}
@@ -142,7 +143,8 @@ export function TeamDetailPageTemplate() {
                           />
                           <div
                             style={{
-                              border: '1px solid white',
+                              border: '1px solid',
+                              borderColor: 'action',
                               width: '100%',
                               marginBottom: '20px',
                             }}
