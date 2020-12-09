@@ -2,13 +2,13 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
 import { GardenRow } from 'src/molecules';
-import grass3 from 'src/assets/grass3.jpg';
+import grass4 from 'src/assets/grass4.jpg';
 
 const useStyles = makeStyles((theme) => ({
   board: {
     width: '45%',
     height: 'auto',
-    backgroundImage: 'url(' + grass3 + ')',
+    backgroundImage: 'url(' + grass4 + ')',
   },
 }));
 

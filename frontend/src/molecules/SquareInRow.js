@@ -1,7 +1,7 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
-import grass2 from 'src/assets/grass2.jpg';
+import tree3 from 'src/assets/tree3.png';
 
 const useStyles = makeStyles((theme) => ({
   square: {
@@ -30,6 +30,8 @@ export function SquareInRow({ rowNum, colNum }) {
     <div
       className={classes.square}
       name={rowNum.toString() + colNum.toString()}
-    ></div>
+    >
+      <img src={tree3} height="75px" />
+    </div>
   );
 }
