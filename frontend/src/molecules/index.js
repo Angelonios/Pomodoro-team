@@ -14,3 +14,5 @@ export { NameField } from './NameField';
 export { StatisticsTable } from './StatisticsTable';
 export { TablePaginationActions } from './TablePaginationActions';
 export { NameChangeForm } from './NameChangeForm';
+export { SquareInRow } from './SquareInRow';
+export { GardenRow } from './GardenRow';

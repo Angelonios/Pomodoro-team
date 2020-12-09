@@ -13,7 +13,7 @@ import {
 
 import { LeaveTeamButton, AddUserToTeam } from '../molecules';
 import { RefreshButton, TeamPageName } from 'src/atoms';
-import { SharedPomodoro } from '../organisms';
+import { Garden, SharedPomodoro } from '../organisms';
 import { useAuth } from '../utils/auth';
 import { ForbiddenPage } from '../pages/ForbiddenPage';
 
@@ -83,6 +83,9 @@ export function TeamDetailPageTemplate() {
                   </Typography>
                   <RefreshButton onClick={onClick} />
                 </Grid>
+
+                <Garden />
+
                 <Grid item container>
                   <Grid container spacing={3} style={{ marginBottom: '20px' }}>
                     <Hidden smDown>
