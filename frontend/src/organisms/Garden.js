@@ -4,8 +4,8 @@ import { gql, useQuery } from '@apollo/client';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import { Button } from '@material-ui/core';
+import NatureIcon from '@material-ui/icons/Nature';
 
 import { GardenRow, UserPoints } from 'src/molecules';
 import grass4 from 'src/assets/grass4.jpg';
@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
     width: '65%',
     marginBottom: theme.spacing(2),
   },
+  button: {},
 }));
 
 const GET_GARDEN_SQUARES = gql`
@@ -53,6 +54,16 @@ export function Garden({ team_id, user_id }) {
           <Toolbar variant="dense">
             <Typography variant="h6" color="inherit">
               <UserPoints user_id={user_id} />
+            </Typography>
+            <Typography component="div" style={{ marginLeft: 'auto' }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                className={classes.button}
+                startIcon={<NatureIcon />}
+              >
+                Plant tree
+              </Button>
             </Typography>
           </Toolbar>
         </AppBar>
