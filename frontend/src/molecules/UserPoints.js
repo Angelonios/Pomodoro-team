@@ -7,7 +7,11 @@ export function UserPoints({ user_id }) {
   const GET_CURRENT_USER_POINTS = gql`
     query Points($user_id: Int!) {
       user(user_id: $user_id) {
-        points
+        used_points
+      }
+      pomodoroStatistics(user_id: $user_id) {
+        finished_at
+        duration
       }
     }
   `;
@@ -17,9 +21,12 @@ export function UserPoints({ user_id }) {
       user_id: user_id,
     },
   });
+  let countedPoints = 0;
   if (loading) {
     return <Typography>Loadin.</Typography>;
   } else {
-    return <Typography>Your points are: {data.user.points}</Typography>;
+    return (
+      <Typography>Your used points are: {data.user.used_points}</Typography>
+    );
   }
 }
