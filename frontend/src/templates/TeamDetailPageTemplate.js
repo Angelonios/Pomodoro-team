@@ -11,7 +11,7 @@ import {
   Hidden,
 } from '@material-ui/core';
 
-import { LeaveTeamButton, AddUserToTeam } from '../molecules';
+import { LeaveTeamButton, AddUserToTeam, UserPoints } from '../molecules';
 import { RefreshButton, TeamPageName } from 'src/atoms';
 import { Garden, SharedPomodoro } from '../organisms';
 import { useAuth } from '../utils/auth';
@@ -83,7 +83,7 @@ export function TeamDetailPageTemplate() {
                   </Typography>
                   <RefreshButton onClick={onClick} />
                 </Grid>
-
+                <UserPoints user_id={user.user_id} />
                 <Garden />
 
                 <Grid item container>

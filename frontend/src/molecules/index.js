@@ -16,3 +16,4 @@ export { TablePaginationActions } from './TablePaginationActions';
 export { NameChangeForm } from './NameChangeForm';
 export { SquareInRow } from './SquareInRow';
 export { GardenRow } from './GardenRow';
+export { UserPoints } from './UserPoints';
