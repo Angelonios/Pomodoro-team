@@ -15,7 +15,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function GardenRow({ rowNum, gardenSquares, gardenSquaresSet }) {
+export function GardenRow({
+  rowNum,
+  gardenSquares,
+  gardenSquaresSet,
+  planting,
+}) {
   const classes = useStyles();
   const squares = [1, 2, 3, 4, 5, 6, 7];
 
@@ -41,6 +46,7 @@ export function GardenRow({ rowNum, gardenSquares, gardenSquaresSet }) {
                       colNum={index}
                       tree={true}
                       key={index}
+                      planting={planting}
                     />
                   );
                 }
@@ -51,6 +57,7 @@ export function GardenRow({ rowNum, gardenSquares, gardenSquaresSet }) {
                   colNum={index}
                   tree={false}
                   key={index}
+                  planting={planting}
                 />
               );
             }

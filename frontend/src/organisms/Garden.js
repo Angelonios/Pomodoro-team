@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { gql, useQuery } from '@apollo/client';
 import AppBar from '@material-ui/core/AppBar';
@@ -35,6 +35,8 @@ const GET_GARDEN_SQUARES = gql`
 
 export function Garden({ team_id, user_id }) {
   const classes = useStyles();
+  const [planting, setPlanting] = useState(false);
+  const points = 10;
   const gardenSquares = useQuery(GET_GARDEN_SQUARES, {
     variables: {
       team_id: team_id,
@@ -43,6 +45,12 @@ export function Garden({ team_id, user_id }) {
   const gardenSquaresSet = !(
     gardenSquares.data === null || gardenSquares.data === undefined
   );
+
+  const handleClick = () => {
+    setPlanting(!planting);
+    console.log(planting);
+  };
+
   if (gardenSquares.data === undefined) {
     return <div>loading...</div>;
   }
@@ -56,14 +64,28 @@ export function Garden({ team_id, user_id }) {
               <UserPoints user_id={user_id} />
             </Typography>
             <Typography component="div" style={{ marginLeft: 'auto' }}>
-              <Button
-                variant="contained"
-                color="secondary"
-                className={classes.button}
-                startIcon={<NatureIcon />}
-              >
-                Plant tree
-              </Button>
+              {points < 10 ? (
+                <Button
+                  disabled={true}
+                  variant="contained"
+                  color="secondary"
+                  className={classes.button}
+                  startIcon={<NatureIcon />}
+                  onClick={handleClick}
+                >
+                  {planting ? 'Cancel' : 'Plant'}
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className={classes.button}
+                  startIcon={<NatureIcon />}
+                  onClick={handleClick}
+                >
+                  {planting ? 'Cancel' : 'Plant'}
+                </Button>
+              )}
             </Typography>
           </Toolbar>
         </AppBar>
@@ -74,36 +96,43 @@ export function Garden({ team_id, user_id }) {
           <GardenRow
             rowNum={0}
             gardenSquares={gardenSquares.data}
+            planting={planting}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
             rowNum={1}
             gardenSquares={gardenSquares.data}
+            planting={planting}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
             rowNum={2}
             gardenSquares={gardenSquares.data}
+            planting={planting}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
             rowNum={3}
             gardenSquares={gardenSquares.data}
+            planting={planting}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
             rowNum={4}
             gardenSquares={gardenSquares.data}
+            planting={planting}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
             rowNum={5}
             gardenSquares={gardenSquares.data}
+            planting={planting}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
             rowNum={6}
             gardenSquares={gardenSquares.data}
+            planting={planting}
             gardenSquaresSet={gardenSquaresSet}
           />
         </div>

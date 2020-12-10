@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function SquareInRow({ rowNum, colNum, tree }) {
+export function SquareInRow({ rowNum, colNum, tree, planting }) {
   const classes = useStyles();
   return (
     <>
@@ -32,13 +32,36 @@ export function SquareInRow({ rowNum, colNum, tree }) {
           className={classes.square}
           name={rowNum.toString() + colNum.toString()}
         >
-          <img className={classes.img} src={tree3} height="75px" />
+          {planting ? (
+            <img
+              className={classes.img}
+              src={tree3}
+              height="75px"
+              style={{ filter: 'brightness(0.2)' }}
+            />
+          ) : (
+            <img className={classes.img} src={tree3} height="75px" />
+          )}
         </div>
       ) : (
-        <div
-          className={classes.square}
-          name={rowNum.toString() + colNum.toString()}
-        />
+        <>
+          {planting ? (
+            <div
+              className={classes.square}
+              name={rowNum.toString() + colNum.toString()}
+              style={{
+                backgroundColor: '#ffffff7a',
+                filter: 'brightness(1)',
+                cursor: 'pointer',
+              }}
+            />
+          ) : (
+            <div
+              className={classes.square}
+              name={rowNum.toString() + colNum.toString()}
+            />
+          )}
+        </>
       )}
     </>
   );
