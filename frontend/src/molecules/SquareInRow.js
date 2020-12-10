@@ -24,14 +24,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function SquareInRow({ rowNum, colNum }) {
+export function SquareInRow({ rowNum, colNum, tree }) {
   const classes = useStyles();
   return (
-    <div
-      className={classes.square}
-      name={rowNum.toString() + colNum.toString()}
-    >
-      <img src={tree3} height="75px" />
-    </div>
+    <>
+      {tree ? (
+        <div
+          className={classes.square}
+          name={rowNum.toString() + colNum.toString()}
+        >
+          <img src={tree3} height="75px" />
+        </div>
+      ) : (
+        <div
+          className={classes.square}
+          name={rowNum.toString() + colNum.toString()}
+        ></div>
+      )}
+    </>
   );
 }

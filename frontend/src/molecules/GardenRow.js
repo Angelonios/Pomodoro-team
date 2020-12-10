@@ -15,18 +15,57 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function GardenRow({ rowNum }) {
+export function GardenRow({ rowNum, gardenSquares, gardenSquaresSet }) {
   const classes = useStyles();
+  const row = [1, 2, 3, 4, 5, 6, 7];
+
+  if (!gardenSquaresSet) {
+    return <div>loading...</div>;
+  }
+
   return (
-    <div className={classes.row}>
-      <div className={classes.float} />
-      <SquareInRow rowNum={rowNum} colNum={0} />
-      <SquareInRow rowNum={rowNum} colNum={1} />
-      <SquareInRow rowNum={rowNum} colNum={2} />
-      <SquareInRow rowNum={rowNum} colNum={3} />
-      <SquareInRow rowNum={rowNum} colNum={4} />
-      <SquareInRow rowNum={rowNum} colNum={5} />
-      <SquareInRow rowNum={rowNum} colNum={6} />
-    </div>
+    <>
+      {gardenSquaresSet ? (
+        <div className={classes.row}>
+          <div className={classes.float} />
+          {row.map((gardenSquare, index) => {
+            if (
+              gardenSquares.data.gardenSquares[index] !== undefined &&
+              gardenSquares.data.gardenSquares[index].position ===
+                rowNum.toString() + index
+            ) {
+              return (
+                <SquareInRow
+                  rowNum={rowNum}
+                  colNum={index}
+                  tree={true}
+                  key={index}
+                />
+              );
+            } else {
+              return (
+                <SquareInRow
+                  rowNum={rowNum}
+                  colNum={index}
+                  tree={false}
+                  key={index}
+                />
+              );
+            }
+          })}
+        </div>
+      ) : (
+        <div className={classes.row}>
+          <div className={classes.float} />
+          <SquareInRow rowNum={rowNum} colNum={0} tree={false} />
+          <SquareInRow rowNum={rowNum} colNum={1} tree={false} />
+          <SquareInRow rowNum={rowNum} colNum={2} tree={false} />
+          <SquareInRow rowNum={rowNum} colNum={3} tree={false} />
+          <SquareInRow rowNum={rowNum} colNum={4} tree={false} />
+          <SquareInRow rowNum={rowNum} colNum={5} tree={false} />
+          <SquareInRow rowNum={rowNum} colNum={6} tree={false} />
+        </div>
+      )}
+    </>
   );
 }

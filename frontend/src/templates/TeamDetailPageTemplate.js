@@ -87,7 +87,7 @@ export function TeamDetailPageTemplate() {
                   <UserPoints user_id={user.user_id} />
                 </Grid>
 
-                <Garden />
+                <Garden team_id={id} />
 
                 <Grid item container>
                   <Grid container spacing={3} style={{ marginBottom: '20px' }}>

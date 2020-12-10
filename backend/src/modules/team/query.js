@@ -80,6 +80,5 @@ export const gardenSquares = async (_, { team_id }, { dbConnection }) => {
   if (!gardenSquares) {
     return null;
   }
-  console.log(gardenSquares);
   return gardenSquares;
 };
