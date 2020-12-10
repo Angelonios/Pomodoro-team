@@ -24,7 +24,6 @@ export function UserPoints({ user_id }) {
   if (loading) {
     return <Typography>Loading</Typography>;
   } else {
-    console.log(data.pomodoroStatistics);
     data.pomodoroStatistics.forEach((item) => {
       sum += item.duration;
     });
