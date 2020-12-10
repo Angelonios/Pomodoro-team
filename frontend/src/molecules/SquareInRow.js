@@ -4,6 +4,8 @@ import { gql, useMutation } from '@apollo/client';
 
 import tree3 from 'src/assets/tree3.png';
 import { useAuth } from 'src/utils/auth';
+import { useHistory, useLocation } from 'react-router-dom';
+import { route } from 'src/Routes';
 
 const useStyles = makeStyles((theme) => ({
   square: {
@@ -44,6 +46,8 @@ const PLANT_TREE = gql`
 export function SquareInRow({ rowNum, colNum, tree, planting, team_id }) {
   const classes = useStyles();
   const { user } = useAuth();
+  const history = useHistory();
+  const location = useLocation();
 
   const [plantTree] = useMutation(PLANT_TREE, {
     onCompleted: () => console.log('tree planted'),
@@ -58,6 +62,7 @@ export function SquareInRow({ rowNum, colNum, tree, planting, team_id }) {
         position: e.target.id,
       },
     });
+    window.location.reload();
     console.log(e.target.id);
   };
 

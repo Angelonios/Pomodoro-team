@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
@@ -41,17 +41,23 @@ export function TeamDetailPageTemplate() {
   const { user } = useAuth();
   const classes = useStyles();
   const location = useLocation();
+  const urlParams = useParams();
+  const team_id = parseInt(urlParams.teamId);
+  const team_name = urlParams.teamName;
   const dataSet = !(location.data === null || location.data === undefined);
   const name = dataSet ? location.data.name : 'No team set!';
   const id = dataSet ? parseInt(location.data.id) : 0;
 
+  console.log(urlParams);
+  console.log(team_id);
+  console.log(team_name);
   const onClick = () => {
     teamMembers.refetch();
   };
 
   const teamMembers = useQuery(GET_TEAM_MEMBERS_POMODORO, {
     variables: {
-      team_id: id,
+      team_id: team_id,
     },
   });
   const teamMembersSet = !(
@@ -69,7 +75,7 @@ export function TeamDetailPageTemplate() {
     <Container component="main">
       <Paper elevation={3}>
         <Box p={3}>
-          {dataSet && teamMembersSet ? (
+          {teamMembersSet ? (
             <div className={classes.root}>
               <Grid
                 container
@@ -79,7 +85,7 @@ export function TeamDetailPageTemplate() {
               >
                 <Grid item xs={12} style={{ textAlign: 'center' }}>
                   <Typography align={'center'} variant={'h3'}>
-                    {dataSet ? name : 'No team selected!'}
+                    {teamMembersSet ? team_name : 'No team selected!'}
                   </Typography>
                   <RefreshButton onClick={onClick} />
                 </Grid>
@@ -87,7 +93,7 @@ export function TeamDetailPageTemplate() {
                   <UserPoints user_id={user.user_id} />
                 </Grid> */}
 
-                <Garden team_id={id} user_id={user.user_id} />
+                <Garden team_id={team_id} user_id={user.user_id} />
                 <div
                   style={{
                     border: '1px solid ',
@@ -126,8 +132,7 @@ export function TeamDetailPageTemplate() {
                       marginBottom: '20px',
                     }}
                   ></div>
-                  {dataSet &&
-                    teamMembersSet &&
+                  {teamMembersSet &&
                     teamMembers.data.teamMembersPomodoro.map(
                       (pomodoro, index) => (
                         <Grid
