@@ -4,22 +4,32 @@ import { Typography } from '@material-ui/core';
 import { gql, useQuery } from '@apollo/client';
 
 export function UserPoints({ user_id }) {
-  const GET_CURRENT_USER_POINTS = gql`
+  const GET_DATA_FOR_USER_POINTS = gql`
     query Points($user_id: Int!) {
       user(user_id: $user_id) {
-        points
+        used_points
+      }
+      pomodoroStatistics(user_id: $user_id) {
+        duration
       }
     }
   `;
 
-  const { loading, data } = useQuery(GET_CURRENT_USER_POINTS, {
+  const { loading, data } = useQuery(GET_DATA_FOR_USER_POINTS, {
     variables: {
       user_id: user_id,
     },
   });
+  let sum = 0;
   if (loading) {
-    return <Typography>Loadin.</Typography>;
+    return <Typography>Loading</Typography>;
   } else {
-    return <Typography>Your points are: {data.user.points}</Typography>;
+    data.pomodoroStatistics.forEach((item) => {
+      sum += item.duration;
+    });
+
+    const countedPoints = Math.floor(sum / 1500) - data.user.used_points;
+
+    return <Typography>Your points are: {countedPoints}</Typography>;
   }
 }

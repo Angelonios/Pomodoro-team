@@ -46,7 +46,7 @@ const typeDefs = gql`
     user_id: Int!
     display_name: String!
     email: String!
-    points: Int!
+    used_points: Int!
   }
 
   type userTeams {
