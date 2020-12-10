@@ -66,7 +66,7 @@ export function Garden({ team_id, user_id }) {
         <AppBar position="static">
           <Toolbar variant="dense">
             <Typography variant="h6" color="inherit">
-              You have: {actualPoints} points!
+              You have: {actualPoints > points ? points : actualPoints} points!
             </Typography>
             <Typography component="div" style={{ marginLeft: 'auto' }}>
               {points < 10 ? (
