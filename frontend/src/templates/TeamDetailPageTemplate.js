@@ -83,12 +83,19 @@ export function TeamDetailPageTemplate() {
                   </Typography>
                   <RefreshButton onClick={onClick} />
                 </Grid>
-                <Grid item xs={12} md={4}>
+                {/*                 <Grid item xs={12} md={4}>
                   <UserPoints user_id={user.user_id} />
-                </Grid>
+                </Grid> */}
 
-                <Garden team_id={id} />
-
+                <Garden team_id={id} user_id={user.user_id} />
+                <div
+                  style={{
+                    border: '1px solid ',
+                    borderColor: 'action',
+                    width: '100%',
+                    marginBottom: '20px',
+                  }}
+                ></div>
                 <Grid item container>
                   <Grid container spacing={3} style={{ marginBottom: '20px' }}>
                     <Hidden smDown>

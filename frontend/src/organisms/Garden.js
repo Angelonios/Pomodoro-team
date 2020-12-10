@@ -1,8 +1,13 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { gql, useQuery } from '@apollo/client';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
-import { GardenRow } from 'src/molecules';
+import { GardenRow, UserPoints } from 'src/molecules';
 import grass4 from 'src/assets/grass4.jpg';
 
 const useStyles = makeStyles((theme) => ({
@@ -10,6 +15,12 @@ const useStyles = makeStyles((theme) => ({
     width: '45%',
     height: 'auto',
     backgroundImage: 'url(' + grass4 + ')',
+    marginBottom: theme.spacing(4),
+  },
+  root: {
+    flexGrow: 1,
+    width: '65%',
+    marginBottom: theme.spacing(2),
   },
 }));
 
@@ -21,7 +32,7 @@ const GET_GARDEN_SQUARES = gql`
   }
 `;
 
-export function Garden({ team_id }) {
+export function Garden({ team_id, user_id }) {
   const classes = useStyles();
   const gardenSquares = useQuery(GET_GARDEN_SQUARES, {
     variables: {
@@ -37,6 +48,16 @@ export function Garden({ team_id }) {
 
   return (
     <>
+      <div className={classes.root}>
+        <AppBar position="static">
+          <Toolbar variant="dense">
+            <Typography variant="h6" color="inherit">
+              <UserPoints user_id={user_id} />
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      </div>
+
       {gardenSquaresSet ? (
         <div className={classes.board}>
           <GardenRow
