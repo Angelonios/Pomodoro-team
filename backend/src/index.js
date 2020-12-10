@@ -19,6 +19,7 @@ const typeDefs = gql`
     teamMembersPomodoro(team_id: Int!): [UsersPomodoro!]!
     userPomodoroIds(user_id: Int!): Ids!
     pomodoroStatistics(user_id: Int!): [PomodoroStatistic]!
+    gardenSquares(team_id: Int!): [SquareInGarden]
   }
 
   type Pomodoro {
@@ -58,6 +59,12 @@ const typeDefs = gql`
     user_id: Int!
     finished_at: String!
     duration: Int!
+  }
+
+  type SquareInGarden {
+    team_id: Int!
+    user_id: Int!
+    position: String!
   }
 
   enum State {

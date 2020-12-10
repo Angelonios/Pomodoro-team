@@ -70,3 +70,16 @@ export const teamMembersPomodoro = async (_, { team_id }, { dbConnection }) => {
   }
   return teamMembersPomodoro;
 };
+
+export const gardenSquares = async (_, { team_id }, { dbConnection }) => {
+  const gardenSquares = await dbConnection.query(
+    `SELECT * FROM garden WHERE team_id = ?`,
+    [team_id],
+  );
+
+  if (!gardenSquares) {
+    return null;
+  }
+  console.log(gardenSquares);
+  return gardenSquares;
+};
