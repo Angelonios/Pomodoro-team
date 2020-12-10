@@ -20,6 +20,7 @@ export function GardenRow({
   gardenSquares,
   gardenSquaresSet,
   planting,
+  team_id,
 }) {
   const classes = useStyles();
   const squares = [1, 2, 3, 4, 5, 6, 7];
@@ -47,6 +48,7 @@ export function GardenRow({
                       tree={true}
                       key={index}
                       planting={planting}
+                      team_id={team_id}
                     />
                   );
                 }
@@ -58,6 +60,7 @@ export function GardenRow({
                   tree={false}
                   key={index}
                   planting={planting}
+                  team_id={team_id}
                 />
               );
             }

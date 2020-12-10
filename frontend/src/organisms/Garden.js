@@ -48,7 +48,6 @@ export function Garden({ team_id, user_id }) {
 
   const handleClick = () => {
     setPlanting(!planting);
-    console.log(planting);
   };
 
   if (gardenSquares.data === undefined) {
@@ -98,38 +97,45 @@ export function Garden({ team_id, user_id }) {
             gardenSquares={gardenSquares.data}
             planting={planting}
             gardenSquaresSet={gardenSquaresSet}
+            team_id={team_id}
           />
           <GardenRow
             rowNum={1}
             gardenSquares={gardenSquares.data}
             planting={planting}
             gardenSquaresSet={gardenSquaresSet}
+            team_id={team_id}
           />
           <GardenRow
+            team_id={team_id}
             rowNum={2}
             gardenSquares={gardenSquares.data}
             planting={planting}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
+            team_id={team_id}
             rowNum={3}
             gardenSquares={gardenSquares.data}
             planting={planting}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
+            team_id={team_id}
             rowNum={4}
             gardenSquares={gardenSquares.data}
             planting={planting}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
+            team_id={team_id}
             rowNum={5}
             gardenSquares={gardenSquares.data}
             planting={planting}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
+            team_id={team_id}
             rowNum={6}
             gardenSquares={gardenSquares.data}
             planting={planting}

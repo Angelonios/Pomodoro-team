@@ -100,6 +100,13 @@ const typeDefs = gql`
 
     DeleteTeam(teamName: String!, email: String!): String!
 
+    PlantTree(
+      team_id: Int!
+      user_id: Int!
+      display_name: String!
+      position: String!
+    ): Boolean
+
     savePomodoroDuration(
       user_id: Int!
       finished_at: String!
