@@ -30,10 +30,7 @@ export function UserPoints({ user_id }) {
     });
 
     const countedPoints = Math.floor(sum / 1500) - data.user.used_points;
-    if (countedPoints < 0) {
-      return <Typography>Your points are: 0</Typography>;
-    } else {
-      return <Typography>Your points are: {countedPoints}</Typography>;
-    }
+
+    return <Typography>Your points are: {countedPoints}</Typography>;
   }
 }
