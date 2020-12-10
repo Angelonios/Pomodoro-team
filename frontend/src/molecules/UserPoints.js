@@ -30,6 +30,6 @@ export function UserPoints({ user_id }) {
 
     const countedPoints = Math.floor(sum / 1500) - data.user.used_points;
 
-    return <Typography>Your points are: {countedPoints}</Typography>;
+    return countedPoints;
   }
 }

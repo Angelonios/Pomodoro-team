@@ -8,6 +8,22 @@ export const NameChange = async (_, { name, user_id }, { dbConnection }) => {
   );
 };
 
+export const SpendPoints = async (_, { user_id }, { dbConnection }) => {
+  const pointsNow = (
+    await dbConnection.query(
+      `SELECT used_points FROM users WHERE user_id = ?`,
+      [user_id],
+    )
+  )[0];
+  var pointsToBe = pointsNow.used_points + 10;
+  const spendPoints = await dbConnection.query(
+    `UPDATE users SET used_points = ? WHERE user_id = ?;`,
+    [pointsToBe, user_id],
+  );
+
+  return spendPoints.warningStatus === 0;
+};
+
 export const SignIn = async (_, { email, password }, { dbConnection }) => {
   const dbResponse = await dbConnection.query(
     `SELECT * FROM users WHERE email = ? LIMIT 1;`,

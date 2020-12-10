@@ -101,6 +101,8 @@ const typeDefs = gql`
 
     DeleteTeam(teamName: String!, email: String!): String!
 
+    SpendPoints(user_id: Int!): Boolean
+
     PlantTree(
       team_id: Int!
       user_id: Int!

@@ -37,7 +37,8 @@ const GET_GARDEN_SQUARES = gql`
 export function Garden({ team_id, user_id }) {
   const classes = useStyles();
   const [planting, setPlanting] = useState(false);
-  const points = 10;
+  const points = UserPoints({ user_id });
+  const [actualPoints, setActualPoints] = useState(null);
   const gardenSquares = useQuery(GET_GARDEN_SQUARES, {
     variables: {
       team_id: team_id,
@@ -55,13 +56,17 @@ export function Garden({ team_id, user_id }) {
     return <div>loading...</div>;
   }
 
+  if ((points !== undefined || points !== null) && actualPoints === null) {
+    setActualPoints(points);
+  }
+
   return (
     <>
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar variant="dense">
             <Typography variant="h6" color="inherit">
-              <UserPoints user_id={user_id} />
+              You have: {actualPoints} points!
             </Typography>
             <Typography component="div" style={{ marginLeft: 'auto' }}>
               {points < 10 ? (
@@ -98,6 +103,8 @@ export function Garden({ team_id, user_id }) {
             gardenSquares={gardenSquares}
             planting={planting}
             setPlanting={setPlanting}
+            actualPoints={actualPoints}
+            setActualPoints={setActualPoints}
             gardenSquaresSet={gardenSquaresSet}
             team_id={team_id}
           />
@@ -106,6 +113,8 @@ export function Garden({ team_id, user_id }) {
             gardenSquares={gardenSquares}
             planting={planting}
             setPlanting={setPlanting}
+            actualPoints={actualPoints}
+            setActualPoints={setActualPoints}
             gardenSquaresSet={gardenSquaresSet}
             team_id={team_id}
           />
@@ -115,6 +124,8 @@ export function Garden({ team_id, user_id }) {
             gardenSquares={gardenSquares}
             planting={planting}
             setPlanting={setPlanting}
+            actualPoints={actualPoints}
+            setActualPoints={setActualPoints}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
@@ -123,6 +134,8 @@ export function Garden({ team_id, user_id }) {
             gardenSquares={gardenSquares}
             planting={planting}
             setPlanting={setPlanting}
+            actualPoints={actualPoints}
+            setActualPoints={setActualPoints}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
@@ -131,6 +144,8 @@ export function Garden({ team_id, user_id }) {
             gardenSquares={gardenSquares}
             planting={planting}
             setPlanting={setPlanting}
+            actualPoints={actualPoints}
+            setActualPoints={setActualPoints}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
@@ -139,6 +154,8 @@ export function Garden({ team_id, user_id }) {
             gardenSquares={gardenSquares}
             planting={planting}
             setPlanting={setPlanting}
+            actualPoints={actualPoints}
+            setActualPoints={setActualPoints}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
@@ -147,6 +164,8 @@ export function Garden({ team_id, user_id }) {
             gardenSquares={gardenSquares}
             planting={planting}
             setPlanting={setPlanting}
+            actualPoints={actualPoints}
+            setActualPoints={setActualPoints}
             gardenSquaresSet={gardenSquaresSet}
           />
         </div>

@@ -42,6 +42,12 @@ const PLANT_TREE = gql`
   }
 `;
 
+const SPEND_POINTS = gql`
+  mutation SpendPoints($user_id: Int!) {
+    SpendPoints(user_id: $user_id)
+  }
+`;
+
 export function SquareInRow({
   rowNum,
   colNum,
@@ -51,10 +57,15 @@ export function SquareInRow({
   team_id,
   gardenSquares,
   display_name,
+  actualPoints,
+  setActualPoints,
 }) {
   const classes = useStyles();
   const { user } = useAuth();
-  const [plantTree] = useMutation(PLANT_TREE);
+  const [spendPoints] = useMutation(SPEND_POINTS);
+  const [plantTree] = useMutation(PLANT_TREE, {
+    onCompleted: () => spendPoints({ variables: { user_id: user.user_id } }),
+  });
 
   const plantTrees = (e) => {
     plantTree({
@@ -66,6 +77,7 @@ export function SquareInRow({
       },
     });
     setPlanting(!planting);
+    setActualPoints(actualPoints - 10);
     gardenSquares.refetch();
   };
 

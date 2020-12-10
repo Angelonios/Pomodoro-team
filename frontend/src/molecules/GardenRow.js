@@ -21,6 +21,8 @@ export function GardenRow({
   planting,
   setPlanting,
   team_id,
+  actualPoints,
+  setActualPoints,
 }) {
   const classes = useStyles();
   const squares = [1, 2, 3, 4, 5, 6, 7];
@@ -53,6 +55,8 @@ export function GardenRow({
                       key={index}
                       planting={planting}
                       setPlanting={setPlanting}
+                      actualPoints={actualPoints}
+                      setActualPoints={setActualPoints}
                       team_id={team_id}
                       gardenSquares={gardenSquares}
                       display_name={
@@ -70,6 +74,8 @@ export function GardenRow({
                   key={index}
                   planting={planting}
                   setPlanting={setPlanting}
+                  actualPoints={actualPoints}
+                  setActualPoints={setActualPoints}
                   team_id={team_id}
                   gardenSquares={gardenSquares}
                   display_name="empty"
