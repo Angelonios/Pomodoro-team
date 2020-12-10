@@ -36,15 +36,15 @@ export function TeamsViewMenu({ user_id, anchor, setAnchor }) {
     setAnchor(null);
     setAnchorEl(null);
 
-    history.push('/teamdetail/' + e.target.id + '/' + e.target.innerText);
+    /* history.push('/teamdetail/' + e.target.id + '/' + e.target.innerText); */
 
-    /*     history.push({
+    history.push({
       pathname: route.teamDetail(),
       data: {
         name: e.target.innerText,
         id: e.target.id,
       },
-    }); */
+    });
   };
 
   const { loading, data } = useQuery(USER_TEAMS, {

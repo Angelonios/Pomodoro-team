@@ -94,51 +94,58 @@ export function Garden({ team_id, user_id }) {
         <div className={classes.board}>
           <GardenRow
             rowNum={0}
-            gardenSquares={gardenSquares.data}
+            gardenSquares={gardenSquares}
             planting={planting}
+            setPlanting={setPlanting}
             gardenSquaresSet={gardenSquaresSet}
             team_id={team_id}
           />
           <GardenRow
             rowNum={1}
-            gardenSquares={gardenSquares.data}
+            gardenSquares={gardenSquares}
             planting={planting}
+            setPlanting={setPlanting}
             gardenSquaresSet={gardenSquaresSet}
             team_id={team_id}
           />
           <GardenRow
             team_id={team_id}
             rowNum={2}
-            gardenSquares={gardenSquares.data}
+            gardenSquares={gardenSquares}
             planting={planting}
+            setPlanting={setPlanting}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
             team_id={team_id}
             rowNum={3}
-            gardenSquares={gardenSquares.data}
+            gardenSquares={gardenSquares}
             planting={planting}
+            setPlanting={setPlanting}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
             team_id={team_id}
             rowNum={4}
-            gardenSquares={gardenSquares.data}
+            gardenSquares={gardenSquares}
             planting={planting}
+            setPlanting={setPlanting}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
             team_id={team_id}
             rowNum={5}
-            gardenSquares={gardenSquares.data}
+            gardenSquares={gardenSquares}
             planting={planting}
+            setPlanting={setPlanting}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
             team_id={team_id}
             rowNum={6}
-            gardenSquares={gardenSquares.data}
+            gardenSquares={gardenSquares}
             planting={planting}
+            setPlanting={setPlanting}
             gardenSquaresSet={gardenSquaresSet}
           />
         </div>

@@ -19,7 +19,7 @@ export const route = {
   signIn: () => `/signin`,
   share: () => `/share/:shareId`,
   createTeam: () => `/teamform`,
-  teamDetail: () => `/teamdetail/:teamId/:teamName`,
+  teamDetail: () => `/teamdetail`,
   profile: () => `/profile`,
   statistics: () => `/statistics`,
 };

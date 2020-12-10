@@ -2,7 +2,6 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
 import { SquareInRow } from 'src/molecules';
-import { from } from '@apollo/client';
 
 const useStyles = makeStyles((theme) => ({
   row: {
@@ -20,6 +19,7 @@ export function GardenRow({
   gardenSquares,
   gardenSquaresSet,
   planting,
+  setPlanting,
   team_id,
 }) {
   const classes = useStyles();
@@ -35,10 +35,14 @@ export function GardenRow({
         <div className={classes.row}>
           <div className={classes.float} />
           {squares.map((square, index) => {
-            if (gardenSquares.gardenSquares !== undefined) {
-              for (let i = 0; i < gardenSquares.gardenSquares.length; i++) {
+            if (gardenSquares.data.gardenSquares !== undefined) {
+              for (
+                let i = 0;
+                i < gardenSquares.data.gardenSquares.length;
+                i++
+              ) {
                 if (
-                  gardenSquares.gardenSquares[i].position ===
+                  gardenSquares.data.gardenSquares[i].position ===
                   rowNum.toString() + index
                 ) {
                   return (
@@ -48,7 +52,9 @@ export function GardenRow({
                       tree={true}
                       key={index}
                       planting={planting}
+                      setPlanting={setPlanting}
                       team_id={team_id}
+                      gardenSquares={gardenSquares}
                     />
                   );
                 }
@@ -60,7 +66,9 @@ export function GardenRow({
                   tree={false}
                   key={index}
                   planting={planting}
+                  setPlanting={setPlanting}
                   team_id={team_id}
+                  gardenSquares={gardenSquares}
                 />
               );
             }

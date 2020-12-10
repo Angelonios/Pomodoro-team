@@ -23,7 +23,7 @@ export function CreateTeamDialog({
       setOpen(false);
       history.push(path);
     } else {
-      if (path == '/profile') {
+      if (path === '/profile') {
         setOpen(false);
         window.location.reload();
       }

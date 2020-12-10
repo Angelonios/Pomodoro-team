@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { gql, useMutation } from '@apollo/client';
 
@@ -43,15 +43,18 @@ const PLANT_TREE = gql`
   }
 `;
 
-export function SquareInRow({ rowNum, colNum, tree, planting, team_id }) {
+export function SquareInRow({
+  rowNum,
+  colNum,
+  tree,
+  planting,
+  setPlanting,
+  team_id,
+  gardenSquares,
+}) {
   const classes = useStyles();
   const { user } = useAuth();
-  const history = useHistory();
-  const location = useLocation();
-
-  const [plantTree] = useMutation(PLANT_TREE, {
-    onCompleted: () => console.log('tree planted'),
-  });
+  const [plantTree] = useMutation(PLANT_TREE);
 
   const plantTrees = (e) => {
     plantTree({
@@ -62,8 +65,8 @@ export function SquareInRow({ rowNum, colNum, tree, planting, team_id }) {
         position: e.target.id,
       },
     });
-    window.location.reload();
-    console.log(e.target.id);
+    setPlanting(!planting);
+    gardenSquares.refetch();
   };
 
   return (
