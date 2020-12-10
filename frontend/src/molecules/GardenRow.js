@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 export function GardenRow({ rowNum, gardenSquares, gardenSquaresSet }) {
   const classes = useStyles();
-  const row = [1, 2, 3, 4, 5, 6, 7];
+  const squares = [1, 2, 3, 4, 5, 6, 7];
 
   if (!gardenSquaresSet) {
     return <div>loading...</div>;
@@ -28,21 +28,23 @@ export function GardenRow({ rowNum, gardenSquares, gardenSquaresSet }) {
       {gardenSquaresSet ? (
         <div className={classes.row}>
           <div className={classes.float} />
-          {row.map((gardenSquare, index) => {
-            if (
-              gardenSquares.data.gardenSquares[index] !== undefined &&
-              gardenSquares.data.gardenSquares[index].position ===
-                rowNum.toString() + index
-            ) {
-              return (
-                <SquareInRow
-                  rowNum={rowNum}
-                  colNum={index}
-                  tree={true}
-                  key={index}
-                />
-              );
-            } else {
+          {squares.map((square, index) => {
+            if (gardenSquares.gardenSquares !== undefined) {
+              for (let i = 0; i < gardenSquares.gardenSquares.length; i++) {
+                if (
+                  gardenSquares.gardenSquares[i].position ===
+                  rowNum.toString() + index
+                ) {
+                  return (
+                    <SquareInRow
+                      rowNum={rowNum}
+                      colNum={index}
+                      tree={true}
+                      key={index}
+                    />
+                  );
+                }
+              }
               return (
                 <SquareInRow
                   rowNum={rowNum}

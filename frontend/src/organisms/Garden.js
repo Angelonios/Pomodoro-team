@@ -41,37 +41,37 @@ export function Garden({ team_id }) {
         <div className={classes.board}>
           <GardenRow
             rowNum={0}
-            gardenSquares={gardenSquares}
+            gardenSquares={gardenSquares.data}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
             rowNum={1}
-            gardenSquares={gardenSquares}
+            gardenSquares={gardenSquares.data}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
             rowNum={2}
-            gardenSquares={gardenSquares}
+            gardenSquares={gardenSquares.data}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
             rowNum={3}
-            gardenSquares={gardenSquares}
+            gardenSquares={gardenSquares.data}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
             rowNum={4}
-            gardenSquares={gardenSquares}
+            gardenSquares={gardenSquares.data}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
             rowNum={5}
-            gardenSquares={gardenSquares}
+            gardenSquares={gardenSquares.data}
             gardenSquaresSet={gardenSquaresSet}
           />
           <GardenRow
             rowNum={6}
-            gardenSquares={gardenSquares}
+            gardenSquares={gardenSquares.data}
             gardenSquaresSet={gardenSquaresSet}
           />
         </div>
