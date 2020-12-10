@@ -64,6 +64,7 @@ const typeDefs = gql`
   type SquareInGarden {
     team_id: Int!
     user_id: Int!
+    display_name: String!
     position: String!
   }
 

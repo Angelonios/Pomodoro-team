@@ -1,6 +1,7 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { gql, useMutation } from '@apollo/client';
+import { Tooltip } from '@material-ui/core';
 
 import tree3 from 'src/assets/tree3.png';
 import { useAuth } from 'src/utils/auth';
@@ -49,6 +50,7 @@ export function SquareInRow({
   setPlanting,
   team_id,
   gardenSquares,
+  display_name,
 }) {
   const classes = useStyles();
   const { user } = useAuth();
@@ -84,7 +86,14 @@ export function SquareInRow({
               style={{ filter: 'brightness(0.2)' }}
             />
           ) : (
-            <img className={classes.img} src={tree3} height="75px" alt="tree" />
+            <Tooltip title={display_name}>
+              <img
+                className={classes.img}
+                src={tree3}
+                height="75px"
+                alt="tree"
+              />
+            </Tooltip>
           )}
         </div>
       ) : (

@@ -29,6 +29,7 @@ const GET_GARDEN_SQUARES = gql`
   query gardenSquares($team_id: Int!) {
     gardenSquares(team_id: $team_id) {
       position
+      display_name
     }
   }
 `;

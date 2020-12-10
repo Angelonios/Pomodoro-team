@@ -55,6 +55,9 @@ export function GardenRow({
                       setPlanting={setPlanting}
                       team_id={team_id}
                       gardenSquares={gardenSquares}
+                      display_name={
+                        gardenSquares.data.gardenSquares[i].display_name
+                      }
                     />
                   );
                 }
@@ -69,6 +72,7 @@ export function GardenRow({
                   setPlanting={setPlanting}
                   team_id={team_id}
                   gardenSquares={gardenSquares}
+                  display_name="empty"
                 />
               );
             }
