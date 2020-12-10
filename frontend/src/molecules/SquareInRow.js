@@ -32,12 +32,7 @@ export function SquareInRow({ rowNum, colNum, tree }) {
           className={classes.square}
           name={rowNum.toString() + colNum.toString()}
         >
-          <img
-            className={classes.img}
-            onMouseOver="hover"
-            src={tree3}
-            height="75px"
-          />
+          <img className={classes.img} src={tree3} height="75px" />
         </div>
       ) : (
         <div
