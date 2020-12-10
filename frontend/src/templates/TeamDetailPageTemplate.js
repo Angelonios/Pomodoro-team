@@ -83,7 +83,10 @@ export function TeamDetailPageTemplate() {
                   </Typography>
                   <RefreshButton onClick={onClick} />
                 </Grid>
-                <UserPoints user_id={user.user_id} />
+                <Grid item xs={12} md={4}>
+                  <UserPoints user_id={user.user_id} />
+                </Grid>
+
                 <Garden />
 
                 <Grid item container>
