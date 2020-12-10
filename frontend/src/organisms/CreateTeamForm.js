@@ -2,18 +2,14 @@ import React from 'react';
 import { useState } from 'react';
 
 import { gql, useMutation } from '@apollo/client';
-import Avatar from '@material-ui/core/Avatar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
+import { Paper, Avatar, Grid, Box, Container } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+
 import { Copyright, TeamNameField, CreateTeamDialog } from 'src/molecules';
 import { useAuth } from 'src/utils/auth';
 import { FormButton } from '../atoms';
-import { Paper } from '@material-ui/core';
 
 //TODO: CREATE_TEAM
 const CREATE_TEAM = gql`

@@ -26,9 +26,10 @@ export function CreateTeamDialog({
       if (path === '/profile') {
         setOpen(false);
         window.location.reload();
+      } else {
+        setOpen(false);
+        setOpen2(false);
       }
-      setOpen(false);
-      setOpen2(false);
       /*setOpen2(false);*/
       /*history.push({
         pathname: path,

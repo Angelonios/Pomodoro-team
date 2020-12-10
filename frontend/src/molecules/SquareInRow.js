@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { gql, useMutation } from '@apollo/client';
 
 import tree3 from 'src/assets/tree3.png';
 import { useAuth } from 'src/utils/auth';
-import { useHistory, useLocation } from 'react-router-dom';
-import { route } from 'src/Routes';
 
 const useStyles = makeStyles((theme) => ({
   square: {
@@ -82,10 +80,11 @@ export function SquareInRow({
               className={classes.img}
               src={tree3}
               height="75px"
+              alt="tree"
               style={{ filter: 'brightness(0.2)' }}
             />
           ) : (
-            <img className={classes.img} src={tree3} height="75px" />
+            <img className={classes.img} src={tree3} height="75px" alt="tree" />
           )}
         </div>
       ) : (

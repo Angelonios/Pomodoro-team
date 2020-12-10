@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Container, Paper, Grid } from '@material-ui/core';
-import { NameField, NameChangeForm } from 'src/molecules';
+import { Paper, Grid } from '@material-ui/core';
+import { NameChangeForm } from 'src/molecules';
 import { useAuth } from '../utils/auth';
 
 const useStyles = makeStyles((theme) => ({

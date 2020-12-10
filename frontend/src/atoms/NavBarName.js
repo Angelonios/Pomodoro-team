@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Avatar, Box, Tooltip, Typography } from '@material-ui/core';
+import { Avatar, Box, Tooltip } from '@material-ui/core';
 import Gravatar from 'react-gravatar';
 
 const useStyles = makeStyles((theme) => ({

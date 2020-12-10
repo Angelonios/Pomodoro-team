@@ -1,14 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
-import Avatar from '@material-ui/core/Avatar';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+
 import { NameField, CreateTeamDialog } from 'src/molecules';
 import { useAuth } from 'src/utils/auth';
 import { FormButton } from '../atoms';
@@ -41,7 +36,7 @@ export function NameChangeForm({ name }) {
   const [open, setOpen] = useState(false);
   const [formData, updateFormData] = useState(initialFormData);
   const [nameErrorText, setNameErrorText] = useState('');
-  var name;
+  var nameErr;
   const [nameError, setNameError] = useState(false);
 
   const [changeName] = useMutation(NAME_CHANGE, {
@@ -52,15 +47,15 @@ export function NameChangeForm({ name }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.name.trim() === '') {
-      name = false;
+      nameErr = false;
       setNameError(true);
       setNameErrorText('Please enter a name for your display name.');
     } else {
-      name = true;
+      nameErr = true;
       setNameError(false);
       setNameErrorText('');
     }
-    if (name) {
+    if (nameErr) {
       setOpen(true);
       changeName({
         variables: { name: formData.name.trim(), user_id: user.user_id },
