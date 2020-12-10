@@ -10,7 +10,6 @@ export function UserPoints({ user_id }) {
         used_points
       }
       pomodoroStatistics(user_id: $user_id) {
-        finished_at
         duration
       }
     }
@@ -21,12 +20,20 @@ export function UserPoints({ user_id }) {
       user_id: user_id,
     },
   });
-  let countedPoints = 0;
+  let sum = 0;
   if (loading) {
-    return <Typography>Loadin.</Typography>;
+    return <Typography>Loading</Typography>;
   } else {
-    return (
-      <Typography>Your used points are: {data.user.used_points}</Typography>
-    );
+    console.log(data.pomodoroStatistics);
+    data.pomodoroStatistics.forEach((item) => {
+      sum += item.duration;
+    });
+
+    const countedPoints = Math.floor(sum / 1500) - data.user.used_points;
+    if (countedPoints < 0) {
+      return <Typography>Your points are: 0</Typography>;
+    } else {
+      return <Typography>Your points are: {countedPoints}</Typography>;
+    }
   }
 }
