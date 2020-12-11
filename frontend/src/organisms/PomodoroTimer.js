@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Container, Grid, Paper } from '@material-ui/core';
 import { CircularPomodoroCountdown, ShareUrl } from 'src/molecules';
-import { PomodoroTimerButton } from 'src/atoms';
+import { PomodoroTimerButton, PomodoroBotText } from 'src/atoms';
 import { usePomodoroState } from 'src/utils/PomodoroContext';
 
 export function PomodoroTimer() {
@@ -43,6 +43,7 @@ export function PomodoroTimer() {
             </Grid>
           </Grid>
         </Box>
+        <PomodoroBotText />
         <Box p={8}>
           <Grid container alignItems="center" justify="center">
             <Grid item lg={8} xs={12}>

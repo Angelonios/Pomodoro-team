@@ -1,5 +1,6 @@
 export { PomodoroTimerLabel } from './PomodoroTimerLabel';
 export { PomodoroTimerButton } from './PomodoroTimerButton';
+export { PomodoroBotText } from './PomodoroBotText';
 export { NavLink } from './NavLink';
 export { FormButton } from './FormButton';
 export { Link } from './Link';
