@@ -89,14 +89,16 @@ async function getPomodoroStatistics(user_id, dbConnection) {
   return result;
 }
 
-export const userPomodoroSecondsSum = async (
-  _,
-  { user_id },
-  { dbConnection },
-) => {
+export const userPoints = async (_, { user_id }, { dbConnection }) => {
   const resultSum = await dbConnection.query(
-    'SELECT sum(duration) AS resultSum FROM `pomodoro_statistics` WHERE user_id = ?',
+    'SELECT sum(duration) AS resultSum FROM pomodoro_statistics WHERE user_id = ?',
     [user_id],
   );
-  return resultSum[0].resultSum;
+  const usedPoints = await dbConnection.query(
+    `SELECT used_points FROM users WHERE user_id = ?`,
+    [user_id],
+  );
+  const countedPoints =
+    Math.floor(resultSum[0].resultSum / 1500) - usedPoints[0].used_points;
+  return countedPoints;
 };
