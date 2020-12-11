@@ -33,6 +33,11 @@ const GET_GARDEN_SQUARES = gql`
     }
   }
 `;
+const GET_USER_POINTS = gql`
+  query userPoints($user_id: Int!) {
+    userPoints(user_id: $user_id)
+  }
+`;
 
 export function Garden({ team_id, user_id }) {
   const classes = useStyles();
