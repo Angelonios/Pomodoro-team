@@ -67,8 +67,12 @@ async function getDbTime(dbConnection) {
   return result[0];
 }
 
-export const pomodoroStatistics = async (_, { user_id: user_id }, { dbConnection }) => {
-  if(!user_id){
+export const pomodoroStatistics = async (
+  _,
+  { user_id: user_id },
+  { dbConnection },
+) => {
+  if (!user_id) {
     return;
   }
 
@@ -79,7 +83,20 @@ export const pomodoroStatistics = async (_, { user_id: user_id }, { dbConnection
 
 async function getPomodoroStatistics(user_id, dbConnection) {
   const result = await dbConnection.query(
-    `SELECT * FROM pomodoro_statistics WHERE user_id = ?`, [user_id]
+    `SELECT * FROM pomodoro_statistics WHERE user_id = ?`,
+    [user_id],
   );
   return result;
 }
+
+export const userPomodoroSecondsSum = async (
+  _,
+  { user_id },
+  { dbConnection },
+) => {
+  const resultSum = await dbConnection.query(
+    'SELECT sum(duration) AS resultSum FROM `pomodoro_statistics` WHERE user_id = ?',
+    [user_id],
+  );
+  return resultSum[0].resultSum;
+};

@@ -20,6 +20,7 @@ const typeDefs = gql`
     userPomodoroIds(user_id: Int!): Ids!
     pomodoroStatistics(user_id: Int!): [PomodoroStatistic]!
     gardenSquares(team_id: Int!): [SquareInGarden]
+    userPomodoroSecondsSum(user_id: Int!): Int!
   }
 
   type Pomodoro {
