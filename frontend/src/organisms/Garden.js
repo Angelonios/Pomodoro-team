@@ -7,13 +7,13 @@ import Typography from '@material-ui/core/Typography';
 import { Button } from '@material-ui/core';
 import NatureIcon from '@material-ui/icons/Nature';
 
-import { GardenRow, UserPoints } from 'src/molecules';
+import { SquareInRow } from 'src/molecules';
 import grass4 from 'src/assets/grass4.jpg';
 
 const useStyles = makeStyles((theme) => ({
   board: {
-    width: '45%',
-    height: 'auto',
+    width: '550px',
+    height: '550px',
     backgroundImage: 'url(' + grass4 + ')',
     marginBottom: theme.spacing(4),
   },
@@ -22,7 +22,14 @@ const useStyles = makeStyles((theme) => ({
     width: '65%',
     marginBottom: theme.spacing(2),
   },
-  button: {},
+  float: {
+    paddingTop: '100%',
+    float: 'left',
+  },
+  container: {
+    width: '1208px',
+    height: '1208px',
+  },
 }));
 
 const GET_GARDEN_SQUARES = gql`
@@ -41,9 +48,14 @@ const GET_USER_POINTS = gql`
 
 export function Garden({ team_id, user_id }) {
   const classes = useStyles();
+  const rows = [0, 1, 2, 3, 4, 5, 6];
+  const cols = [0, 1, 2, 3, 4, 5, 6];
   const [planting, setPlanting] = useState(false);
-  const points = UserPoints({ user_id });
   const [actualPoints, setActualPoints] = useState(null);
+  const points = useQuery(GET_USER_POINTS, {
+    variables: { user_id: user_id },
+    onCompleted: () => setActualPoints(points.data.userPoints),
+  });
   const gardenSquares = useQuery(GET_GARDEN_SQUARES, {
     variables: {
       team_id: team_id,
@@ -61,20 +73,16 @@ export function Garden({ team_id, user_id }) {
     return <div>loading...</div>;
   }
 
-  if ((points !== undefined || points !== null) && actualPoints === null) {
-    setActualPoints(points);
-  }
-
   return (
     <>
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar variant="dense">
             <Typography variant="h6" color="inherit">
-              You have: {actualPoints > points ? points : actualPoints} points!
+              You have: {actualPoints} points!
             </Typography>
             <Typography component="div" style={{ marginLeft: 'auto' }}>
-              {points < 10 ? (
+              {actualPoints < 10 ? (
                 <Button
                   disabled={true}
                   variant="contained"
@@ -100,119 +108,85 @@ export function Garden({ team_id, user_id }) {
           </Toolbar>
         </AppBar>
       </div>
-
-      {gardenSquaresSet ? (
-        <div className={classes.board}>
-          <GardenRow
-            rowNum={0}
-            gardenSquares={gardenSquares}
-            planting={planting}
-            setPlanting={setPlanting}
-            actualPoints={actualPoints}
-            setActualPoints={setActualPoints}
-            gardenSquaresSet={gardenSquaresSet}
-            team_id={team_id}
-          />
-          <GardenRow
-            rowNum={1}
-            gardenSquares={gardenSquares}
-            planting={planting}
-            setPlanting={setPlanting}
-            actualPoints={actualPoints}
-            setActualPoints={setActualPoints}
-            gardenSquaresSet={gardenSquaresSet}
-            team_id={team_id}
-          />
-          <GardenRow
-            team_id={team_id}
-            rowNum={2}
-            gardenSquares={gardenSquares}
-            planting={planting}
-            setPlanting={setPlanting}
-            actualPoints={actualPoints}
-            setActualPoints={setActualPoints}
-            gardenSquaresSet={gardenSquaresSet}
-          />
-          <GardenRow
-            team_id={team_id}
-            rowNum={3}
-            gardenSquares={gardenSquares}
-            planting={planting}
-            setPlanting={setPlanting}
-            actualPoints={actualPoints}
-            setActualPoints={setActualPoints}
-            gardenSquaresSet={gardenSquaresSet}
-          />
-          <GardenRow
-            team_id={team_id}
-            rowNum={4}
-            gardenSquares={gardenSquares}
-            planting={planting}
-            setPlanting={setPlanting}
-            actualPoints={actualPoints}
-            setActualPoints={setActualPoints}
-            gardenSquaresSet={gardenSquaresSet}
-          />
-          <GardenRow
-            team_id={team_id}
-            rowNum={5}
-            gardenSquares={gardenSquares}
-            planting={planting}
-            setPlanting={setPlanting}
-            actualPoints={actualPoints}
-            setActualPoints={setActualPoints}
-            gardenSquaresSet={gardenSquaresSet}
-          />
-          <GardenRow
-            team_id={team_id}
-            rowNum={6}
-            gardenSquares={gardenSquares}
-            planting={planting}
-            setPlanting={setPlanting}
-            actualPoints={actualPoints}
-            setActualPoints={setActualPoints}
-            gardenSquaresSet={gardenSquaresSet}
-          />
-        </div>
-      ) : (
-        <div className={classes.board}>
-          <GardenRow
-            rowNum={0}
-            gardenSquares={gardenSquares}
-            gardenSquaresSet={gardenSquaresSet}
-          />
-          <GardenRow
-            rowNum={1}
-            gardenSquares={gardenSquares}
-            gardenSquaresSet={gardenSquaresSet}
-          />
-          <GardenRow
-            rowNum={2}
-            gardenSquares={gardenSquares}
-            gardenSquaresSet={gardenSquaresSet}
-          />
-          <GardenRow
-            rowNum={3}
-            gardenSquares={gardenSquares}
-            gardenSquaresSet={gardenSquaresSet}
-          />
-          <GardenRow
-            rowNum={4}
-            gardenSquares={gardenSquares}
-            gardenSquaresSet={gardenSquaresSet}
-          />
-          <GardenRow
-            rowNum={5}
-            gardenSquares={gardenSquares}
-            gardenSquaresSet={gardenSquaresSet}
-          />
-          <GardenRow
-            rowNum={6}
-            gardenSquares={gardenSquares}
-            gardenSquaresSet={gardenSquaresSet}
-          />
-        </div>
-      )}
+      <div>
+        {gardenSquaresSet ? (
+          <div className={classes.board}>
+            {rows.map((row, index) => (
+              <>
+                {cols.map((col, index) => {
+                  for (
+                    let i = 0;
+                    i < gardenSquares.data.gardenSquares.length;
+                    i++
+                  ) {
+                    if (
+                      gardenSquares.data.gardenSquares[i].position ===
+                      row.toString() + col
+                    ) {
+                      return (
+                        <SquareInRow
+                          rowNum={row}
+                          colNum={col}
+                          tree={true}
+                          key={row * 7 + col}
+                          planting={planting}
+                          setPlanting={setPlanting}
+                          actualPoints={actualPoints}
+                          setActualPoints={setActualPoints}
+                          team_id={team_id}
+                          gardenSquares={gardenSquares}
+                          display_name={
+                            gardenSquares.data.gardenSquares[i].display_name
+                          }
+                        />
+                      );
+                    }
+                  }
+                  return (
+                    <SquareInRow
+                      rowNum={row}
+                      colNum={col}
+                      tree={false}
+                      key={row * 7 + col}
+                      planting={planting}
+                      setPlanting={setPlanting}
+                      actualPoints={actualPoints}
+                      setActualPoints={setActualPoints}
+                      team_id={team_id}
+                      gardenSquares={gardenSquares}
+                      display_name="empty"
+                    />
+                  );
+                })}
+              </>
+            ))}
+          </div>
+        ) : (
+          <div className={classes.board}>
+            {rows.map((row, index) => (
+              <>
+                {cols.map((col, index) => {
+                  return (
+                    <SquareInRow
+                      rowNum={row}
+                      colNum={col}
+                      tree={false}
+                      key={row * 7 + col}
+                      planting={planting}
+                      setPlanting={setPlanting}
+                      actualPoints={actualPoints}
+                      setActualPoints={setActualPoints}
+                      team_id={team_id}
+                      gardenSquares={gardenSquares}
+                      display_name="empty"
+                    />
+                  );
+                })}
+              </>
+            ))}
+          </div>
+        )}
+      </div>
     </>
   );
 }

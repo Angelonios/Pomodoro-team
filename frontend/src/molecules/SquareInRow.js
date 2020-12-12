@@ -9,15 +9,23 @@ import { useAuth } from 'src/utils/auth';
 const useStyles = makeStyles((theme) => ({
   square: {
     width: 'calc(100%/7)',
-    maxHeight: '100%',
+    height: 'calc(100%/7)',
     display: 'flex',
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
+    float: 'left',
   },
   img: {
     '&:hover': {
       filter: 'brightness(2)',
+    },
+  },
+  imgPlanting: {
+    opacity: '0.2',
+    '&:hover': {
+      filter: 'brightness(1)',
+      opacity: '1',
     },
   },
   float: {
@@ -68,6 +76,10 @@ export function SquareInRow({
   });
 
   const plantTrees = (e) => {
+    if (e.target.id === '') {
+      setPlanting(!planting);
+      return false;
+    }
     plantTree({
       variables: {
         team_id: team_id,
@@ -84,36 +96,46 @@ export function SquareInRow({
   return (
     <>
       {tree ? (
-        <div
-          className={classes.square}
-          name={rowNum.toString() + colNum.toString()}
-          id={rowNum.toString() + colNum.toString()}
-        >
-          {planting ? (
-            <img
-              className={classes.img}
-              src={tree3}
-              height="75px"
-              alt="tree"
-              style={{ filter: 'brightness(0.2)' }}
-            />
-          ) : (
-            <Tooltip title={display_name}>
+        <>
+          {planting /* je strom a sázím */ ? (
+            <div
+              className={classes.square}
+              id={rowNum.toString() + colNum.toString()}
+              style={{
+                backgroundColor: '#ffffffe0',
+                filter: 'brightness(0.1)',
+              }}
+            >
               <img
                 className={classes.img}
                 src={tree3}
                 height="75px"
                 alt="tree"
+                style={{ filter: 'brightness(0.2)' }}
               />
-            </Tooltip>
-          )}
-        </div>
-      ) : (
-        <>
-          {planting ? (
+            </div>
+          ) : (
+            /* je strom a nesázím */
             <div
               className={classes.square}
-              name={rowNum.toString() + colNum.toString()}
+              id={rowNum.toString() + colNum.toString()}
+            >
+              <Tooltip title={display_name}>
+                <img
+                  className={classes.img}
+                  src={tree3}
+                  height="75px"
+                  alt="tree"
+                />
+              </Tooltip>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          {planting /* není strom a sázím */ ? (
+            <div
+              className={classes.square}
               id={rowNum.toString() + colNum.toString()}
               style={{
                 backgroundColor: '#ffffff7a',
@@ -121,11 +143,18 @@ export function SquareInRow({
                 cursor: 'pointer',
               }}
               onClick={(e) => plantTrees(e)}
-            />
+            >
+              <img
+                className={classes.imgPlanting}
+                id={rowNum.toString() + colNum.toString()}
+                src={tree3}
+                height="75px"
+                alt="tree"
+              />
+            </div>
           ) : (
             <div
               className={classes.square}
-              name={rowNum.toString() + colNum.toString()}
               id={rowNum.toString() + colNum.toString()}
             />
           )}
