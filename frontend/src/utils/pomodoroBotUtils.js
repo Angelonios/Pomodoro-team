@@ -1,60 +1,35 @@
-import { convertSecondsToHours } from 'src/utils/pomodoroUtils';
-//2nd version 20201208
-
-const mapping = {
-  components: {
-    pomodoro: 1,
-    shortBreak: 2,
-    longBreak: 3,
-  },
-  timerStates: {
-    idle: 'IDLE',
-    running: 'RUNNING',
-    paused: 'PAUSED',
-    offline: 'OFFLINE',
-  },
-  statisticsBreakPoints: {
-    default: 'DEFAULT',
-    justStarted: 'JUST_STARTED',
-    over6Hours: 'OVER_6_HOURS',
-    over4Hours: 'OVER_4_HOURS',
-  },
-  timeOfDay: {
-    morning: 'morning',
-    afternoon: 'afternoon',
-    evening: 'evening',
-  },
-  userStates: {
-    anonymous: 'ANONYMOUS',
-    loggedIn: 'LOGGED_IN',
-  },
-};
+import {
+  convertSecondsToHours,
+  convertSecondsToPrettyString,
+} from 'src/utils/pomodoroUtils';
+import { messages } from 'src/utils/pomodoroBotMessages';
+import { mapping } from 'src/utils/pomodoroBotMapping';
 
 const getTimeOfDay = () => {
   const currentHour = new Date().getHours();
   if (0 <= currentHour && currentHour < 12) {
-    return 'morning';
+    return mapping.timeOfDay.morning;
   }
   if (12 <= currentHour && currentHour < 18) {
-    return 'afternoon';
+    return mapping.timeOfDay.afternoon;
   }
   if (18 <= currentHour && currentHour <= 24) {
-    return 'evening';
+    return mapping.timeOfDay.evening;
   }
 };
 
 const getTodaysTimeBreakpoint = (seconds) => {
   const hours = convertSecondsToHours(seconds);
   if (hours > 6) {
-    return 'OVER_6_HOURS';
+    return mapping.statisticsBreakPoints.over6Hours;
   }
   if (hours > 4) {
-    return 'OVER_4_HOURS';
+    return mapping.statisticsBreakPoints.over4Hours;
   }
   if (seconds === 0) {
-    return 'JUST_STARTED';
+    return mapping.statisticsBreakPoints.justStarted;
   }
-  return 'DEFAULT';
+  return mapping.statisticsBreakPoints.default;
 };
 
 const getUserState = (userStateObj) => {
@@ -64,31 +39,10 @@ const getUserState = (userStateObj) => {
 
 const defaultScore = 0.5;
 
-const messages = [
-  {
-    text:
-      "Hello ___DISPLAY_NAME___! Let's get some work done! It is ___TIME_OF_DAY___ and you have been working for ___TODAYS_STATS___ seconds today!",
-    icon: 'happy',
-    coefs: {},
-  },
-  {
-    text: "Let's work break!",
-    icon: 'happy',
-    coefs: {
-      /*       components: [
-        { type: mapping.components.shortBreak, coef: 1 },
-        { type: mapping.components.longBreak, coef: 1 },
-      ], */
-    },
-  },
-];
-
 function calculateScore({ message, pomodoroState, userState, todaysSeconds }) {
-  console.log(getTimeOfDay());
-  console.log(getTodaysTimeBreakpoint(todaysSeconds));
   let score = 0;
   //Components
-  if (message.coefs.components) {
+  if (message.coefs?.components) {
     const filteredComponent = message.coefs.components.filter(
       (component) => pomodoroState.componentType === component.type,
     );
@@ -99,11 +53,10 @@ function calculateScore({ message, pomodoroState, userState, todaysSeconds }) {
     score += defaultScore;
   }
   //Timer states
-  if (message.coefs.timerStates) {
+  if (message.coefs?.timerStates) {
     const filteredTimerState = message.coefs.timerStates.filter(
       (timerState) => pomodoroState.timerState === timerState.type,
     );
-    console.log('timerState', filteredTimerState);
     filteredTimerState.length > 0
       ? (score += filteredTimerState[0].coef)
       : (score += defaultScore);
@@ -111,7 +64,7 @@ function calculateScore({ message, pomodoroState, userState, todaysSeconds }) {
     score += defaultScore;
   }
   //User states
-  if (message.coefs.userStates) {
+  if (message.coefs?.userStates) {
     const filteredUserState = message.coefs.userStates.filter(
       (coefUserState) => getUserState(userState) === coefUserState.type,
     );
@@ -122,7 +75,7 @@ function calculateScore({ message, pomodoroState, userState, todaysSeconds }) {
     score += defaultScore;
   }
   //Statistics
-  if (message.coefs.statisticsBreakPoints) {
+  if (message.coefs?.statisticsBreakPoints) {
     const filteredStatisticsBreakPoints = message.coefs.statisticsBreakPoints.filter(
       (coefStatisticsBreakPoint) =>
         getTodaysTimeBreakpoint(todaysSeconds) ===
@@ -135,7 +88,7 @@ function calculateScore({ message, pomodoroState, userState, todaysSeconds }) {
     score += defaultScore;
   }
   //Time of day
-  if (message.coefs.timeOfDay) {
+  if (message.coefs?.timeOfDay) {
     const filteredTimeOfDay = message.coefs.timeOfDay.filter(
       (coefTimeOfDay) => getTimeOfDay() === coefTimeOfDay.type,
     );
@@ -145,7 +98,6 @@ function calculateScore({ message, pomodoroState, userState, todaysSeconds }) {
   } else {
     score += defaultScore;
   }
-  console.log('score', score);
   return score / 5;
 }
 
@@ -155,7 +107,6 @@ const completeString = ({
   userState,
   todaysSeconds,
 }) => {
-  console.log('usrStt', userState);
   const messageToReplace = message.text;
   let replacedMessage = '';
   replacedMessage = messageToReplace.replaceAll(
@@ -168,10 +119,8 @@ const completeString = ({
   );
   replacedMessage = replacedMessage.replaceAll(
     '___TODAYS_STATS___',
-    todaysSeconds,
+    convertSecondsToPrettyString(todaysSeconds),
   );
-  //console.log('rplcdmsg', replacedMessage);
-  console.log('rplcdmsg', replacedMessage);
 
   return replacedMessage;
 };

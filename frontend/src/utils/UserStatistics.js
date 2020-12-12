@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAuth } from 'src/utils/auth';
 
 import { usePomodoroState } from 'src/utils/PomodoroContext';
