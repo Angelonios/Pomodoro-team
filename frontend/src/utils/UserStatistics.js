@@ -1,13 +1,21 @@
 import { useQuery } from '@apollo/client';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from 'src/utils/auth';
+
+import { usePomodoroState } from 'src/utils/PomodoroContext';
 import { POMODORO_STATISTICS } from 'src/utils/serverSync';
 
 function UserStatistics({ type }) {
   const auth = useAuth();
-  const { loading, data } = useQuery(POMODORO_STATISTICS, {
+  const pomodoroState = usePomodoroState();
+  const { loading, data, refetch } = useQuery(POMODORO_STATISTICS, {
     variables: { user_id: auth.user?.user_id },
     skip: !auth.user,
   });
+
+  useEffect(() => {
+    refetch();
+  }, [pomodoroState.type]);
 
   if (auth.user) {
     if (data && type === 'all') {
@@ -33,5 +41,5 @@ function UserStatistics({ type }) {
 }
 
 export function useStatistics({ type }) {
-  return UserStatistics({ type });
+  return UserStatistics({ type, refetch: true });
 }

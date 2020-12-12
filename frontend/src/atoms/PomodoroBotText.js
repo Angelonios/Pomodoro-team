@@ -7,7 +7,7 @@ import { useStatistics } from 'src/utils/UserStatistics';
 export function PomodoroBotText() {
   const pomodoroState = usePomodoroState();
   const userState = useAuth();
-  const userStatistics = useStatistics({ type: 'today' });
+  const todaysSeconds = useStatistics({ type: 'today' });
   const [message, setMessage] = useState('Text');
 
   const memoizedPomodoroState = useMemo(
@@ -19,11 +19,17 @@ export function PomodoroBotText() {
   );
 
   useEffect(() => {
-    setMessage(getMessage({ memoizedPomodoroState, userState }));
+    setMessage(
+      getMessage({
+        pomodoroState: memoizedPomodoroState,
+        userState,
+        todaysSeconds,
+      }),
+    );
     console.log(memoizedPomodoroState);
     console.log(userState);
-    console.log(userStatistics);
-  }, [memoizedPomodoroState, userState]);
+    console.log(todaysSeconds);
+  }, [memoizedPomodoroState, userState, todaysSeconds]);
 
   return message;
 }
