@@ -36,7 +36,7 @@ const messages = [
   },
 ];
 
-function calculateScore(message, component, timerState, userState, timeOfDay) {
+function calculateScore({ message, pomodoroState, userState }) {
   let score = 0;
   return score;
 }
@@ -47,12 +47,13 @@ function calculateScore(message, component, timerState, userState, timeOfDay) {
 //E.g.: 0.3 + 0.9 + 0.6 + 0.6 / 4 = 0.6.
 //Example with banned metric: 0.3 + 0.9 + (-1) + 0.2 / 4 = 0.1
 
-export function getMessage({ component, pomodoroState, userState }) {
+export function getMessage({ pomodoroState, userState }) {
   const evaluatedMessages = messages.map((message) => {
     return {
       text: message.text,
-      score: calculateScore(message, component, pomodoroState, userState),
+      score: calculateScore({ message, pomodoroState, userState }),
     };
   });
+  console.log(evaluatedMessages);
   return evaluatedMessages[0].text;
 }
