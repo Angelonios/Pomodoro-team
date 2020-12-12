@@ -11,7 +11,7 @@ const dark = createMuiTheme({
     },
     background: {
       default: '#a64646',
-      paper: '#1c2120',
+      paper: '#383838',
     },
   },
 });
