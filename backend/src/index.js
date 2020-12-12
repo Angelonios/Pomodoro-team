@@ -113,7 +113,6 @@ const typeDefs = gql`
 
     savePomodoroDuration(
       user_id: Int!
-      finished_at: String!
       duration: Int!
     ): String!
   }

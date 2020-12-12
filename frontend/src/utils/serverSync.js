@@ -39,12 +39,10 @@ export const GET_USER_POMODORO_IDS = gql`
 export const SAVE_POMODORO_DURATION = gql`
   mutation savePomodoroDuration(
     $user_id: Int!
-    $finished_at: String!
     $duration: Int!
   ) {
     savePomodoroDuration(
       user_id: $user_id
-      finished_at: $finished_at
       duration: $duration
     )
   }

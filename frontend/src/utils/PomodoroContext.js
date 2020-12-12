@@ -135,7 +135,6 @@ export function PomodoroProvider({ children }) {
             savePomodoroDuration({
               variables: {
                 user_id: user.user_id,
-                finished_at: Date.now().toString(),
                 duration: calcDuration(),
               },
             });
