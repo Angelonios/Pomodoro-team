@@ -35,7 +35,7 @@ export function StatisticsTable({
 
     return result;
   }
-debugger;
+
   const week = (pages.length !== 0)
     ? pages[currentPage].sort((d1, d2) => d1 > d2 ? 1 : -1)
     : [];
