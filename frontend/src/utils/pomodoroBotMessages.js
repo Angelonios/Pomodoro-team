@@ -311,7 +311,7 @@ export const messages = [
   },
   {
     text:
-      "Awesome! Looks like we have a winner! Your today's score is ___TODAYS_STATS___.",
+      'Awesome! Looks like we have a winner! Your score today is ___TODAYS_STATS___!',
     avatar: tomato.amazed,
     coefs: {
       components: [
