@@ -7,8 +7,15 @@ import { getMessage } from 'src/utils/pomodoroBotUtils';
 import { usePomodoroState } from 'src/utils/PomodoroContext';
 import { useAuth } from 'src/utils/auth';
 import { useStatistics } from 'src/utils/UserStatistics';
+import { tomato } from 'src/utils/pomodoroBotMapping';
 
 import happyTomato from 'src/assets/tomatoes/happyTomato.svg';
+import amazedTomato from 'src/assets/tomatoes/amazedTomato.svg';
+import angryTomato from 'src/assets/tomatoes/angryTomato.svg';
+import chilledTomato from 'src/assets/tomatoes/chilledTomato.svg';
+import sadTomato from 'src/assets/tomatoes/sadTomato.svg';
+import veryHappyTomato from 'src/assets/tomatoes/veryHappyTomato.svg';
+
 import { Link } from 'react-router-dom';
 import { route } from 'src/Routes';
 
@@ -116,6 +123,10 @@ export function PomodoroBotText() {
       [theme.breakpoints.down('sm')]: {
         paddingTop: '0',
       },
+      height: '200px',
+    },
+    avatarImg: {
+      transform: 'scaleX(-1)',
     },
   }));
   const classes = useStyles();
@@ -132,11 +143,33 @@ export function PomodoroBotText() {
         >
           <Grid item xs={12} md={10}>
             <div id="bubble" className={classes.bubble}>
-              <p className={classes.bubbleText}>{completeMessage(message)}</p>
+              <p className={classes.bubbleText}>
+                {completeMessage(message?.text)}
+              </p>
             </div>
           </Grid>
           <Grid item id="avatar" className={classes.avatar} xs={5} md={2}>
-            <img src={happyTomato} alt="Tomato" />
+            <Grid container alignItems="flex-start">
+              <img
+                className={classes.avatarImg}
+                src={
+                  message?.avatar === tomato.amazed
+                    ? amazedTomato
+                    : message?.avatar === tomato.angry
+                    ? angryTomato
+                    : message?.avatar === tomato.chilled
+                    ? chilledTomato
+                    : message?.avatar === tomato.happy
+                    ? happyTomato
+                    : message?.avatar === tomato.sad
+                    ? sadTomato
+                    : message?.avatar === tomato.veryHappy
+                    ? veryHappyTomato
+                    : happyTomato
+                }
+                alt="Tomato"
+              />
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

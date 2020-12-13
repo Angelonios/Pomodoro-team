@@ -121,15 +121,14 @@ const completeString = ({
     '___TODAYS_STATS___',
     convertSecondsToPrettyString(todaysSeconds),
   );
-
-  return replacedMessage;
+  return { ...message, text: replacedMessage };
 };
 
 // Score in range <0, 1>.
 // Banned metrics have score of -1.
-// Overall score is counted as (weighted) average.
+// Overall score is counted as average.
 //E.g.: 0.3 + 0.9 + 0.6 + 0.6 / 4 = 0.6.
-//Example with banned metric: 0.3 + 0.9 + (-1) + 0.2 / 4 = 0.1
+
 let savedPomodoroState;
 let messageToReturn;
 export function getMessage({ pomodoroState, userState, todaysSeconds }) {
@@ -137,6 +136,7 @@ export function getMessage({ pomodoroState, userState, todaysSeconds }) {
     const evaluatedMessages = messages.map((message) => {
       return {
         text: message.text,
+        avatar: message.avatar,
         score: calculateScore({
           message,
           pomodoroState,

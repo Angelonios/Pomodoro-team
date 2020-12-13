@@ -1,4 +1,4 @@
-import { mapping } from 'src/utils/pomodoroBotMapping';
+import { mapping, tomato } from 'src/utils/pomodoroBotMapping';
 
 //Example message with all possible coeficients. Ideal for copy&paste!
 /* const exampleMessage = {
@@ -89,6 +89,7 @@ export const messages = [
   },
   {
     text: "Let's work!",
+    avatar: tomato.veryHappy,
     coefs: {
       components: [
         { type: mapping.components.pomodoro, coef: 1 },
@@ -105,6 +106,7 @@ export const messages = [
   },
   {
     text: 'Ready to start?',
+    avatar: tomato.chilled,
     coefs: {
       components: [
         { type: mapping.components.pomodoro, coef: 1 },
@@ -120,6 +122,7 @@ export const messages = [
   },
   {
     text: "I'm ready! And you?",
+    avatar: tomato.chilled,
     coefs: {
       components: [
         { type: mapping.components.pomodoro, coef: 1 },
@@ -135,6 +138,7 @@ export const messages = [
   },
   {
     text: 'Ready? Click the button one more time!',
+    avatar: tomato.veryHappy,
     coefs: {
       components: [
         { type: mapping.components.pomodoro, coef: 1 },
@@ -150,6 +154,7 @@ export const messages = [
   },
   {
     text: "Don't worry, I'll notify you when your pomodoro is done.",
+    avatar: tomato.chilled,
     coefs: {
       components: [
         { type: mapping.components.pomodoro, coef: 1 },
@@ -166,6 +171,7 @@ export const messages = [
   },
   {
     text: "Let's start a productive day!",
+    avatar: tomato.veryHappy,
     coefs: {
       components: [
         { type: mapping.components.pomodoro, coef: 1 },
@@ -188,6 +194,7 @@ export const messages = [
   },
   {
     text: 'Enjoy your break!',
+    avatar: tomato.chilled,
     coefs: {
       components: [
         { type: mapping.components.pomodoro, coef: 0 },
@@ -209,6 +216,7 @@ export const messages = [
   },
   {
     text: 'Time to relax.',
+    avatar: tomato.chilled,
     coefs: {
       components: [
         { type: mapping.components.pomodoro, coef: 0 },
@@ -220,6 +228,7 @@ export const messages = [
   {
     text:
       "Did you know? Pomodoro Technique was developed by Francesco Cirillo in the late 80's. You can follow him at @cirillof on Twitter.",
+    avatar: tomato.chilled,
     coefs: {
       components: [
         { type: mapping.components.pomodoro, coef: 0 },
@@ -231,6 +240,7 @@ export const messages = [
   {
     text:
       'Pomodoro technique can be a great way to fight against procrastination.',
+    avatar: tomato.amazed,
     coefs: {
       components: [
         { type: mapping.components.pomodoro, coef: 0 },
@@ -254,6 +264,7 @@ export const messages = [
   {
     text:
       'Great job! You have worked for ___TODAYS_STATS___ today so far! Keep up the good work!',
+    avatar: tomato.veryHappy,
     coefs: {
       components: [
         { type: mapping.components.pomodoro, coef: 0 },
@@ -270,6 +281,7 @@ export const messages = [
   },
   {
     text: "You're on fire! ___TODAYS_STATS___ and counting!",
+    avatar: tomato.amazed,
     coefs: {
       components: [
         { type: mapping.components.pomodoro, coef: 0 },
@@ -288,6 +300,7 @@ export const messages = [
   {
     text:
       "Awesome! Looks like we have a winner! Your today's score is ___TODAYS_STATS___.",
+    avatar: tomato.amazed,
     coefs: {
       components: [
         { type: mapping.components.pomodoro, coef: 0 },
@@ -306,6 +319,8 @@ export const messages = [
   {
     text:
       'You can ___REGISTER___ to gain access to your statistics. Already registered? ___LOG_IN_HERE___!',
+    avatar: tomato.veryHappy,
+
     coefs: {
       userStates: [
         { type: mapping.userStates.anonymous, coef: 1 },
@@ -317,6 +332,8 @@ export const messages = [
   {
     text:
       'If you ___REGISTER___, you will be able to see your stats! Already registered? ___LOG_IN_HERE___!',
+    avatar: tomato.chilled,
+
     coefs: {
       userStates: [
         { type: mapping.userStates.anonymous, coef: 1 },

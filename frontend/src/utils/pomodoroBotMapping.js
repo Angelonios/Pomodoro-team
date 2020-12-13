@@ -26,3 +26,12 @@ export const mapping = {
     loggedIn: 'LOGGED_IN',
   },
 };
+
+export const tomato = {
+  amazed: 'amazedTomato',
+  angry: 'angryTomato',
+  chilled: 'chilledTomato',
+  happy: 'happyTomato',
+  sad: 'sadTomato',
+  veryHappy: 'veryHappyTomato',
+};

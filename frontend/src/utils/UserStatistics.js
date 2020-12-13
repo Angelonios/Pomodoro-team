@@ -26,6 +26,7 @@ function UserStatistics({ type }) {
       return data.pomodoroStatistics;
     }
     if (data && type === 'today') {
+      //This can be simplified a lot once we have one row per day in the DB.
       const todaysRecords = data.pomodoroStatistics.filter((record) => {
         const recordDate = new Date(
           parseInt(record.finished_at),
