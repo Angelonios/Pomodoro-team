@@ -34,6 +34,7 @@ function UserStatistics({ type }) {
         if (recordDate === todayDate) {
           return record;
         }
+        return null;
       });
       const todaysTotalSeconds = todaysRecords.reduce(function (acc, obj) {
         return acc + obj.duration;

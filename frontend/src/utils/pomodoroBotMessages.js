@@ -1,5 +1,4 @@
 import { mapping } from 'src/utils/pomodoroBotMapping';
-import { getPomodoroComponent } from 'src/utils/pomodoroCycle';
 
 //Example message with all possible coeficients. Ideal for copy&paste!
 /* const exampleMessage = {
@@ -252,11 +251,6 @@ export const messages = [
       userStates: [{ type: mapping.userStates.anonymous, coef: -10 }],
     },
   },
-  /*   {
-    text: `Your first today's pomodoro is over. Now it's time for your ${
-      getPomodoroComponent(1).seconds / 60
-    }-minute break.`,
-  }, */
   {
     text:
       'Great job! You have worked for ___TODAYS_STATS___ today so far! Keep up the good work!',
