@@ -73,7 +73,6 @@ const setPomodoroState = (state, newState) => {
     };
   }
   if (newState.state === timerStates.paused) {
-    console.log(updatedState.secondsSinceStart);
     return {
       ...updatedState,
       remainingSeconds:

@@ -48,6 +48,15 @@ export const SAVE_POMODORO_DURATION = gql`
   }
 `;
 
+export const POMODORO_STATISTICS = gql`
+  query pomodoroStatistics($user_id: Int!) {
+    pomodoroStatistics(user_id: $user_id) {
+      finished_at
+      duration
+    }
+  }
+`;
+
 export const timerStates = {
   idle: 'IDLE',
   running: 'RUNNING',
