@@ -7,3 +7,4 @@ export { SharedPomodoro } from './SharedPomodoro';
 export { ProfilePageForm } from './ProfilePageForm';
 export { PomodoroStatistics } from './PomodoroStatistics';
 export { Garden } from './Garden';
+export { PomodoroBot } from './PomodoroBot';
