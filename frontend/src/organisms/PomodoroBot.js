@@ -2,24 +2,16 @@ import React, { useState, useEffect, useMemo } from 'react';
 import reactStringReplace from 'react-string-replace';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
+import { route } from 'src/Routes';
 import { getMessage } from 'src/utils/pomodoroBotUtils';
 import { usePomodoroState } from 'src/utils/PomodoroContext';
 import { useAuth } from 'src/utils/auth';
 import { useStatistics } from 'src/utils/UserStatistics';
-import { tomato } from 'src/utils/pomodoroBotMapping';
+import { PomodoroBotAvatar } from 'src/atoms';
 
-import happyTomato from 'src/assets/tomatoes/happyTomato.svg';
-import amazedTomato from 'src/assets/tomatoes/amazedTomato.svg';
-import angryTomato from 'src/assets/tomatoes/angryTomato.svg';
-import chilledTomato from 'src/assets/tomatoes/chilledTomato.svg';
-import sadTomato from 'src/assets/tomatoes/sadTomato.svg';
-import veryHappyTomato from 'src/assets/tomatoes/veryHappyTomato.svg';
-
-import { Link } from 'react-router-dom';
-import { route } from 'src/Routes';
-
-export function PomodoroBotText() {
+export function PomodoroBot() {
   const pomodoroState = usePomodoroState();
   const userState = useAuth();
   const todaysSeconds = useStatistics({ type: 'today' });
@@ -150,25 +142,7 @@ export function PomodoroBotText() {
           </Grid>
           <Grid item id="avatar" className={classes.avatar} xs={5} md={2}>
             <Grid container alignItems="flex-start">
-              <img
-                className={classes.avatarImg}
-                src={
-                  message?.avatar === tomato.amazed
-                    ? amazedTomato
-                    : message?.avatar === tomato.angry
-                    ? angryTomato
-                    : message?.avatar === tomato.chilled
-                    ? chilledTomato
-                    : message?.avatar === tomato.happy
-                    ? happyTomato
-                    : message?.avatar === tomato.sad
-                    ? sadTomato
-                    : message?.avatar === tomato.veryHappy
-                    ? veryHappyTomato
-                    : happyTomato
-                }
-                alt="Tomato"
-              />
+              <PomodoroBotAvatar avatar={message?.avatar} classes={classes} />
             </Grid>
           </Grid>
         </Grid>
