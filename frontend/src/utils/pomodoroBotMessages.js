@@ -153,7 +153,7 @@ export const messages = [
     },
   },
   {
-    text: "Don't worry, I'll notify you when your pomodoro is done.",
+    text: "Don't worry. I'll notify you when your Pomodoro is at its end.",
     avatar: tomato.chilled,
     coefs: {
       components: [
@@ -252,6 +252,18 @@ export const messages = [
   {
     text:
       'As a logged-in user, you can create teams, invite new team members, and then see their current status.',
+    coefs: {
+      components: [
+        { type: mapping.components.pomodoro, coef: 0 },
+        { type: mapping.components.shortBreak, coef: 1 },
+        { type: mapping.components.longBreak, coef: 1 },
+      ],
+      userStates: [{ type: mapping.userStates.anonymous, coef: -10 }],
+    },
+  },
+  {
+    text:
+      'Tip: If you join our beta program, you can plant trees! For every finished Pomodoro, you get points that you can later exchange for a tree!',
     coefs: {
       components: [
         { type: mapping.components.pomodoro, coef: 0 },
