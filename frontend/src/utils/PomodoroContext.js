@@ -168,7 +168,6 @@ export function PomodoroProvider({ children }) {
             getPomodoroComponent(state.position).seconds -
             state.remainingSeconds;
         }
-        console.log('New state', newTimerState);
         dispatch({
           type: SET_POMODORO_STATE,
           newState: {

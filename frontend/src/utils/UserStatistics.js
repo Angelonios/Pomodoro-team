@@ -9,14 +9,18 @@ function UserStatistics({ type }) {
   const auth = useAuth();
   const pomodoroState = usePomodoroState();
   const { loading, data, refetch } = useQuery(POMODORO_STATISTICS, {
-    variables: { user_id: auth.user?.user_id },
     skip: !auth.user,
+    variables: { user_id: auth.user?.user_id },
   });
 
   useEffect(() => {
-    refetch();
-  }, [pomodoroState.type]);
-
+    if (auth.user) {
+      refetch();
+    }
+  }, [pomodoroState.type, refetch, auth.user]);
+  if (loading) {
+    return 'loading';
+  }
   if (auth.user) {
     if (data && type === 'all') {
       return data.pomodoroStatistics;

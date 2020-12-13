@@ -130,32 +130,34 @@ const completeString = ({
 // Overall score is counted as (weighted) average.
 //E.g.: 0.3 + 0.9 + 0.6 + 0.6 / 4 = 0.6.
 //Example with banned metric: 0.3 + 0.9 + (-1) + 0.2 / 4 = 0.1
-
+let savedPomodoroState;
+let messageToReturn;
 export function getMessage({ pomodoroState, userState, todaysSeconds }) {
-  const evaluatedMessages = messages.map((message) => {
-    return {
-      text: message.text,
-      score: calculateScore({
-        message,
-        pomodoroState,
-        userState,
-        todaysSeconds,
-      }),
-    };
-  });
-  console.log(evaluatedMessages);
-  const maxScore = Math.max(...evaluatedMessages.map((o) => o.score), 0);
-  const maxScoreMessages = evaluatedMessages.filter(
-    (message) => message.score === maxScore,
-  );
-  const messageToReturn = completeString({
-    message:
-      maxScoreMessages[Math.floor(Math.random() * maxScoreMessages.length)],
+  if (savedPomodoroState !== pomodoroState) {
+    const evaluatedMessages = messages.map((message) => {
+      return {
+        text: message.text,
+        score: calculateScore({
+          message,
+          pomodoroState,
+          userState,
+          todaysSeconds,
+        }),
+      };
+    });
+    const maxScore = Math.max(...evaluatedMessages.map((o) => o.score), 0);
+    const maxScoreMessages = evaluatedMessages.filter(
+      (message) => message.score === maxScore,
+    );
+    messageToReturn = completeString({
+      message:
+        maxScoreMessages[Math.floor(Math.random() * maxScoreMessages.length)],
 
-    pomodoroState,
-    userState,
-    todaysSeconds,
-  });
-
+      pomodoroState,
+      userState,
+      todaysSeconds,
+    });
+    savedPomodoroState = pomodoroState;
+  }
   return messageToReturn;
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import reactStringReplace from 'react-string-replace';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 
@@ -8,12 +9,14 @@ import { useAuth } from 'src/utils/auth';
 import { useStatistics } from 'src/utils/UserStatistics';
 
 import happyTomato from 'src/assets/tomatoes/happyTomato.svg';
+import { Link } from 'react-router-dom';
+import { route } from 'src/Routes';
 
 export function PomodoroBotText() {
   const pomodoroState = usePomodoroState();
   const userState = useAuth();
   const todaysSeconds = useStatistics({ type: 'today' });
-  const [message, setMessage] = useState('Text');
+  const [message, setMessage] = useState();
 
   const memoizedPomodoroState = useMemo(
     () => ({
@@ -24,17 +27,42 @@ export function PomodoroBotText() {
   );
 
   useEffect(() => {
-    setMessage(
-      getMessage({
-        pomodoroState: memoizedPomodoroState,
-        userState,
-        todaysSeconds,
-      }),
-    );
-    console.log(memoizedPomodoroState);
-    console.log(userState);
-    console.log(todaysSeconds);
+    if (todaysSeconds !== 'loading') {
+      setMessage(
+        getMessage({
+          pomodoroState: memoizedPomodoroState,
+          userState,
+          todaysSeconds,
+        }),
+      );
+    }
   }, [memoizedPomodoroState, userState, todaysSeconds]);
+
+  const completeMessage = (message) => {
+    let replacedText;
+
+    // Match "Registration"
+    replacedText = reactStringReplace(
+      message,
+      '___REGISTRATION___',
+      (match, i) => <Link to={route.signUp()}>Registration</Link>,
+    );
+
+    // Match "register"
+    replacedText = reactStringReplace(
+      replacedText,
+      '___REGISTER___',
+      (match, i) => <Link to={route.signUp()}>register</Link>,
+    );
+    // Match "Log-in here"
+    replacedText = reactStringReplace(
+      replacedText,
+      '___LOG_IN_HERE___',
+      (match, i) => <Link to={route.signIn()}>Log-in here</Link>,
+    );
+
+    return replacedText;
+  };
 
   const useStyles = makeStyles((theme) => ({
     bubble: {
@@ -73,10 +101,14 @@ export function PomodoroBotText() {
         content: '"“"',
         fontFamily: 'Georgia',
         fontSize: '60px',
+        width: '0px',
         lineHeight: 0,
         marginTop: '30px',
         display: 'inline-block',
-        display: '-webkit-inline-box',
+        padding: '0 0 0 0',
+      },
+      '& a': {
+        color: theme.palette.secondary.contrastText,
       },
     },
     avatar: {
@@ -100,7 +132,7 @@ export function PomodoroBotText() {
         >
           <Grid item xs={12} md={10}>
             <div id="bubble" className={classes.bubble}>
-              <p className={classes.bubbleText}>{message}</p>
+              <p className={classes.bubbleText}>{completeMessage(message)}</p>
             </div>
           </Grid>
           <Grid item id="avatar" className={classes.avatar} xs={5} md={2}>

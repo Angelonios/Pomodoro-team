@@ -105,6 +105,51 @@ export const messages = [
     },
   },
   {
+    text: 'Ready to start?',
+    coefs: {
+      components: [
+        { type: mapping.components.pomodoro, coef: 1 },
+        { type: mapping.components.shortBreak, coef: 0 },
+        { type: mapping.components.longBreak, coef: 0 },
+      ],
+      timerStates: [
+        { type: mapping.timerStates.running, coef: 0 },
+        { type: mapping.timerStates.paused, coef: 0 },
+        { type: mapping.timerStates.offline, coef: 0 },
+      ],
+    },
+  },
+  {
+    text: "I'm ready! And you?",
+    coefs: {
+      components: [
+        { type: mapping.components.pomodoro, coef: 1 },
+        { type: mapping.components.shortBreak, coef: 0 },
+        { type: mapping.components.longBreak, coef: 0 },
+      ],
+      timerStates: [
+        { type: mapping.timerStates.running, coef: 0 },
+        { type: mapping.timerStates.paused, coef: 0 },
+        { type: mapping.timerStates.offline, coef: 0 },
+      ],
+    },
+  },
+  {
+    text: 'Ready? Click the button one more time!',
+    coefs: {
+      components: [
+        { type: mapping.components.pomodoro, coef: 1 },
+        { type: mapping.components.shortBreak, coef: 0 },
+        { type: mapping.components.longBreak, coef: 0 },
+      ],
+      timerStates: [
+        { type: mapping.timerStates.running, coef: 0 },
+        { type: mapping.timerStates.paused, coef: 0 },
+        { type: mapping.timerStates.offline, coef: 0 },
+      ],
+    },
+  },
+  {
     text: "Don't worry, I'll notify you when your pomodoro is done.",
     coefs: {
       components: [
@@ -134,10 +179,12 @@ export const messages = [
         { type: mapping.timerStates.paused, coef: 1 },
         { type: mapping.timerStates.offline, coef: 0 },
       ],
-      timeOfDay: [
-        { type: mapping.timeOfDay.morning, coef: 1 },
-        { type: mapping.timeOfDay.evening, coef: 0 },
+      statisticsBreakPoints: [
+        { type: mapping.statisticsBreakPoints.justStarted, coef: 1 },
+        { type: mapping.statisticsBreakPoints.over4Hours, coef: 0 },
+        { type: mapping.statisticsBreakPoints.over6Hours, coef: 0 },
       ],
+      timeOfDay: [{ type: mapping.timeOfDay.evening, coef: 0 }],
     },
   },
   {
@@ -171,6 +218,40 @@ export const messages = [
       ],
     },
   },
+  {
+    text:
+      "Did you know? Pomodoro Technique was developed by Francesco Cirillo in the late 80's. You can follow him at @cirillof on Twitter.",
+    coefs: {
+      components: [
+        { type: mapping.components.pomodoro, coef: 0 },
+        { type: mapping.components.shortBreak, coef: 1 },
+        { type: mapping.components.longBreak, coef: 1 },
+      ],
+    },
+  },
+  {
+    text:
+      'Pomodoro technique can be a great way to fight against procrastination.',
+    coefs: {
+      components: [
+        { type: mapping.components.pomodoro, coef: 0 },
+        { type: mapping.components.shortBreak, coef: 1 },
+        { type: mapping.components.longBreak, coef: 1 },
+      ],
+    },
+  },
+  {
+    text:
+      'As a logged-in user, you can create teams, invite new team members, and then see their current status.',
+    coefs: {
+      components: [
+        { type: mapping.components.pomodoro, coef: 0 },
+        { type: mapping.components.shortBreak, coef: 1 },
+        { type: mapping.components.longBreak, coef: 1 },
+      ],
+      userStates: [{ type: mapping.userStates.anonymous, coef: -10 }],
+    },
+  },
   /*   {
     text: `Your first today's pomodoro is over. Now it's time for your ${
       getPomodoroComponent(1).seconds / 60
@@ -185,10 +266,7 @@ export const messages = [
         { type: mapping.components.shortBreak, coef: 1 },
         { type: mapping.components.longBreak, coef: 1 },
       ],
-      userStates: [
-        { type: mapping.userStates.anonymous, coef: -10 },
-        { type: mapping.userStates.loggedIn, coef: 1 },
-      ],
+      userStates: [{ type: mapping.userStates.anonymous, coef: -10 }],
       statisticsBreakPoints: [
         { type: mapping.statisticsBreakPoints.over6Hours, coef: 1 },
         { type: mapping.statisticsBreakPoints.justStarted, coef: 0 },
@@ -204,10 +282,7 @@ export const messages = [
         { type: mapping.components.shortBreak, coef: 1 },
         { type: mapping.components.longBreak, coef: 1 },
       ],
-      userStates: [
-        { type: mapping.userStates.anonymous, coef: -10 },
-        { type: mapping.userStates.loggedIn, coef: 1 },
-      ],
+      userStates: [{ type: mapping.userStates.anonymous, coef: -10 }],
       statisticsBreakPoints: [
         { type: mapping.statisticsBreakPoints.over6Hours, coef: 1 },
         { type: mapping.statisticsBreakPoints.default, coef: 0 },
@@ -225,10 +300,7 @@ export const messages = [
         { type: mapping.components.shortBreak, coef: 1 },
         { type: mapping.components.longBreak, coef: 1 },
       ],
-      userStates: [
-        { type: mapping.userStates.anonymous, coef: -10 },
-        { type: mapping.userStates.loggedIn, coef: 1 },
-      ],
+      userStates: [{ type: mapping.userStates.anonymous, coef: -10 }],
       statisticsBreakPoints: [
         { type: mapping.statisticsBreakPoints.over6Hours, coef: 1 },
         { type: mapping.statisticsBreakPoints.default, coef: 0 },
@@ -239,7 +311,7 @@ export const messages = [
   },
   {
     text:
-      'You can [register](registrationPage) to gain access to your statistics. Already registered? [Log-in here!](loginPage)',
+      'You can ___REGISTER___ to gain access to your statistics. Already registered? ___LOG_IN_HERE___!',
     coefs: {
       userStates: [
         { type: mapping.userStates.anonymous, coef: 1 },
@@ -250,7 +322,7 @@ export const messages = [
 
   {
     text:
-      'If you [register](registrationPage), you will be able to see your stats! Already registered? [Log-in here!](loginPage)',
+      'If you ___REGISTER___, you will be able to see your stats! Already registered? ___LOG_IN_HERE___!',
     coefs: {
       userStates: [
         { type: mapping.userStates.anonymous, coef: 1 },
@@ -260,7 +332,7 @@ export const messages = [
   },
   {
     text:
-      'Did you know? [Registration](registrationPage) gives you ability to create a team and invite your teammates! Already registered? [Log-in here!](loginPage)',
+      'Did you know? ___REGISTRATION___ gives you ability to create a team and invite your teammates! Already registered? ___LOG_IN_HERE___!',
     coefs: {
       userStates: [
         { type: mapping.userStates.anonymous, coef: 1 },
