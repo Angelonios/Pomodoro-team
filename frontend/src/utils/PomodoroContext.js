@@ -110,8 +110,8 @@ export function PomodoroProvider({ children }) {
   function calcDuration() {
     const remainingSeconds = state.remainingSeconds;
     const pomodoroDuration = getPomodoroComponent(state.position).seconds;
-    const DURATION_LIMIT = -900;
-    const MAX_DURATION = 2400;
+    const DURATION_LIMIT = -1200;
+    const MAX_DURATION = 2700;
     if (remainingSeconds <= DURATION_LIMIT) {
       return MAX_DURATION;
     }
