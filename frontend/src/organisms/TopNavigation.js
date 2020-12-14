@@ -73,6 +73,9 @@ export function TopNavigation({ currentUser }) {
                 Team Pomodori
               </NavLink>
             </Typography>
+            <Grid item xs={12} style={{ textAlign: 'end' }}>
+              <ThemeChange />
+            </Grid>
             <Typography align="right">
               Hello!{' '}
               <NavLink to={route.signIn()} style={{ textDecoration: 'none' }}>
