@@ -42,19 +42,17 @@ export function PomodoroStatistics() {
       }),
     );
 
-    const finishedPages = mapWorkDatesToPages(workDurations, preparedPages)
-    return finishedPages;
+    return mapWorkDatesToPages(workDurations, preparedPages);
   }
 
   function mapWorkDatesToPages(workDurations, preparedPages){
     for (let i = 0; i < preparedPages.length; i++){
       const week = preparedPages[i];
       for (let j = 0; j < week.length; j++){
-        const day = week[j].date;
+        const day = week[j];
         for (let k = 0; k < workDurations.length; k++){
-          debugger;
-          const workDay = workDurations[k].finished_at;
-          if(day.getTime() === workDay.getTime()){
+          const workDay = workDurations[k];
+          if(day.date.getTime() === workDay.finished_at.getTime()){
             day.work = workDay.duration;
             console.log("mapped work to day: " + day);
           }

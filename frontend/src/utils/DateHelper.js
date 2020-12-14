@@ -108,6 +108,7 @@ export const GetFirstDayOfWeekFromDate = (date) => {
   let diffToMonday = weekDay.getDate() - day + (day === 0 ? -6 : 1);
   let monday = new Date();
   const firstDayOfTheWeek = new Date(monday.setDate(diffToMonday));
+  firstDayOfTheWeek.setHours(0,0,0,0);
   return firstDayOfTheWeek;
 };
 
@@ -117,14 +118,15 @@ export const GetLastDayOfWeekFromDate = (date) => {
   let diffToSunday = weekDay.getDate() + (7 - day);
   let sunday = new Date();
   const lastDayOfTheWeek = new Date(sunday.setDate(diffToSunday));
+  lastDayOfTheWeek.setHours(0,0,0,0);
   return lastDayOfTheWeek;
 };
 
 export const FillWeekWithMissingDates = (week) => {
   const monday = GetFirstDayOfWeekFromDate(week[0]);
   const sunday = GetLastDayOfWeekFromDate(week[0]);
-  const weekWithDates = CreateDateRange(monday, sunday);
-  return weekWithDates;
+
+  return CreateDateRange(monday, sunday);
 };
 
 export const PrepareWeeks = () => {
