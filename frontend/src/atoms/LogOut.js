@@ -5,8 +5,8 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 export function LogOut({ logOut }) {
   return (
-    <IconButton color="secondary" aria-label="log out" onClick={logOut}>
-      <ExitToAppIcon color="action" size="large" />
+    <IconButton color="inherit" aria-label="log out" onClick={logOut}>
+      <ExitToAppIcon size="large" />
     </IconButton>
   );
 }
