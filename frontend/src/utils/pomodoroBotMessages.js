@@ -150,6 +150,9 @@ export const messages = [
         { type: mapping.timerStates.paused, coef: 0 },
         { type: mapping.timerStates.offline, coef: 0 },
       ],
+      statisticsBreakPoints: [
+        { type: mapping.statisticsBreakPoints.justStarted, coef: -10 },
+      ],
     },
   },
   {
