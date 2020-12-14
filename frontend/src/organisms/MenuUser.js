@@ -26,10 +26,10 @@ export function MenuUser({ user_id, logOut }) {
       <IconButton
         aria-controls="simple-menu"
         aria-haspopup="true"
-        style={{ padding: '6px' }}
+        style={{ padding: '6px', color: '#fff' }}
         onClick={handleClick}
       >
-        <MenuIcon color="action" />
+        <MenuIcon />
       </IconButton>
       <Menu
         id="simple-menu"
@@ -49,7 +49,9 @@ export function MenuUser({ user_id, logOut }) {
           />
         </MenuItem>
         <MenuItem>
-          <Button onClick={() => history.push(route.statistics())}>Statistics</Button>
+          <Button onClick={() => history.push(route.statistics())}>
+            Statistics
+          </Button>
         </MenuItem>
         <MenuItem>
           <LogOut logOut={logOut} />

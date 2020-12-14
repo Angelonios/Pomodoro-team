@@ -4,14 +4,15 @@ const dark = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: '#1b5e20',
+      main: '#CF3D3A',
+      contrastText: '#fff',
     },
     secondary: {
-      main: '#880e4f',
+      main: '#709E1A',
     },
     background: {
-      default: '#a64646',
-      paper: '#383838',
+      default: '#212121',
+      paper: '#474747',
     },
   },
 });
@@ -19,8 +20,12 @@ const dark = createMuiTheme({
 const light = createMuiTheme({
   palette: {
     type: 'light',
-    action: {
-      active: '#fff',
+    primary: {
+      main: '#e33e3b',
+      contrastText: '#fff',
+    },
+    secondary: {
+      main: '#9ddb25',
     },
   },
 });

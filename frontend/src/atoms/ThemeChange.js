@@ -22,14 +22,10 @@ export function ThemeChange() {
     <IconButton
       aria-controls="simple-menu"
       aria-haspopup="true"
-      style={{ padding: '6px' }}
+      style={{ padding: '6px', color: '#fff' }}
       onClick={handleThemeChange}
     >
-      {isDark ? (
-        <Brightness7Icon color="action" />
-      ) : (
-        <Brightness6Icon color="action" />
-      )}
+      {isDark ? <Brightness7Icon /> : <Brightness6Icon />}
     </IconButton>
   );
 }

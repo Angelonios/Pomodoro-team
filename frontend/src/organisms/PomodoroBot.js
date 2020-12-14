@@ -74,8 +74,9 @@ export function PomodoroBot() {
       marginBottom: '45px',
       cursor: 'default',
       borderRadius: '10px',
+      maxWidth: 'fit-content',
       borderBottomRightRadius: '25px',
-      borderRight: '5px solid black',
+      borderRight: '5px solid rgba(0,0,0,0.3);',
       '&::after': {
         content: '""',
         marginTop: '-30px',
@@ -111,7 +112,7 @@ export function PomodoroBot() {
       },
     },
     avatar: {
-      padding: '80px 0 0 0',
+      padding: '120px 0 0 0',
       [theme.breakpoints.down('sm')]: {
         paddingTop: '0',
       },
@@ -125,7 +126,7 @@ export function PomodoroBot() {
 
   return (
     <Grid container justify="center">
-      <Grid item xs={10}>
+      <Grid item xs={8}>
         <Grid
           container
           id="botContainer"
