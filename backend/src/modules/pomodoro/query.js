@@ -35,7 +35,7 @@ export const pomodoro = async (_, { shareId }, { dbConnection }) => {
       if (
         currentTime['CURRENT_TIMESTAMP()'] / 1000 -
           pomodoro.last_updated / 1000 >=
-        MINUTE * 35
+        MINUTE * 45
       ) {
         state = 'OFFLINE';
       }
