@@ -24,6 +24,7 @@ export function PomodoroStatistics() {
   });
 
   function prepareData(data) {
+    debugger;
     const workDurations = data.pomodoroStatistics;
     const preparedWeeks = PrepareWeeks();
     const preparedPages = preparedWeeks.map(week =>

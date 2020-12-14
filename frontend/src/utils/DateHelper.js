@@ -105,7 +105,7 @@ export const GroupDatesIntoWeeks = (dates) => {
 export const GetFirstDayOfWeekFromDate = (date) => {
   const weekDay = new Date(date);
   let day = weekDay.getDay();
-  let diffToMonday = weekDay.getDate() - day + (day == 0 ? -6 : 1);
+  let diffToMonday = weekDay.getDate() - day + (day === 0 ? -6 : 1);
   let monday = new Date();
   const firstDayOfTheWeek = new Date(monday.setDate(diffToMonday));
   return firstDayOfTheWeek;
