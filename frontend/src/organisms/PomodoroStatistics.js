@@ -24,7 +24,6 @@ export function PomodoroStatistics() {
   });
 
   function prepareData(data) {
-    debugger;
     const workDurations = data.pomodoroStatistics.map(ps => {
       let workDate = new Date(parseInt(ps.finished_at));
       workDate.setHours(0,0,0,0);
@@ -51,11 +50,11 @@ export function PomodoroStatistics() {
     for (let i = 0; i < preparedPages.length; i++){
       const week = preparedPages[i];
       for (let j = 0; j < week.length; j++){
-        const day = week[j];
+        const day = week[j].date;
         for (let k = 0; k < workDurations.length; k++){
-          const workDay = workDurations[k];
-          const workDayDate = new Date(parseInt(workDay.finished_at));
-          if(day.date.getTime() === workDayDate.getTime()){
+          debugger;
+          const workDay = workDurations[k].finished_at;
+          if(day.getTime() === workDay.getTime()){
             day.work = workDay.duration;
             console.log("mapped work to day: " + day);
           }
