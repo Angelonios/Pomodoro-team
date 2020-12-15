@@ -20,10 +20,9 @@ export function EmailField({
         label="Email Address"
         name="email"
         autoComplete="email"
-        defaultValue={data}
         onChange={handleChange}
         helperText={helperText}
-        value={formData.email}
+        defaultValue={formData.email}
       />
     </Grid>
   );
