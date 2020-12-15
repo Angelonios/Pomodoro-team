@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, Grid } from '@material-ui/core';
 import { NameChangeForm } from 'src/molecules';
+import { BetaModeSwitch } from 'src/atoms';
 import { useAuth } from '../utils/auth';
 
 const useStyles = makeStyles((theme) => ({
@@ -25,6 +26,7 @@ export function ProfilePageForm({ email }) {
     <Grid item xs={12} sm={12} md={6} style={{ minHeight: '245px' }}>
       <Paper className={classes.paper} style={{ minHeight: '225px' }}>
         <NameChangeForm name={user.display_name} />
+        <BetaModeSwitch />
       </Paper>
     </Grid>
   );
