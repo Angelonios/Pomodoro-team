@@ -3,24 +3,28 @@ import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 export function BetaModeSwitch() {
-  const [checked, setChecked] = React.useState(true);
-  var isChecked = checked;
+  if (!window.localStorage.getItem('beta')) {
+    window.localStorage.setItem('beta', false);
+  }
+
+  var beta = JSON.parse(window.localStorage.getItem('beta'));
+
+  const [checked, setChecked] = React.useState(beta);
 
   const toggleChecked = () => {
-    if (isChecked) {
+    if (checked) {
       window.localStorage.setItem('beta', false);
-      isChecked = !isChecked;
+      setChecked(false);
     } else {
       window.localStorage.setItem('beta', true);
-      isChecked = !isChecked;
+      setChecked(true);
     }
-    setChecked((prev) => !prev);
   };
 
   return (
     <FormControlLabel
       control={
-        <Switch checked={checked} onChange={toggleChecked} color="primary" />
+        <Switch checked={beta} onChange={toggleChecked} color="primary" />
       }
       label="Beta mode"
     />
