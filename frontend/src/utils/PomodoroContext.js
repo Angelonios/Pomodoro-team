@@ -12,6 +12,8 @@ import {
   POMODORO_QUERY,
   UPDATE_POMODORO_MUTATION,
   GET_USER_POMODORO_IDS,
+  SAVE_POMODORO_DURATION,
+  timerStates,
 } from 'src/utils/serverSync';
 import {
   pomodoroReducer,
@@ -22,6 +24,8 @@ import {
 
 import { convertSecondsToMinutesSting } from 'src/utils/pomodoroUtils';
 import { useAuth } from 'src/utils/auth';
+import sound1 from 'src/assets/nuclear.mp3';
+import useSound from 'use-sound';
 
 const PomodoroStateContext = createContext();
 const PomodoroDispatchContext = createContext();
@@ -32,15 +36,17 @@ export function PomodoroProvider({ children }) {
   const [shareUrl, setShareUrl] = useState();
   const serverPomodoro = useQuery(POMODORO_QUERY, { variables: { shareId } });
   const [updateMutation] = useMutation(UPDATE_POMODORO_MUTATION);
+  const [savePomodoroDuration] = useMutation(SAVE_POMODORO_DURATION);
   const { user } = useAuth();
   const [userId, setUserId] = useState(0);
+  const [play] = useSound(sound1, { volume: 0.5, playbackRate: 1.5 });
 
   const [state, dispatch] = useReducer(pomodoroReducer, {
     remainingSeconds: 1500,
     secondsSinceStart: 0,
     finalTime: 0,
     position: 0,
-    running: false,
+    timerState: timerStates.idle,
   });
 
   const userPomodoroIds = useQuery(GET_USER_POMODORO_IDS, {
@@ -71,21 +77,117 @@ export function PomodoroProvider({ children }) {
     }
   }, [user]);
 
-  const clickMainButton = () => {
-    dispatch({ type: CLICK_MAIN_BUTTON });
+  const handleSecondaryActions = (index) => {
+    let newTimerState = state.timerState;
+    let newPosition = state.position;
+    switch (
+      getPomodoroComponent(state.position).actions[state.timerState].secondary[
+        index
+      ].type
+    ) {
+      case 'SWITCH_TO_POMODORO':
+        newTimerState = timerStates.idle;
+        newPosition = 0;
 
-    //Prepare props for mutation
-    let running, position;
-    running = !state.running;
-    state.running
-      ? (position = getNextIndex(state.position))
-      : (position = state.position);
+        return { newTimerState, newPosition };
+      case 'SWITCH_TO_SHORT_BREAK':
+        newTimerState = timerStates.idle;
+        newPosition = 1;
+        return { newTimerState, newPosition };
+      case 'SWITCH_TO_LONG_BREAK':
+        newTimerState = timerStates.idle;
+        newPosition = 7;
+        return { newTimerState, newPosition };
+      case 'RESTART':
+        newTimerState = timerStates.idle;
+        newPosition = state.position;
+        return { newTimerState, newPosition };
+      default:
+        console.log('Unknown action type!');
+    }
+  };
+
+  function calcDuration() {
+    const remainingSeconds = state.remainingSeconds;
+    const pomodoroDuration = getPomodoroComponent(state.position).seconds;
+    const DURATION_LIMIT = -1200;
+    const MAX_DURATION = 2700;
+    if (remainingSeconds <= DURATION_LIMIT) {
+      return MAX_DURATION;
+    }
+    return pomodoroDuration - remainingSeconds;
+  }
+
+  const performAction = ({ type, index }) => {
+    let newTimerState;
+    let newPosition;
+    switch (type) {
+      case 'primary':
+        dispatch({ type: CLICK_MAIN_BUTTON });
+        if (
+          state.timerState !== timerStates.idle &&
+          state.timerState !== timerStates.offline
+        ) {
+          newTimerState = timerStates.idle;
+          //statistics
+          getPomodoroComponent(state.position).type === 1 &&
+            user &&
+            savePomodoroDuration({
+              variables: {
+                user_id: user.user_id,
+                duration: calcDuration(),
+              },
+            });
+        } else {
+          newTimerState = timerStates.running;
+        }
+        state.timerState === timerStates.running ||
+        state.timerState === timerStates.paused
+          ? (newPosition = getNextIndex(state.position))
+          : (newPosition = state.position);
+        break;
+      case 'secondary':
+        ({ newTimerState, newPosition } = handleSecondaryActions(index));
+        dispatch({
+          type: SET_POMODORO_STATE,
+          newState: {
+            position: newPosition,
+            state: newTimerState,
+            secondsSinceStart: 0,
+          },
+        });
+        break;
+      case 'pause':
+        newTimerState = timerStates.running;
+        newPosition = state.position;
+        let newSecondsSinceStart = state.secondsSinceStart;
+        if (state.timerState !== timerStates.paused) {
+          newTimerState = timerStates.paused;
+          newSecondsSinceStart =
+            getPomodoroComponent(state.position).seconds -
+            state.remainingSeconds;
+        }
+        dispatch({
+          type: SET_POMODORO_STATE,
+          newState: {
+            ...state,
+            position: newPosition,
+            state: newTimerState,
+            secondsSinceStart: newSecondsSinceStart,
+          },
+        });
+        break;
+      default:
+        newTimerState = state.timerState;
+        newPosition = state.position;
+        console.log('Unknown action category type!');
+    }
 
     //Send mutation with new values
     updateMutation({
       variables: {
-        running: running,
-        position: position,
+        state: newTimerState,
+        position: newPosition,
         communicationId: communicationId,
         shareId: shareId,
       },
@@ -100,7 +202,7 @@ export function PomodoroProvider({ children }) {
       //If backend returns null, then we have to send mutation with new share and communication ids
       updateMutation({
         variables: {
-          running: false,
+          state: timerStates.idle,
           position: 0,
           communicationId: communicationId,
           shareId: shareId,
@@ -125,10 +227,18 @@ export function PomodoroProvider({ children }) {
     user,
   ]);
 
+  //Favicon, title and sound
+  //TODO: Move somewhere else
+  const favicon = document.getElementById('favicon');
   useEffect(() => {
     let title = '';
-    if (!state.running) {
+    let faviconHref = '';
+    if (
+      state.timerState === timerStates.idle ||
+      state.timerState === timerStates.offline
+    ) {
       title = 'Idle - Team Pomodori';
+      faviconHref = '/grey-tomato.svg';
     } else if (state.remainingSeconds < 0) {
       title =
         '(' +
@@ -137,25 +247,59 @@ export function PomodoroProvider({ children }) {
         getPomodoroComponent(state.position).label +
         ' - ' +
         'Team Pomodori';
+      faviconHref = '/red-tomato.svg';
+
+      if (
+        state.remainingSeconds % 300 === 0 &&
+        state.timerState === timerStates.running
+      ) {
+        //play sound
+        play();
+      }
     } else {
       title = getPomodoroComponent(state.position).label + ' - Team Pomodori';
+      if (Object.is(state.remainingSeconds, +0)) {
+        //play sound
+        play();
+      }
+      if (
+        getPomodoroComponent(state.position).type === 2 ||
+        getPomodoroComponent(state.position).type === 3
+      ) {
+        faviconHref = '/yellow-tomato.svg';
+      } else {
+        faviconHref = '/green-tomato.svg';
+      }
     }
+    favicon.href = faviconHref;
     document.title = title;
-    if (!state.running) return;
+    //End of favicon, title and sound
+
+    //Refresh context every second
+    if (
+      state.timerState === timerStates.idle ||
+      state.timerState === timerStates.paused ||
+      state.timerState === timerStates.offline
+    )
+      return;
     const timer = setTimeout(() => {
       dispatch({ type: GET_REMAINING_SECONDS });
     }, 1000);
     return () => clearTimeout(timer);
-  });
-
-  ////////////////////////////////////////////////////////////////
-  // Perform these actions after first load / reload of the page
-  ////////////////////////////////////////////////////////////////
-  useEffect(() => {}, []);
+  }, [
+    state.timerState,
+    state.remainingSeconds,
+    favicon.href,
+    play,
+    state.position,
+  ]);
 
   useEffect(() => {
     if (cachedServerData !== null) {
-      dispatch({ type: SET_POMODORO_STATE, newState: cachedServerData });
+      dispatch({
+        type: SET_POMODORO_STATE,
+        newState: cachedServerData.pomodoro,
+      });
     }
   }, [cachedServerData]);
 
@@ -163,7 +307,7 @@ export function PomodoroProvider({ children }) {
     <PomodoroStateContext.Provider
       value={{
         remainingSeconds: state.remainingSeconds,
-        pomodoroRunning: state.running,
+        pomodoroTimerState: state.timerState,
         maxSeconds: getPomodoroComponent(state.position).seconds,
         buttonText: getPomodoroComponent(state.position).buttonText,
         label: getPomodoroComponent(state.position).label,
@@ -171,9 +315,14 @@ export function PomodoroProvider({ children }) {
         color: getPomodoroComponent(state.position).color,
         shareUrl: shareUrl,
         communicationId: communicationId,
+        actions: getPomodoroComponent(state.position).actions[state.timerState],
+        performAction: performAction,
+        pauseControls: getPomodoroComponent(state.position).actions[
+          state.timerState
+        ].pauseControls?.icon,
       }}
     >
-      <PomodoroDispatchContext.Provider value={clickMainButton}>
+      <PomodoroDispatchContext.Provider value={dispatch}>
         {children}
       </PomodoroDispatchContext.Provider>
     </PomodoroStateContext.Provider>

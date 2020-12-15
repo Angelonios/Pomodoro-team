@@ -22,7 +22,7 @@ export function RefreshButton({ onClick }) {
       onClick={onClick}
       className={classes.margin}
     >
-      <RefreshIcon fontSize="large" color="action" />
+      <RefreshIcon style={{ fontSize: 45 }} color="secondary" />
     </IconButton>
   );
 }

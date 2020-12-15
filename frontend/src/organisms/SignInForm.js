@@ -2,10 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { gql, useMutation } from '@apollo/client';
-import Avatar from '@material-ui/core/Avatar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
+import { Paper, Avatar, Grid, Box } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,7 +14,7 @@ import { useAuth } from 'src/utils/auth';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -46,6 +43,7 @@ const SIGN_IN = gql`
       user {
         user_id
         email
+        display_name
       }
       token
     }
@@ -103,48 +101,49 @@ export function SignInForm({ props }) {
   if (error) {
     return (
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <Container maxWidth="xs" className={classes.error}>
-            <Typography
-              component="h5"
-              variant="caption"
-              color="error"
-              display="inline"
-            >
-              <b>{errorText}</b>
+        <Paper style={{ padding: '20px', marginTop: '20px' }}>
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
             </Typography>
-          </Container>
-          <form className={classes.form} noValidate>
-            <Grid container spacing={2}>
-              <EmailField
-                data={email}
-                formData={formData}
-                formErrors={error}
-                handleChange={handleChange}
-              />
-              <PasswordField
-                id="password"
-                name="password"
-                formData={formData}
-                formErrors={error}
-                handleChange={handleChange}
+            <Container maxWidth="xs" className={classes.error}>
+              <Typography
+                component="h5"
+                variant="caption"
+                color="error"
+                display="inline"
               >
-                Password
-              </PasswordField>
-            </Grid>
-            <FormButton submit={handleSubmit}>Sign in</FormButton>
-            <FormLink link={route.signUp()}>
-              Don't have an account? Sign Up
-            </FormLink>
-          </form>
-        </div>
+                <b>{errorText}</b>
+              </Typography>
+            </Container>
+            <form className={classes.form} noValidate>
+              <Grid container spacing={2}>
+                <EmailField
+                  data={email}
+                  formData={formData}
+                  formErrors={error}
+                  handleChange={handleChange}
+                />
+                <PasswordField
+                  id="password"
+                  name="password"
+                  formData={formData}
+                  formErrors={error}
+                  handleChange={handleChange}
+                >
+                  Password
+                </PasswordField>
+              </Grid>
+              <FormButton submit={handleSubmit}>Sign in</FormButton>
+              <FormLink link={route.signUp()}>
+                Don't have an account? Sign Up
+              </FormLink>
+            </form>
+          </div>
+        </Paper>
         <Box mt={8}>
           <Copyright />
         </Box>
@@ -153,38 +152,39 @@ export function SignInForm({ props }) {
   } else {
     return (
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <form className={classes.form} noValidate>
-            <Grid container spacing={2}>
-              <EmailField
-                data={email}
-                formData={formData}
-                formErrors={error}
-                handleChange={handleChange}
-              />
-              <PasswordField
-                id="password"
-                name="password"
-                formData={formData}
-                formErrors={error}
-                handleChange={handleChange}
-              >
-                Password
-              </PasswordField>
-            </Grid>
-            <FormButton submit={handleSubmit}>Sign in</FormButton>
-            <FormLink link={route.signUp()}>
-              Don't have an account? Sign Up
-            </FormLink>
-          </form>
-        </div>
+        <Paper style={{ padding: '20px', marginTop: '20px' }}>
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <form className={classes.form} noValidate>
+              <Grid container spacing={2}>
+                <EmailField
+                  data={email}
+                  formData={formData}
+                  formErrors={error}
+                  handleChange={handleChange}
+                />
+                <PasswordField
+                  id="password"
+                  name="password"
+                  formData={formData}
+                  formErrors={error}
+                  handleChange={handleChange}
+                >
+                  Password
+                </PasswordField>
+              </Grid>
+              <FormButton submit={handleSubmit}>Sign in</FormButton>
+              <FormLink link={route.signUp()}>
+                Don't have an account? Sign Up
+              </FormLink>
+            </form>
+          </div>
+        </Paper>
         <Box mt={8}>
           <Copyright />
         </Box>

@@ -6,18 +6,14 @@ import {
   Container,
   Paper,
   Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
+  Grid,
+  Typography,
+  Hidden,
 } from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
+
 import { LeaveTeamButton, AddUserToTeam } from '../molecules';
-import { RefreshButton } from 'src/atoms';
-import { SharedPomodoro } from '../organisms';
+import { RefreshButton, TeamPageName } from 'src/atoms';
+import { Garden, SharedPomodoro } from '../organisms';
 import { useAuth } from '../utils/auth';
 import { ForbiddenPage } from '../pages/ForbiddenPage';
 
@@ -26,8 +22,8 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     backgroundColor: theme.palette.background.paper,
   },
-  name: {
-    marginTop: 58,
+  header: {
+    textAlign: 'center',
   },
 }));
 
@@ -36,6 +32,7 @@ const GET_TEAM_MEMBERS_POMODORO = gql`
     teamMembersPomodoro(team_id: $team_id) {
       share_id
       email
+      display_name
     }
   }
 `;
@@ -47,6 +44,7 @@ export function TeamDetailPageTemplate() {
   const dataSet = !(location.data === null || location.data === undefined);
   const name = dataSet ? location.data.name : 'No team set!';
   const id = dataSet ? parseInt(location.data.id) : 0;
+  var beta = JSON.parse(window.localStorage.getItem('beta'));
 
   const onClick = () => {
     teamMembers.refetch();
@@ -80,40 +78,95 @@ export function TeamDetailPageTemplate() {
                 direction="column"
                 alignItems="center"
               >
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ textAlign: 'center' }}>
                   <Typography align={'center'} variant={'h3'}>
                     {dataSet ? name : 'No team selected!'}
-                    <RefreshButton onClick={onClick} />
                   </Typography>
+                  <RefreshButton onClick={onClick} />
                 </Grid>
-                <TableContainer component={Paper}>
-                  <Table className={classes.table} aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>E-mail</TableCell>
-                        <TableCell align="center">State</TableCell>
-                        <TableCell align="center">Timer</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {dataSet &&
-                        teamMembersSet &&
-                        teamMembers.data.teamMembersPomodoro.map(
-                          (pomodoro, index) => (
-                            <TableRow key={index}>
-                              <TableCell component="th" scope="row">
-                                {pomodoro.email}
-                              </TableCell>
-                              <SharedPomodoro
-                                shareId={pomodoro.share_id}
-                                key={index}
-                              />
-                            </TableRow>
-                          ),
-                        )}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                {/*                 <Grid item xs={12} md={4}>
+                  <UserPoints user_id={user.user_id} />
+                </Grid> */}
+
+                {beta && <Garden team_id={id} user_id={user.user_id} />}
+                <div
+                  style={{
+                    border: '1px solid ',
+                    borderColor: 'action',
+                    width: '100%',
+                    marginBottom: '20px',
+                  }}
+                ></div>
+                <Grid item container>
+                  <Grid container spacing={3} style={{ marginBottom: '20px' }}>
+                    <Hidden smDown>
+                      <Grid item xs={12} md={4}>
+                        <Typography className={classes.header}>Name</Typography>
+                      </Grid>
+                    </Hidden>
+                    <Hidden smDown>
+                      <Grid item xs={12} md={4}>
+                        <Typography className={classes.header}>
+                          State
+                        </Typography>
+                      </Grid>
+                    </Hidden>
+                    <Hidden smDown>
+                      <Grid item xs={12} md={4}>
+                        <Typography className={classes.header}>
+                          Timer
+                        </Typography>
+                      </Grid>
+                    </Hidden>
+                  </Grid>
+                  <div
+                    style={{
+                      border: '1px solid ',
+                      borderColor: 'action',
+                      width: '100%',
+                      marginBottom: '20px',
+                    }}
+                  ></div>
+                  {dataSet &&
+                    teamMembersSet &&
+                    teamMembers.data.teamMembersPomodoro.map(
+                      (pomodoro, index) => (
+                        <Grid
+                          key={index}
+                          container
+                          spacing={3}
+                          style={{
+                            alignItems: 'center',
+                            marginBottom: '20px',
+                          }}
+                        >
+                          <Hidden mdUp>
+                            <Grid item xs={2}>
+                              <Typography className={classes.header}>
+                                Name
+                              </Typography>
+                            </Grid>
+                          </Hidden>
+                          <TeamPageName
+                            email={pomodoro.email}
+                            name={pomodoro.display_name}
+                          />
+                          <SharedPomodoro
+                            key={index}
+                            shareId={pomodoro.share_id}
+                          />
+                          <div
+                            style={{
+                              border: '1px solid',
+                              borderColor: 'action',
+                              width: '100%',
+                              marginBottom: '20px',
+                            }}
+                          ></div>
+                        </Grid>
+                      ),
+                    )}
+                </Grid>
                 <Grid item>
                   <LeaveTeamButton team_id={id} />
                 </Grid>

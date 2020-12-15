@@ -6,3 +6,8 @@ export { Link } from './Link';
 export { MenuItems } from './MenuItems';
 export { LogOut } from './LogOut';
 export { RefreshButton } from './RefreshButton';
+export { NavBarName } from './NavBarName';
+export { TeamPageName } from './TeamPageName';
+export { ThemeChange } from './ThemeChange';
+export { PomodoroBotAvatar } from './PomodorBotAvatar';
+export { BetaModeSwitch } from './BetaModeSwitch';

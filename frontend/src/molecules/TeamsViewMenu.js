@@ -35,6 +35,9 @@ export function TeamsViewMenu({ user_id, anchor, setAnchor }) {
   const handleClickItem = (e) => {
     setAnchor(null);
     setAnchorEl(null);
+
+    /* history.push('/teamdetail/' + e.target.id + '/' + e.target.innerText); */
+
     history.push({
       pathname: route.teamDetail(),
       data: {

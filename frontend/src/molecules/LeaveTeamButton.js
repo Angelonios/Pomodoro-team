@@ -6,7 +6,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import makeStyles from '@material-ui/core/styles/makeStyles';
 import { gql, useMutation } from '@apollo/client';
 import { route } from '../Routes';
 import { useAuth } from '../utils/auth';
@@ -17,22 +16,13 @@ const LEAVE_TEAM = gql`
   }
 `;
 
-const useStyles = makeStyles((theme) => ({
-  button: {
-    color: '#3f51b5',
-    backgroundColor: '#ffffff',
-  },
-}));
-
 export function LeaveTeamButton({ team_id }) {
   const { user } = useAuth();
   const history = useHistory();
-  const [leaveTeam] = useMutation(LEAVE_TEAM,
-    {
-      onCompleted: () =>
-        history.push(route.home()),
-    });
-  const classes = useStyles();
+  const [leaveTeam] = useMutation(LEAVE_TEAM, {
+    onCompleted: () => history.push(route.home()),
+  });
+
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -46,14 +36,15 @@ export function LeaveTeamButton({ team_id }) {
   const handleYes = () => {
     leaveTeam({
       variables: {
-        team_id: team_id, user_id: user.user_id,
+        team_id: team_id,
+        user_id: user.user_id,
       },
     });
   };
 
   return (
     <div>
-      <Button className={classes.button} variant="outlined" onClick={handleClickOpen}>
+      <Button color="primary" variant="contained" onClick={handleClickOpen}>
         Leave Team
       </Button>
       <Dialog
@@ -69,10 +60,10 @@ export function LeaveTeamButton({ team_id }) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancel} color="secondary">
+          <Button onClick={handleCancel} color="secondary" variant="contained">
             Cancel
           </Button>
-          <Button onClick={handleYes} color="primary" autoFocus>
+          <Button onClick={handleYes} color="primary" variant="contained">
             Yes, leave
           </Button>
         </DialogActions>

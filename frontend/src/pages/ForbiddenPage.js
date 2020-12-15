@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Container, Grid, Paper, Typography } from '@material-ui/core';
-import angryTomato from 'src/assets/angryTomato.svg';
+import angryTomato from 'src/assets/tomatoes/angryTomato.svg';
 
 export function ForbiddenPage() {
   return (

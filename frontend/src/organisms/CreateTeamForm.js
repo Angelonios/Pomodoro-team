@@ -1,15 +1,12 @@
 import React from 'react';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+
 import { gql, useMutation } from '@apollo/client';
-import Avatar from '@material-ui/core/Avatar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
+import { Paper, Avatar, Grid, Box, Container } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+
 import { Copyright, TeamNameField, CreateTeamDialog } from 'src/molecules';
 import { useAuth } from 'src/utils/auth';
 import { FormButton } from '../atoms';
@@ -26,7 +23,7 @@ const CREATE_TEAM = gql`
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -91,34 +88,35 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Create Team
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <TeamNameField
-              formData={formData}
-              handleChange={handleChange}
-              formErrors={teamNameError}
-              helperText={teamNameErrorText}
+      <Paper style={{ padding: '20px', marginTop: '20px' }}>
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Create Team
+          </Typography>
+          <form className={classes.form} noValidate>
+            <Grid container spacing={2}>
+              <TeamNameField
+                formData={formData}
+                handleChange={handleChange}
+                formErrors={teamNameError}
+                helperText={teamNameErrorText}
+              />
+            </Grid>
+            <FormButton submit={handleSubmit}>Create team</FormButton>
+            <CreateTeamDialog
+              open={open}
+              setOpen={setOpen}
+              text={'You have successfully created team'}
+              path={'/'}
+              teamName={formData.teamName}
+              id={user.user_id}
             />
-          </Grid>
-          <FormButton submit={handleSubmit}>Create team</FormButton>
-          <CreateTeamDialog
-            open={open}
-            setOpen={setOpen}
-            text={'You have successfully created team'}
-            path={'/'}
-            teamName={formData.teamName}
-            id={user.user_id}
-          />
-        </form>
-      </div>
+          </form>
+        </div>
+      </Paper>
       <Box mt={5}>
         <Copyright />
       </Box>

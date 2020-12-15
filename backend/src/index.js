@@ -18,10 +18,14 @@ const typeDefs = gql`
     getUsersFromTeam(team_id: Int!): [User!]!
     teamMembersPomodoro(team_id: Int!): [UsersPomodoro!]!
     userPomodoroIds(user_id: Int!): Ids!
+    pomodoroStatistics(user_id: Int!): [PomodoroStatistic]!
+    gardenSquares(team_id: Int!): [SquareInGarden]
+    userPoints(user_id: Int!): Int!
   }
 
   type Pomodoro {
-    position: String!
+    state: State
+    position: Int!
     secondsSinceStart: Int!
     isOffline: Boolean!
     ids: Ids!
@@ -31,6 +35,7 @@ const typeDefs = gql`
     share_id: String!
     email: String!
     user_id: Int!
+    display_name: String!
   }
 
   type Ids {
@@ -40,7 +45,9 @@ const typeDefs = gql`
 
   type User {
     user_id: Int!
+    display_name: String!
     email: String!
+    used_points: Int!
   }
 
   type userTeams {
@@ -48,7 +55,30 @@ const typeDefs = gql`
     teams: [Team!]!
   }
 
+  type PomodoroStatistic {
+    id: Int!
+    user_id: Int!
+    finished_at: String!
+    duration: Int!
+  }
+
+  type SquareInGarden {
+    team_id: Int!
+    user_id: Int!
+    display_name: String!
+    position: String!
+  }
+
+  enum State {
+    IDLE
+    RUNNING
+    PAUSED
+    OFFLINE
+  }
+
   type Mutation {
+    NameChange(name: String!, user_id: Int!): Boolean
+
     SignIn(email: String!, password: String!): AuthInfo!
 
     SignUp(
@@ -58,7 +88,7 @@ const typeDefs = gql`
     ): AuthInfo!
 
     updatePomodoro(
-      running: Boolean!
+      state: State!
       position: Int!
       communicationId: String!
       shareId: String!
@@ -71,10 +101,25 @@ const typeDefs = gql`
     LeaveTeam(team_id: Int!, user_id: Int!): Boolean
 
     DeleteTeam(teamName: String!, email: String!): String!
+
+    SpendPoints(user_id: Int!): Boolean
+
+    PlantTree(
+      team_id: Int!
+      user_id: Int!
+      display_name: String!
+      position: String!
+    ): Boolean
+
+    savePomodoroDuration(
+      user_id: Int!
+      duration: Int!
+    ): String!
   }
 
   type AuthUser {
     user_id: Int!
+    display_name: String
     email: String!
   }
 

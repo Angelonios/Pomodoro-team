@@ -2,10 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { gql, useMutation } from '@apollo/client';
-import Avatar from '@material-ui/core/Avatar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
+import { Avatar, Grid, Box, Paper } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -18,7 +15,7 @@ import { usePomodoroState } from 'src/utils/PomodoroContext';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -50,6 +47,7 @@ const SIGN_UP = gql`
       user {
         user_id
         email
+        display_name
       }
       token
     }
@@ -171,47 +169,48 @@ export function SignUpForm({
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <EmailField
-              formData={formData}
-              handleChange={handleChange}
-              formErrors={emailError}
-              helperText={emailErrorText}
-            />
-            <PasswordField
-              handleChange={handleChange}
-              formErrors={passwordError}
-              helperText={passwordErrorText}
-              id="password"
-              name="password"
-            >
-              Password
-            </PasswordField>
-            <PasswordField
-              handleChange={handleChange}
-              formErrors={rePasswordError}
-              helperText={rePasswordErrorText}
-              id="rePassword"
-              name="rePassword"
-            >
-              Re-enter password
-            </PasswordField>
-          </Grid>
-          <FormButton submit={handleSubmit}>Create your account</FormButton>
-          <FormLink link={route.signIn()}>
-            Already have an account? Sign in
-          </FormLink>
-        </form>
-      </div>
+      <Paper style={{ padding: '20px', marginTop: '20px' }}>
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <form className={classes.form} noValidate>
+            <Grid container spacing={2}>
+              <EmailField
+                formData={formData}
+                handleChange={handleChange}
+                formErrors={emailError}
+                helperText={emailErrorText}
+              />
+              <PasswordField
+                handleChange={handleChange}
+                formErrors={passwordError}
+                helperText={passwordErrorText}
+                id="password"
+                name="password"
+              >
+                Password
+              </PasswordField>
+              <PasswordField
+                handleChange={handleChange}
+                formErrors={rePasswordError}
+                helperText={rePasswordErrorText}
+                id="rePassword"
+                name="rePassword"
+              >
+                Re-enter password
+              </PasswordField>
+            </Grid>
+            <FormButton submit={handleSubmit}>Create your account</FormButton>
+            <FormLink link={route.signIn()}>
+              Already have an account? Sign in
+            </FormLink>
+          </form>
+        </div>
+      </Paper>
       <Box mt={5}>
         <Copyright />
       </Box>

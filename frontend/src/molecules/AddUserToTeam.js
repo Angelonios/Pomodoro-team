@@ -5,7 +5,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import makeStyles from '@material-ui/core/styles/makeStyles';
 import { EmailField } from 'src/molecules';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { CreateTeamDialog } from 'src/molecules';
@@ -16,15 +15,7 @@ const ADD_USER = gql`
   }
 `;
 
-const useStyles = makeStyles((theme) => ({
-  button: {
-    color: '#3f51b5',
-    backgroundColor: '#ffffff',
-  },
-}));
-
 export function AddUserToTeam({ team_id, team_name }) {
-  const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [emailErrorText, updateEmailErrorText] = useState('');
@@ -87,11 +78,7 @@ export function AddUserToTeam({ team_id, team_name }) {
 
   return (
     <div>
-      <Button
-        variant="outlined"
-        className={classes.button}
-        onClick={handleClickOpen}
-      >
+      <Button variant="contained" color="primary" onClick={handleClickOpen}>
         Add team member
       </Button>
       <Dialog
@@ -111,10 +98,10 @@ export function AddUserToTeam({ team_id, team_name }) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary">
+          <Button onClick={handleClose} color="secondary" variant="contained">
             Cancel
           </Button>
-          <Button onClick={handleSubmit} color="primary">
+          <Button onClick={handleSubmit} color="primary" variant="contained">
             Add
           </Button>
         </DialogActions>

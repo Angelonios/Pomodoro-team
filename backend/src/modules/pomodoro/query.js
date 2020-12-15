@@ -1,44 +1,53 @@
+import { user, userPomodoroIds } from '../user/query';
+
 export const pomodoro = async (_, { shareId }, { dbConnection }) => {
-  if (shareId !== '' || shareId !== undefined) {
+  if (shareId !== '' && shareId !== undefined) {
     const pomodoro = await getPomodoro({ shareId, dbConnection });
     if (pomodoro !== undefined) {
       const currentTime = await getDbTime(dbConnection);
 
       let secondsSinceStart = 0;
       let positionInCycle = pomodoro.position_in_cycle;
+      let state = pomodoro.state;
 
-      if (pomodoro.running === 0) {
-        secondsSinceStart = 0;
-      } else {
-        secondsSinceStart =
-          currentTime['CURRENT_TIMESTAMP()'] / 1000 -
-          pomodoro.last_updated / 1000;
+      switch (pomodoro.state) {
+        case 'IDLE':
+          secondsSinceStart = 0;
+          break;
+        case 'PAUSED':
+          secondsSinceStart = pomodoro.seconds_since_start_at_pause;
+          break;
+        case 'RUNNING':
+          pomodoro.seconds_since_start_at_pause
+            ? (secondsSinceStart =
+                currentTime['CURRENT_TIMESTAMP()'] / 1000 -
+                pomodoro.last_updated / 1000 +
+                pomodoro.seconds_since_start_at_pause)
+            : (secondsSinceStart =
+                currentTime['CURRENT_TIMESTAMP()'] / 1000 -
+                pomodoro.last_updated / 1000);
+          break;
       }
 
-      const HOUR = 3600;
-      let isOffline = false;
+      const MINUTE = 60;
 
-      //Return offline if no action in 30 minutes
+      //Return offline if no action in 35 minutes
       if (
         currentTime['CURRENT_TIMESTAMP()'] / 1000 -
           pomodoro.last_updated / 1000 >=
-        HOUR / 2
+        MINUTE * 45
       ) {
-        isOffline = true;
+        state = 'OFFLINE';
       }
 
-      //If timer is idle for more than 10 hours, then restart it
-      if (
-        currentTime['CURRENT_TIMESTAMP()'] / 1000 -
-          pomodoro.last_updated / 1000 >
-        HOUR * 10
-      ) {
-        return { position: 0, secondsSinceStart: 0, isOffline: true };
+      //If timer is offline, then return initial values
+      if (state === 'OFFLINE') {
+        return { position: 0, secondsSinceStart: 0, state: state };
       } else {
         return {
           position: positionInCycle,
           secondsSinceStart: secondsSinceStart,
-          isOffline: isOffline,
+          state: state,
         };
       }
     }
@@ -57,3 +66,39 @@ async function getDbTime(dbConnection) {
   const result = await dbConnection.query(`SELECT CURRENT_TIMESTAMP()`, []);
   return result[0];
 }
+
+export const pomodoroStatistics = async (
+  _,
+  { user_id: user_id },
+  { dbConnection },
+) => {
+  if (!user_id) {
+    return;
+  }
+
+  const pomodoroStatistics = await getPomodoroStatistics(user_id, dbConnection);
+
+  return pomodoroStatistics;
+};
+
+async function getPomodoroStatistics(user_id, dbConnection) {
+  const result = await dbConnection.query(
+    `SELECT * FROM pomodoro_statistics WHERE user_id = ?`,
+    [user_id],
+  );
+  return result;
+}
+
+export const userPoints = async (_, { user_id }, { dbConnection }) => {
+  const resultSum = await dbConnection.query(
+    'SELECT sum(duration) AS resultSum FROM pomodoro_statistics WHERE user_id = ?',
+    [user_id],
+  );
+  const usedPoints = await dbConnection.query(
+    `SELECT used_points FROM users WHERE user_id = ?`,
+    [user_id],
+  );
+  const countedPoints =
+    Math.floor(resultSum[0].resultSum / 1500) - usedPoints[0].used_points;
+  return countedPoints;
+};

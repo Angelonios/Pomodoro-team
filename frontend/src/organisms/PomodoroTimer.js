@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Container, Grid, Paper } from '@material-ui/core';
 import { CircularPomodoroCountdown, ShareUrl } from 'src/molecules';
 import { PomodoroTimerButton } from 'src/atoms';
+import { PomodoroBot } from 'src/organisms';
 import { usePomodoroState } from 'src/utils/PomodoroContext';
 
 export function PomodoroTimer() {
@@ -9,7 +10,7 @@ export function PomodoroTimer() {
   return (
     <Container component="main">
       <Paper elevation={3}>
-        <Box p={2}>
+        <Box p={1} pt={6}>
           <Grid
             container
             spacing={10}
@@ -24,6 +25,8 @@ export function PomodoroTimer() {
                 color={state.color}
                 timeSize="h2"
                 circleSize={300}
+                pauseControls={state.pauseControls}
+                performAction={state.performAction}
               />
             </Grid>
             <Grid item xl={4} lg={4} xs={12}>
@@ -41,7 +44,10 @@ export function PomodoroTimer() {
             </Grid>
           </Grid>
         </Box>
-        <Box p={4}>
+        <Box p={7}>
+          <PomodoroBot />
+        </Box>
+        <Box p={7}>
           <Grid container alignItems="center" justify="center">
             <Grid item lg={8} xs={12}>
               <ShareUrl shareUrl={state.shareUrl} />

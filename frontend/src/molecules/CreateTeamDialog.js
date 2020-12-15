@@ -1,12 +1,11 @@
 import React from 'react';
-import { useHistory, Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { route } from '../Routes';
 
 export function CreateTeamDialog({
   open,
@@ -24,8 +23,14 @@ export function CreateTeamDialog({
       setOpen(false);
       history.push(path);
     } else {
-      setOpen(false);
-      setOpen2(false);
+      if (path === '/profile') {
+        setOpen(false);
+        window.location.reload();
+      } else {
+        setOpen(false);
+        setOpen2(false);
+      }
+      /*setOpen2(false);*/
       /*history.push({
         pathname: path,
         data: {
@@ -50,7 +55,7 @@ export function CreateTeamDialog({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary" autoFocus>
+        <Button onClick={handleClose} color="primary" variant="contained">
           Ok
         </Button>
       </DialogActions>

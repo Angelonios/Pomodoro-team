@@ -40,9 +40,6 @@ export const AddUserToTeam = async (
     [email],
   );
   if (dbResponse !== null) {
-    console.log(dbResponse.user_id);
-    console.log(dbResponse[0]);
-    console.log(dbResponse[0].user_id);
     const dbResponse2 = await dbConnection.query(
       `INSERT INTO in_team (user_id, team_id)
     VALUES (?, ?);`,
@@ -53,4 +50,17 @@ export const AddUserToTeam = async (
   }
 
   return false;
+};
+
+export const PlantTree = async (
+  _,
+  { team_id, user_id, display_name, position },
+  { dbConnection },
+) => {
+  const PlantTree = await dbConnection.query(
+    `INSERT INTO garden (team_id, user_id, display_name, position) VALUES (?, ?, ?, ?)`,
+    [team_id, user_id, display_name, position],
+  );
+
+  return PlantTree.warningStatus === 0;
 };
