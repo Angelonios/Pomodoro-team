@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
 export function ProfilePageForm({ email }) {
   const { user } = useAuth();
   const classes = useStyles();
+  var beta = JSON.parse(window.localStorage.getItem('beta'));
 
   return (
     <Grid item xs={12} sm={12} md={6} style={{ minHeight: '245px' }}>

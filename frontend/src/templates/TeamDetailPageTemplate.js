@@ -44,6 +44,7 @@ export function TeamDetailPageTemplate() {
   const dataSet = !(location.data === null || location.data === undefined);
   const name = dataSet ? location.data.name : 'No team set!';
   const id = dataSet ? parseInt(location.data.id) : 0;
+  var beta = JSON.parse(window.localStorage.getItem('beta'));
 
   const onClick = () => {
     teamMembers.refetch();
@@ -87,7 +88,7 @@ export function TeamDetailPageTemplate() {
                   <UserPoints user_id={user.user_id} />
                 </Grid> */}
 
-                <Garden team_id={id} user_id={user.user_id} />
+                {beta && <Garden team_id={id} user_id={user.user_id} />}
                 <div
                   style={{
                     border: '1px solid ',
