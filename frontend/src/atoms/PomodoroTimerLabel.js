@@ -6,7 +6,12 @@ import { convertSecondsToMinutesSting } from 'src/utils/pomodoroUtils';
 export function PomodoroTimerLabel({ remainingSeconds, variant }) {
   const timeString = convertSecondsToMinutesSting(remainingSeconds);
   return (
-    <Typography variant={variant} component="div" color="textSecondary">
+    <Typography
+      variant={variant}
+      component="div"
+      color="textSecondary"
+      style={{ fontWeight: 'bold' }}
+    >
       {timeString}
     </Typography>
   );

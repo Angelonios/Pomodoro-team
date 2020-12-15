@@ -21,11 +21,16 @@ const light = createMuiTheme({
   palette: {
     type: 'light',
     primary: {
-      main: '#e33e3b',
+      main: '#fc345c',
       contrastText: '#fff',
     },
     secondary: {
-      main: '#9ddb25',
+      main: '#49beb7',
+      contrastText: '#fff',
+    },
+    background: {
+      default: '#afffdf',
+      paper: '#eafff7',
     },
   },
 });
