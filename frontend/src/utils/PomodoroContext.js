@@ -231,21 +231,11 @@ export function PomodoroProvider({ children }) {
   //TODO: Move somewhere else
   const favicon = document.getElementById('favicon');
   useEffect(() => {
-    let title = '';
     if (
       state.timerState === timerStates.idle ||
       state.timerState === timerStates.offline
     ) {
-      title = 'Idle - Team Pomodori';
     } else if (state.remainingSeconds < 0) {
-      title =
-        '(' +
-        convertSecondsToMinutesSting(state.remainingSeconds) +
-        ') ' +
-        getPomodoroComponent(state.position).label +
-        ' - ' +
-        'Team Pomodori';
-
       if (
         state.remainingSeconds % 300 === 0 &&
         state.timerState === timerStates.running
@@ -254,7 +244,6 @@ export function PomodoroProvider({ children }) {
         play();
       }
     } else {
-      title = getPomodoroComponent(state.position).label + ' - Team Pomodori';
       if (Object.is(state.remainingSeconds, +0)) {
         //play sound
         play();
@@ -266,7 +255,6 @@ export function PomodoroProvider({ children }) {
       } else {
       }
     }
-    document.title = title;
     //End of favicon, title and sound
 
     //Refresh context every second
