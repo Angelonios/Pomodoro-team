@@ -72,18 +72,10 @@ export function SharedPomodoro({ shareId }) {
         </Grid>
       </Hidden>
       <Grid item xs={10} md={4} style={{ textAlign: 'center' }}>
-        {
-          getTimerStateFriendlyName({
-            timerState: state.timerState,
-            position: state.position,
-          })
-
-          /*         state.timerState === timerStates.offline
-          ? 'Offline'
-          : state.timerState === timerStates.running
-          ? getPomodoroComponent(state.position).label
-          : 'Idle' */
-        }
+        {getTimerStateFriendlyName({
+          timerState: state.timerState,
+          position: state.position,
+        })}
       </Grid>
       <Hidden mdUp>
         <Grid item xs={2}>
