@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { usePomodoroState } from 'src/utils/PomodoroContext';
-import { timerStates } from 'src/utils/serverSync';
+import { timerStates, timerComponents } from 'src/utils/serverSync';
 
 export function Favicon() {
   const state = usePomodoroState();
@@ -18,7 +18,7 @@ export function Favicon() {
     } else {
       switch (state.type) {
         // Pomodoro
-        case 1:
+        case timerComponents.pomodoro:
           setFaviconHref('/green-tomato.svg');
           break;
         // Long or short break

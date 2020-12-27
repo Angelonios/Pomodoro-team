@@ -37,14 +37,8 @@ export const GET_USER_POMODORO_IDS = gql`
 `;
 
 export const SAVE_POMODORO_DURATION = gql`
-  mutation savePomodoroDuration(
-    $user_id: Int!
-    $duration: Int!
-  ) {
-    savePomodoroDuration(
-      user_id: $user_id
-      duration: $duration
-    )
+  mutation savePomodoroDuration($user_id: Int!, $duration: Int!) {
+    savePomodoroDuration(user_id: $user_id, duration: $duration)
   }
 `;
 
@@ -62,6 +56,12 @@ export const timerStates = {
   running: 'RUNNING',
   paused: 'PAUSED',
   offline: 'OFFLINE',
+};
+
+export const timerComponents = {
+  pomodoro: 1,
+  shortBreak: 2,
+  longBreak: 3,
 };
 
 const getUdid = () => {
