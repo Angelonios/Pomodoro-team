@@ -226,35 +226,7 @@ export function PomodoroProvider({ children }) {
     user,
   ]);
 
-  //Favicon, title and sound
-  //TODO: Move somewhere else
   useEffect(() => {
-    if (
-      state.timerState === timerStates.idle ||
-      state.timerState === timerStates.offline
-    ) {
-    } else if (state.remainingSeconds < 0) {
-      if (
-        state.remainingSeconds % 300 === 0 &&
-        state.timerState === timerStates.running
-      ) {
-        //play sound
-        play();
-      }
-    } else {
-      if (Object.is(state.remainingSeconds, +0)) {
-        //play sound
-        play();
-      }
-      if (
-        getPomodoroComponent(state.position).type === 2 ||
-        getPomodoroComponent(state.position).type === 3
-      ) {
-      } else {
-      }
-    }
-    //End of favicon, title and sound
-
     //Refresh context every second
     if (
       state.timerState === timerStates.idle ||
