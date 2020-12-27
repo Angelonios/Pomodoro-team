@@ -22,7 +22,6 @@ import {
   SET_POMODORO_STATE,
 } from 'src/utils/pomodoroReducer';
 
-import { convertSecondsToMinutesSting } from 'src/utils/pomodoroUtils';
 import { useAuth } from 'src/utils/auth';
 import sound1 from 'src/assets/nuclear.mp3';
 import useSound from 'use-sound';
@@ -229,7 +228,6 @@ export function PomodoroProvider({ children }) {
 
   //Favicon, title and sound
   //TODO: Move somewhere else
-  const favicon = document.getElementById('favicon');
   useEffect(() => {
     if (
       state.timerState === timerStates.idle ||
@@ -268,13 +266,7 @@ export function PomodoroProvider({ children }) {
       dispatch({ type: GET_REMAINING_SECONDS });
     }, 1000);
     return () => clearTimeout(timer);
-  }, [
-    state.timerState,
-    state.remainingSeconds,
-    favicon.href,
-    play,
-    state.position,
-  ]);
+  }, [state.timerState, state.remainingSeconds, play, state.position]);
 
   useEffect(() => {
     if (cachedServerData !== null) {

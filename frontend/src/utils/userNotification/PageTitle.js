@@ -1,6 +1,6 @@
 import { usePomodoroState } from 'src/utils/PomodoroContext';
 import { timerStates } from 'src/utils/serverSync';
-import { convertSecondsToMinutesSting } from '../pomodoroUtils';
+import { convertSecondsToMinutesString } from '../pomodoroUtils';
 
 export function PageTitle({ pageName }) {
   const state = usePomodoroState();
@@ -16,7 +16,7 @@ export function PageTitle({ pageName }) {
     ) {
       dynamicTitle = 'Idle';
     } else if (state.remainingSeconds < 0) {
-      dynamicTitle = `(${convertSecondsToMinutesSting(
+      dynamicTitle = `(${convertSecondsToMinutesString(
         state.remainingSeconds,
       )}) ${state.label}`;
     } else {
