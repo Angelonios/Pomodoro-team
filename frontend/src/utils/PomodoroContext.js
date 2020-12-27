@@ -232,13 +232,11 @@ export function PomodoroProvider({ children }) {
   const favicon = document.getElementById('favicon');
   useEffect(() => {
     let title = '';
-    let faviconHref = '';
     if (
       state.timerState === timerStates.idle ||
       state.timerState === timerStates.offline
     ) {
       title = 'Idle - Team Pomodori';
-      faviconHref = '/grey-tomato.svg';
     } else if (state.remainingSeconds < 0) {
       title =
         '(' +
@@ -247,7 +245,6 @@ export function PomodoroProvider({ children }) {
         getPomodoroComponent(state.position).label +
         ' - ' +
         'Team Pomodori';
-      faviconHref = '/red-tomato.svg';
 
       if (
         state.remainingSeconds % 300 === 0 &&
@@ -266,12 +263,9 @@ export function PomodoroProvider({ children }) {
         getPomodoroComponent(state.position).type === 2 ||
         getPomodoroComponent(state.position).type === 3
       ) {
-        faviconHref = '/yellow-tomato.svg';
       } else {
-        faviconHref = '/green-tomato.svg';
       }
     }
-    favicon.href = faviconHref;
     document.title = title;
     //End of favicon, title and sound
 
