@@ -1,10 +1,12 @@
 import React from 'react';
 import { Box, Container, Grid, Paper, Typography } from '@material-ui/core';
 import angryTomato from 'src/assets/tomatoes/angryTomato.svg';
+import { PageTitle } from 'src/utils/userNotification/PageTitle';
 
 export function ForbiddenPage() {
   return (
     <>
+      <PageTitle pageName="Forbidden 😤" />
       <Container component="main">
         <Paper elevation={3}>
           <Box p={6}>

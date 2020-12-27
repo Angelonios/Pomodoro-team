@@ -11,7 +11,7 @@ export function SignUpTemplate() {
 
   return (
     <>
-      <PageTitle pageName={'Sign up'} />
+      <PageTitle pageName="Sign up" />
       <TopNavigation />
       <SignUpForm
         emailError={emailError}

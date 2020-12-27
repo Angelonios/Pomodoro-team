@@ -3,12 +3,10 @@ import { TopNavigation } from '../organisms';
 import { TeamDetailPageTemplate } from '../templates/TeamDetailPageTemplate';
 
 export function TeamDetailPage() {
-
   return (
     <>
       <TopNavigation />
-      <TeamDetailPageTemplate
-      />
+      <TeamDetailPageTemplate />
     </>
   );
 }

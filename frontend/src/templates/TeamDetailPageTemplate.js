@@ -16,6 +16,7 @@ import { RefreshButton, TeamPageName } from 'src/atoms';
 import { Garden, SharedPomodoro } from '../organisms';
 import { useAuth } from '../utils/auth';
 import { ForbiddenPage } from '../pages/ForbiddenPage';
+import { PageTitle } from 'src/utils/userNotification/PageTitle';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,58 +68,30 @@ export function TeamDetailPageTemplate() {
     return <ForbiddenPage />;
   }
   return (
-    <Container component="main">
-      <Paper elevation={3}>
-        <Box p={3}>
-          {dataSet && teamMembersSet ? (
-            <div className={classes.root}>
-              <Grid
-                container
-                spacing={3}
-                direction="column"
-                alignItems="center"
-              >
-                <Grid item xs={12} style={{ textAlign: 'center' }}>
-                  <Typography align={'center'} variant={'h3'}>
-                    {dataSet ? name : 'No team selected!'}
-                  </Typography>
-                  <RefreshButton onClick={onClick} />
-                </Grid>
-                {/*                 <Grid item xs={12} md={4}>
+    <>
+      <PageTitle pageName={name} />
+      <Container component="main">
+        <Paper elevation={3}>
+          <Box p={3}>
+            {dataSet && teamMembersSet ? (
+              <div className={classes.root}>
+                <Grid
+                  container
+                  spacing={3}
+                  direction="column"
+                  alignItems="center"
+                >
+                  <Grid item xs={12} style={{ textAlign: 'center' }}>
+                    <Typography align={'center'} variant={'h3'}>
+                      {dataSet ? name : 'No team selected!'}
+                    </Typography>
+                    <RefreshButton onClick={onClick} />
+                  </Grid>
+                  {/*                 <Grid item xs={12} md={4}>
                   <UserPoints user_id={user.user_id} />
                 </Grid> */}
 
-                {beta && <Garden team_id={id} user_id={user.user_id} />}
-                <div
-                  style={{
-                    border: '1px solid ',
-                    borderColor: 'action',
-                    width: '100%',
-                    marginBottom: '20px',
-                  }}
-                ></div>
-                <Grid item container>
-                  <Grid container spacing={3} style={{ marginBottom: '20px' }}>
-                    <Hidden smDown>
-                      <Grid item xs={12} md={4}>
-                        <Typography className={classes.header}>Name</Typography>
-                      </Grid>
-                    </Hidden>
-                    <Hidden smDown>
-                      <Grid item xs={12} md={4}>
-                        <Typography className={classes.header}>
-                          State
-                        </Typography>
-                      </Grid>
-                    </Hidden>
-                    <Hidden smDown>
-                      <Grid item xs={12} md={4}>
-                        <Typography className={classes.header}>
-                          Timer
-                        </Typography>
-                      </Grid>
-                    </Hidden>
-                  </Grid>
+                  {beta && <Garden team_id={id} user_id={user.user_id} />}
                   <div
                     style={{
                       border: '1px solid ',
@@ -127,65 +100,102 @@ export function TeamDetailPageTemplate() {
                       marginBottom: '20px',
                     }}
                   ></div>
-                  {dataSet &&
-                    teamMembersSet &&
-                    teamMembers.data.teamMembersPomodoro.map(
-                      (pomodoro, index) => (
-                        <Grid
-                          key={index}
-                          container
-                          spacing={3}
-                          style={{
-                            alignItems: 'center',
-                            marginBottom: '20px',
-                          }}
-                        >
-                          <Hidden mdUp>
-                            <Grid item xs={2}>
-                              <Typography className={classes.header}>
-                                Name
-                              </Typography>
-                            </Grid>
-                          </Hidden>
-                          <TeamPageName
-                            email={pomodoro.email}
-                            name={pomodoro.display_name}
-                          />
-                          <SharedPomodoro
+                  <Grid item container>
+                    <Grid
+                      container
+                      spacing={3}
+                      style={{ marginBottom: '20px' }}
+                    >
+                      <Hidden smDown>
+                        <Grid item xs={12} md={4}>
+                          <Typography className={classes.header}>
+                            Name
+                          </Typography>
+                        </Grid>
+                      </Hidden>
+                      <Hidden smDown>
+                        <Grid item xs={12} md={4}>
+                          <Typography className={classes.header}>
+                            State
+                          </Typography>
+                        </Grid>
+                      </Hidden>
+                      <Hidden smDown>
+                        <Grid item xs={12} md={4}>
+                          <Typography className={classes.header}>
+                            Timer
+                          </Typography>
+                        </Grid>
+                      </Hidden>
+                    </Grid>
+                    <div
+                      style={{
+                        border: '1px solid ',
+                        borderColor: 'action',
+                        width: '100%',
+                        marginBottom: '20px',
+                      }}
+                    ></div>
+                    {dataSet &&
+                      teamMembersSet &&
+                      teamMembers.data.teamMembersPomodoro.map(
+                        (pomodoro, index) => (
+                          <Grid
                             key={index}
-                            shareId={pomodoro.share_id}
-                          />
-                          <div
+                            container
+                            spacing={3}
                             style={{
-                              border: '1px solid',
-                              borderColor: 'action',
-                              width: '100%',
+                              alignItems: 'center',
                               marginBottom: '20px',
                             }}
-                          ></div>
-                        </Grid>
-                      ),
-                    )}
+                          >
+                            <Hidden mdUp>
+                              <Grid item xs={2}>
+                                <Typography className={classes.header}>
+                                  Name
+                                </Typography>
+                              </Grid>
+                            </Hidden>
+                            <TeamPageName
+                              email={pomodoro.email}
+                              name={pomodoro.display_name}
+                            />
+                            <SharedPomodoro
+                              key={index}
+                              shareId={pomodoro.share_id}
+                            />
+                            <div
+                              style={{
+                                border: '1px solid',
+                                borderColor: 'action',
+                                width: '100%',
+                                marginBottom: '20px',
+                              }}
+                            ></div>
+                          </Grid>
+                        ),
+                      )}
+                  </Grid>
+                  <Grid item>
+                    <LeaveTeamButton team_id={id} />
+                  </Grid>
+                  <Grid item>
+                    <AddUserToTeam team_id={id} team_name={name} />
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <LeaveTeamButton team_id={id} />
-                </Grid>
-                <Grid item>
-                  <AddUserToTeam team_id={id} team_name={name} />
+              </div>
+            ) : (
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <Typography align={'center'} variant={'h3'}>
+                    {dataSet ? name : 'No team selected!'}
+                  </Typography>
                 </Grid>
               </Grid>
-            </div>
-          ) : (
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Typography align={'center'} variant={'h3'}>
-                  {dataSet ? name : 'No team selected!'}
-                </Typography>
-              </Grid>
-            </Grid>
-          )}
-        </Box>
-      </Paper>
-    </Container>
+            )}
+          </Box>
+        </Paper>
+      </Container>
+    </>
   );
 }

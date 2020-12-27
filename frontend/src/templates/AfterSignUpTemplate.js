@@ -48,7 +48,7 @@ export function AfterSignUpTemplate() {
 
   return (
     <>
-      <PageTitle pageName={'Welcome'} />
+      <PageTitle pageName="Welcome" />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
