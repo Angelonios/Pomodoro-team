@@ -23,8 +23,6 @@ import {
 } from 'src/utils/pomodoroReducer';
 
 import { useAuth } from 'src/utils/auth';
-import sound1 from 'src/assets/nuclear.mp3';
-import useSound from 'use-sound';
 
 const PomodoroStateContext = createContext();
 const PomodoroDispatchContext = createContext();
@@ -38,7 +36,6 @@ export function PomodoroProvider({ children }) {
   const [savePomodoroDuration] = useMutation(SAVE_POMODORO_DURATION);
   const { user } = useAuth();
   const [userId, setUserId] = useState(0);
-  const [play] = useSound(sound1, { volume: 0.5, playbackRate: 1.5 });
 
   const [state, dispatch] = useReducer(pomodoroReducer, {
     remainingSeconds: 1500,
@@ -238,7 +235,7 @@ export function PomodoroProvider({ children }) {
       dispatch({ type: GET_REMAINING_SECONDS });
     }, 1000);
     return () => clearTimeout(timer);
-  }, [state.timerState, state.remainingSeconds, play, state.position]);
+  }, [state.timerState, state.remainingSeconds, state.position]);
 
   useEffect(() => {
     if (cachedServerData !== null) {
