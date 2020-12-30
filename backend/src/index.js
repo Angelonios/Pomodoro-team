@@ -36,6 +36,7 @@ const typeDefs = gql`
     email: String!
     user_id: Int!
     display_name: String!
+    name: String!
   }
 
   type Ids {

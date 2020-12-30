@@ -39,7 +39,7 @@ export function MenuUser({ user_id, logOut }) {
         onClose={handleClose}
       >
         <MenuItem>
-          <Button onClick={() => history.push('/profile')}>Profile</Button>
+          <Button onClick={() => history.push(route.profile())}>Profile</Button>
         </MenuItem>
         <MenuItem style={{ color: 'red' }}>
           <TeamsViewMenu

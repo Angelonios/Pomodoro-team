@@ -51,6 +51,39 @@ export const POMODORO_STATISTICS = gql`
   }
 `;
 
+export const GET_TEAM_MEMBERS_POMODORO = gql`
+  query teamMembersPomodoro($team_id: Int!) {
+    teamMembersPomodoro(team_id: $team_id) {
+      share_id
+      email
+      display_name
+      name
+    }
+  }
+`;
+
+export const USER_TEAMS = gql`
+  query userTeams($user_id: Int!) {
+    userTeams(user_id: $user_id) {
+      name
+      team_id
+    }
+  }
+`;
+
+export const SIGN_IN = gql`
+  mutation SignIn($email: String!, $password: String!) {
+    SignIn(email: $email, password: $password) {
+      user {
+        user_id
+        email
+        display_name
+      }
+      token
+    }
+  }
+`;
+
 export const timerStates = {
   idle: 'IDLE',
   running: 'RUNNING',
