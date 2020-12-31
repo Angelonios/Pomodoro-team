@@ -4,7 +4,7 @@ import { gql, useQuery } from '@apollo/client';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { Button, Avatar } from '@material-ui/core';
+import { Button, Avatar, Grid, Box } from '@material-ui/core';
 import NatureIcon from '@material-ui/icons/Nature';
 import Gravatar from 'react-gravatar';
 
@@ -122,17 +122,27 @@ export function Garden({ team_id, user_id }) {
           </Toolbar>
         </AppBar>
         <AppBar position="static">
-          <Toolbar>
-            <Avatar className={classes.medium}>
-              <Gravatar
-                email={lesaPanData.lesaPan.email}
-                size={50}
-                style={{ padding: '5px' }}
-              />
-            </Avatar>
-            <Typography component="div">
-              The best LesaPán: {lesaPanData.lesaPan.display_name}
-            </Typography>
+          <Toolbar variant="dense">
+            <Grid container xs={12} justify="center" alignItems="center">
+              <Grid>
+                <Typography
+                  component="div"
+                  style={{ marginRight: '20px', width: '100%' }}
+                >
+                  The best LesaPán: {lesaPanData.lesaPan.display_name}
+                </Typography>
+                <Avatar
+                  className={classes.medium}
+                  style={{ margin: 'auto', marginBottom: '5px' }}
+                >
+                  <Gravatar
+                    email={lesaPanData.lesaPan.email}
+                    size={50}
+                    style={{ padding: '5px' }}
+                  />
+                </Avatar>
+              </Grid>
+            </Grid>
           </Toolbar>
         </AppBar>
       </div>
