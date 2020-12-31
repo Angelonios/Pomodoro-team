@@ -46,22 +46,16 @@ const GET_USER_POINTS = gql`
     userPoints(user_id: $user_id)
   }
 `;
-/*
+
 const GET_LESAPAN = gql`
   query lesaPan($team_id: Int!) {
-    lesaPan(team_id: $team_id)
+    lesaPan(team_id: $team_id) {
+      email
+      display_name
+    }
   }
 `;
 
-<Avatar className={classes.medium}>
-  <Gravatar
-    email={email}
-    size={70}
-    style={{ verticalAlign: 'sub', padding: '5px' }}
-  />
-
-
-*/
 export function Garden({ team_id, user_id }) {
   const classes = useStyles();
   const rows = [0, 1, 2, 3, 4, 5, 6];
@@ -84,11 +78,15 @@ export function Garden({ team_id, user_id }) {
   const handleClick = () => {
     setPlanting(!planting);
   };
-
-  if (gardenSquares.data === undefined) {
+  const lesaPan = useQuery(GET_LESAPAN, {
+    variables: {
+      team_id: team_id,
+    },
+  });
+  const lesaPanData = lesaPan.data;
+  if (gardenSquares.data === undefined || lesaPanData === undefined) {
     return <div>loading...</div>;
   }
-
   return (
     <>
       <div className={classes.root}>
@@ -120,6 +118,20 @@ export function Garden({ team_id, user_id }) {
                   {planting ? 'Cancel' : 'Plant'}
                 </Button>
               )}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <AppBar position="static">
+          <Toolbar>
+            <Avatar className={classes.medium}>
+              <Gravatar
+                email={lesaPanData.lesaPan.email}
+                size={50}
+                style={{ padding: '5px' }}
+              />
+            </Avatar>
+            <Typography component="div">
+              The best LesaPán: {lesaPanData.lesaPan.display_name}
             </Typography>
           </Toolbar>
         </AppBar>
