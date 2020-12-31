@@ -21,6 +21,7 @@ const typeDefs = gql`
     pomodoroStatistics(user_id: Int!): [PomodoroStatistic]!
     gardenSquares(team_id: Int!): [SquareInGarden]
     userPoints(user_id: Int!): Int!
+    lesaPan(team_id: Int!): User!
   }
 
   type Pomodoro {
@@ -112,10 +113,7 @@ const typeDefs = gql`
       position: String!
     ): Boolean
 
-    savePomodoroDuration(
-      user_id: Int!
-      duration: Int!
-    ): String!
+    savePomodoroDuration(user_id: Int!, duration: Int!): String!
   }
 
   type AuthUser {

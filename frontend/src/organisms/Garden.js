@@ -4,8 +4,9 @@ import { gql, useQuery } from '@apollo/client';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { Button } from '@material-ui/core';
+import { Button, Avatar } from '@material-ui/core';
 import NatureIcon from '@material-ui/icons/Nature';
+import Gravatar from 'react-gravatar';
 
 import { SquareInRow } from 'src/molecules';
 import grass4 from 'src/assets/grass4.jpg';
@@ -45,7 +46,22 @@ const GET_USER_POINTS = gql`
     userPoints(user_id: $user_id)
   }
 `;
+/*
+const GET_LESAPAN = gql`
+  query lesaPan($team_id: Int!) {
+    lesaPan(team_id: $team_id)
+  }
+`;
 
+<Avatar className={classes.medium}>
+  <Gravatar
+    email={email}
+    size={70}
+    style={{ verticalAlign: 'sub', padding: '5px' }}
+  />
+
+
+*/
 export function Garden({ team_id, user_id }) {
   const classes = useStyles();
   const rows = [0, 1, 2, 3, 4, 5, 6];
