@@ -123,7 +123,13 @@ export function Garden({ team_id, user_id }) {
         </AppBar>
         <AppBar position="static">
           <Toolbar variant="dense">
-            <Grid container xs={12} justify="center" alignItems="center">
+            <Grid
+              container
+              xs={12}
+              justify="center"
+              alignItems="center"
+              style={{ marginTop: '5px' }}
+            >
               <Grid>
                 <Typography
                   component="div"
