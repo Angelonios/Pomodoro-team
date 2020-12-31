@@ -98,10 +98,10 @@ export function AddUserToTeam({ team_id, team_name }) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary" variant="contained">
+          <Button onClick={handleClose} color="primary" variant="contained">
             Cancel
           </Button>
-          <Button onClick={handleSubmit} color="primary" variant="contained">
+          <Button onClick={handleSubmit} color="secondary" variant="contained">
             Add
           </Button>
         </DialogActions>
