@@ -84,7 +84,7 @@ export function Garden({ team_id, user_id }) {
     },
   });
   const lesaPanData = lesaPan.data;
-  if (gardenSquares.data === undefined || lesaPanData === undefined) {
+  if (gardenSquares.data === undefined) {
     return <div>loading...</div>;
   }
   return (
@@ -130,24 +130,30 @@ export function Garden({ team_id, user_id }) {
               alignItems="center"
               style={{ marginTop: '5px' }}
             >
-              <Grid>
-                <Typography
-                  component="div"
-                  style={{ marginRight: '20px', width: '100%' }}
-                >
-                  The best LesaPán: {lesaPanData.lesaPan.display_name}
+              {lesaPanData === undefined ? (
+                <Typography>
+                  There is no The best Lesapán or data is not et avaliable
                 </Typography>
-                <Avatar
-                  className={classes.medium}
-                  style={{ margin: 'auto', marginBottom: '5px' }}
-                >
-                  <Gravatar
-                    email={lesaPanData.lesaPan.email}
-                    size={50}
-                    style={{ padding: '5px' }}
-                  />
-                </Avatar>
-              </Grid>
+              ) : (
+                <Grid>
+                  <Typography
+                    component="div"
+                    style={{ marginRight: '20px', width: '100%' }}
+                  >
+                    The best Lesapán: {lesaPanData.lesaPan.display_name}
+                  </Typography>
+                  <Avatar
+                    className={classes.medium}
+                    style={{ margin: 'auto', marginBottom: '5px' }}
+                  >
+                    <Gravatar
+                      email={lesaPanData.lesaPan.email}
+                      size={50}
+                      style={{ padding: '5px' }}
+                    />
+                  </Avatar>
+                </Grid>
+              )}
             </Grid>
           </Toolbar>
         </AppBar>
