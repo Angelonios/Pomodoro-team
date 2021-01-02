@@ -20,7 +20,7 @@ export function KickButton({ user_id, team_id }) {
   const history = useHistory();
   const [leaveTeam] = useMutation(LEAVE_TEAM, {
     onCompleted: () => {
-      setOpen(false);
+      window.location.reload(false);
     },
   });
   const [open, setOpen] = useState(false);

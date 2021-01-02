@@ -29,6 +29,7 @@ export function CreateTeamDialog({
       } else {
         setOpen(false);
         setOpen2(false);
+        window.location.reload();
       }
       /*setOpen2(false);*/
       /*history.push({
