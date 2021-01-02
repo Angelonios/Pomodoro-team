@@ -58,6 +58,7 @@ export const GET_TEAM_MEMBERS_POMODORO = gql`
       email
       display_name
       name
+      user_id
     }
   }
 `;
