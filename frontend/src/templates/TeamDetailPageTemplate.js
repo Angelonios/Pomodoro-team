@@ -18,7 +18,7 @@ import { Garden, SharedPomodoro } from 'src/organisms';
 import { useAuth } from 'src/utils/auth';
 import { ForbiddenPage } from 'src/pages/ForbiddenPage';
 import { PageTitle } from 'src/utils/userNotification/PageTitle';
-import { GET_TEAM_MEMBERS_POMODORO } from 'src/utils/serverSync';
+import { GET_TEAM_MEMBERS_POMODORO, GET_LEADER } from 'src/utils/serverSync';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,12 +41,16 @@ export function TeamDetailPageTemplate() {
       team_id: teamId,
     },
   });
-  console.log(data);
+  const leader = useQuery(GET_LEADER, {
+    variables: {
+      team_id: teamId,
+    },
+  });
   let beta = JSON.parse(window.localStorage.getItem('beta'));
 
   if (error) return <div>Something went wrong. Please refresh the page.</div>;
 
-  if (loading)
+  if (loading || leader.data === undefined)
     return (
       <Container component="main">
         <Paper elevation={3}>
@@ -168,12 +172,15 @@ export function TeamDetailPageTemplate() {
                             key={index}
                             shareId={teamMemberPomodoro.share_id}
                           />
-                          <KickButton
-                            user_id={teamMemberPomodoro.user_id}
-                            team_id={teamId}
-                          >
-                            Kick
-                          </KickButton>
+                          {teamMemberPomodoro.user_id ===
+                          leader.data.team.owner_id ? (
+                            ''
+                          ) : (
+                            <KickButton
+                              user_id={teamMemberPomodoro.user_id}
+                              team_id={teamId}
+                            ></KickButton>
+                          )}
                           <div
                             style={{
                               border: '1px solid',

@@ -84,6 +84,13 @@ export const SIGN_IN = gql`
     }
   }
 `;
+export const GET_LEADER = gql`
+  query GetLeader($team_id: Int!) {
+    team(team_id: $team_id) {
+      owner_id
+    }
+  }
+`;
 
 export const timerStates = {
   idle: 'IDLE',

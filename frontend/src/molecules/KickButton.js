@@ -17,7 +17,6 @@ const LEAVE_TEAM = gql`
 `;
 
 export function KickButton({ user_id, team_id }) {
-  console.log(user_id, team_id);
   const history = useHistory();
   const [leaveTeam] = useMutation(LEAVE_TEAM, {
     onCompleted: () => {
