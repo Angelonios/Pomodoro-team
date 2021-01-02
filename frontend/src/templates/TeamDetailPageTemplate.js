@@ -172,15 +172,11 @@ export function TeamDetailPageTemplate() {
                             key={index}
                             shareId={teamMemberPomodoro.share_id}
                           />
-                          {teamMemberPomodoro.user_id ===
-                          leader.data.team.owner_id ? (
-                            ''
-                          ) : (
-                            <KickButton
-                              user_id={teamMemberPomodoro.user_id}
-                              team_id={teamId}
-                            ></KickButton>
-                          )}
+                          <KickButton
+                            user_id={teamMemberPomodoro.user_id}
+                            team_id={teamId}
+                            owner_id={leader.data.team.owner_id}
+                          ></KickButton>
                           <div
                             style={{
                               border: '1px solid',

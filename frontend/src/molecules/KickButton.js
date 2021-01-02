@@ -16,7 +16,8 @@ const LEAVE_TEAM = gql`
   }
 `;
 
-export function KickButton({ user_id, team_id }) {
+export function KickButton({ user_id, team_id, owner_id }) {
+  const { user } = useAuth();
   const history = useHistory();
   const [leaveTeam] = useMutation(LEAVE_TEAM, {
     onCompleted: () => {
@@ -40,33 +41,39 @@ export function KickButton({ user_id, team_id }) {
       },
     });
   };
-
-  return (
-    <div>
-      <Button color="primary" variant="contained" onClick={handleClickOpen}>
-        Kick from Team
-      </Button>
-      <Dialog
-        open={open}
-        onClose={handleCancel}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{'Kick from team?'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to kick this member from group {''}?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCancel} color="primary" variant="contained">
-            Cancel
-          </Button>
-          <Button onClick={handleYes} color="secondary" variant="contained">
-            Yes, Finish him!!!
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
+  console.log(user_id, owner_id, user.user_id);
+  if (user_id === owner_id) {
+    return '';
+  } else if (user.user_id === owner_id) {
+    return (
+      <div>
+        <Button color="primary" variant="contained" onClick={handleClickOpen}>
+          Kick from Team
+        </Button>
+        <Dialog
+          open={open}
+          onClose={handleCancel}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{'Kick from team?'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Are you sure you want to kick this member from group {''}?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCancel} color="primary" variant="contained">
+              Cancel
+            </Button>
+            <Button onClick={handleYes} color="secondary" variant="contained">
+              Yes, Finish him!!!
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  } else {
+    return '';
+  }
 }
