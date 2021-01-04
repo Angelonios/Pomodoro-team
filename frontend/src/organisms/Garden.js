@@ -131,9 +131,7 @@ export function Garden({ team_id, user_id }) {
               style={{ marginTop: '5px' }}
             >
               {lesaPanData === undefined ? (
-                <Typography>
-                  There is no The best Lesapán or data is not et avaliable
-                </Typography>
+                <Typography>There is no The best Lesapán</Typography>
               ) : (
                 <Grid>
                   <Typography
