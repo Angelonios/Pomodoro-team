@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import AppBar from '@material-ui/core/AppBar';
@@ -78,19 +78,26 @@ const SPEND_POINTS = gql`
 
 function getSquarePosition(row, column) {
   return {
-    top: (row - 1) * 50,
-    left: (column - 1) * 50,
+    top: (row - 1) * 20 + 20 * 9 - (column - 1) * 20,
+    left: (column - 1) * 40 + (row - 1) * 40,
   };
 }
 
-function getMousePosition(x, y) {
+function getMousePosition(left, top) {
+  left = left + 15;
+  top = top + 15;
   return {
-    row: Math.round((y + 50) / 50 - 0.5),
-    column: Math.round((x + 50) / 50 - 0.5),
+    row: Math.round((-180 + left / 2 + top) / 40 - 1.5) + 1,
+    column: Math.round(left / 40 - (-180 + left / 2 + top) / 40 + 0.5) + 1,
   };
+  /*
+overColumn = Math.round(left / 40 - ((-180 + left / 2 + top) / 40) + 0.5);
+overRow = Math.round((-180 + left / 2 + top) / 40 - 1.5);
+  */
 }
 
 export function Garden({ team_id, user_id }) {
+  const abcd = useRef();
   const classes = useStyles();
   const { user } = useAuth();
   const ROW_COUNT = 7;
@@ -162,14 +169,14 @@ export function Garden({ team_id, user_id }) {
             col: plantingPosition.column,
           },
         });
-        console.log(
+        /*  console.log(
           `Sázíme na ${JSON.stringify(
             getMousePosition(
               e.pageX - park.offsetLeft,
               e.pageY - park.offsetTop,
             ),
           )}`,
-        );
+        ); */
         setPlanting(!planting);
         setActualPoints(actualPoints - 10);
         gardenSquares.refetch();
@@ -204,13 +211,14 @@ export function Garden({ team_id, user_id }) {
                   left: left,
                   position: 'absolute',
                   filter: 'brightness(0.2)',
-                  backgroundColor: '#ffffffe0',
+                  transition: 'filter 700ms ease-in-out',
+                  cursor: 'crosshair',
                 }}
               />,
             );
           } else if (isHoveredOver) {
             squares.push(
-              <Tooltip title={planted.display_name}>
+              <Tooltip title={planted.display_name} key="tooltip">
                 <div
                   key={row * 7 + column}
                   style={{
@@ -223,6 +231,7 @@ export function Garden({ team_id, user_id }) {
                     left: left,
                     position: 'absolute',
                     filter: 'brightness(1.4)',
+                    cursor: 'crosshair',
                   }}
                 />
               </Tooltip>,
@@ -248,7 +257,7 @@ export function Garden({ team_id, user_id }) {
           if (isHoveredOver && planting) {
             squares.push(
               <div
-                key={row * 7 + column}
+                key="plantingTree"
                 style={{
                   backgroundImage: 'url(' + tree4 + ')',
                   backgroundRepeat: 'no-repeat',
@@ -258,9 +267,9 @@ export function Garden({ team_id, user_id }) {
                   top: top,
                   left: left,
                   position: 'absolute',
-                  backgroundColor: '#ffffff7a',
-                  filter: 'brightness(1)',
-                  cursor: 'pointer',
+                  filter: 'brightness(1.5) saturate(0%)',
+                  cursor: 'crosshair',
+                  transition: 'top 200ms ease-in-out, left 200ms ease-in-out',
                 }}
               />,
             );
@@ -355,6 +364,7 @@ export function Garden({ team_id, user_id }) {
       <div>
         {gardenSquaresSet ? (
           <div
+            ref={abcd}
             id="park"
             className={classes.board}
             onMouseMove={handleMouseMove}
