@@ -8,18 +8,21 @@ import { Button, Avatar, Grid, Tooltip } from '@material-ui/core';
 import NatureIcon from '@material-ui/icons/Nature';
 import Gravatar from 'react-gravatar';
 
-import grass4 from 'src/assets/grass4.jpg';
+import trava from 'src/assets/trava.png';
 import tree4 from 'src/assets/tree4.png';
 import { Loading } from 'src/atoms';
 import { useAuth } from 'src/utils/auth';
 
 const useStyles = makeStyles((theme) => ({
   board: {
-    width: '350px',
-    height: '350px',
-    backgroundImage: 'url(' + grass4 + ')',
+    width: '530px',
+    height: '362px',
+    backgroundImage: 'url(' + trava + ')',
     marginBottom: theme.spacing(4),
     position: 'relative',
+    backgroundSize: 'contain',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'bottom',
   },
   root: {
     flexGrow: 1,
@@ -230,8 +233,7 @@ export function Garden({ team_id, user_id }) {
                     top: top,
                     left: left,
                     position: 'absolute',
-                    filter: 'brightness(1.4)',
-                    cursor: 'crosshair',
+                    filter: 'brightness(1.8)',
                   }}
                 />
               </Tooltip>,
