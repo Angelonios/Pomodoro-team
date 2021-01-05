@@ -4,39 +4,34 @@ import { gql, useQuery } from '@apollo/client';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { Button, Avatar, Grid, Box } from '@material-ui/core';
+import { Button, Avatar, Grid, Tooltip } from '@material-ui/core';
 import NatureIcon from '@material-ui/icons/Nature';
 import Gravatar from 'react-gravatar';
 
-import { SquareInRow } from 'src/molecules';
 import grass4 from 'src/assets/grass4.jpg';
+import tree4 from 'src/assets/tree4.png';
+import { Loading } from 'src/atoms';
 
 const useStyles = makeStyles((theme) => ({
   board: {
-    width: '550px',
-    height: '550px',
+    width: '350px',
+    height: '350px',
     backgroundImage: 'url(' + grass4 + ')',
     marginBottom: theme.spacing(4),
+    position: 'relative',
   },
   root: {
     flexGrow: 1,
     width: '65%',
     marginBottom: theme.spacing(2),
   },
-  float: {
-    paddingTop: '100%',
-    float: 'left',
-  },
-  container: {
-    width: '1208px',
-    height: '1208px',
-  },
 }));
 
 const GET_GARDEN_SQUARES = gql`
   query gardenSquares($team_id: Int!) {
     gardenSquares(team_id: $team_id) {
-      position
+      row
+      column
       display_name
     }
   }
@@ -56,11 +51,27 @@ const GET_LESAPAN = gql`
   }
 `;
 
+function getSquarePosition(row, column) {
+  return {
+    top: (row - 1) * 50,
+    left: (column - 1) * 50,
+  };
+}
+
+function getMousePosition(x, y) {
+  return {
+    row: Math.round((y + 50) / 50 - 0.5),
+    column: Math.round((x + 50) / 50 - 0.5),
+  };
+}
+
 export function Garden({ team_id, user_id }) {
   const classes = useStyles();
-  const rows = [0, 1, 2, 3, 4, 5, 6];
-  const cols = [0, 1, 2, 3, 4, 5, 6];
+  const ROW_COUNT = 7;
+  const COLUMN_COUNT = 7;
+  const squares = [];
   const [planting, setPlanting] = useState(false);
+  const [hoveredSquare, setHoveredSquare] = useState(null);
   const [actualPoints, setActualPoints] = useState(null);
   const points = useQuery(GET_USER_POINTS, {
     variables: { user_id: user_id },
@@ -85,8 +96,145 @@ export function Garden({ team_id, user_id }) {
   });
   const lesaPanData = lesaPan.data;
   if (gardenSquares.data === undefined) {
-    return <div>loading...</div>;
+    return <Loading />;
   }
+
+  const handleMouseMove = (e) => {
+    var park = document.getElementById('park');
+    setHoveredSquare(
+      getMousePosition(e.pageX - park.offsetLeft, e.pageY - park.offsetTop),
+    );
+    //console.log(hoveredSquare);
+  };
+
+  const handleGardenClick = (e) => {
+    if (planting) {
+      var park = document.getElementById('park');
+      console.log(
+        `Sázíme na ${JSON.stringify(
+          getMousePosition(e.pageX - park.offsetLeft, e.pageY - park.offsetTop),
+        )}`,
+      );
+    }
+  };
+
+  function drawPark(plantedTrees) {
+    for (let row = 1; row <= ROW_COUNT; row++) {
+      for (let column = COLUMN_COUNT; column >= 1; column--) {
+        const { top, left } = getSquarePosition(row, column);
+        const isHoveredOver =
+          hoveredSquare &&
+          hoveredSquare.row === row &&
+          hoveredSquare.column === column;
+        for (let i = 0; i < gardenSquares.data.gardenSquares.length; i++) {
+          if (
+            gardenSquares.data.gardenSquares[i].row === row &&
+            gardenSquares.data.gardenSquares[i].column === column
+          ) {
+            if (planting) {
+              squares.push(
+                <div
+                  key={row * 7 + column}
+                  style={{
+                    backgroundImage: 'url(' + tree4 + ')',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    width: '50px',
+                    height: '50px',
+                    top: top,
+                    left: left,
+                    position: 'absolute',
+                    filter: 'brightness(0.2)',
+                    backgroundColor: '#ffffffe0',
+                  }}
+                />,
+              );
+            } else if (isHoveredOver) {
+              squares.push(
+                <Tooltip
+                  title={gardenSquares.data.gardenSquares[i].display_name}
+                >
+                  <div
+                    key={row * 7 + column}
+                    style={{
+                      backgroundImage: 'url(' + tree4 + ')',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'center',
+                      width: '50px',
+                      height: '50px',
+                      top: top,
+                      left: left,
+                      position: 'absolute',
+                      filter: 'brightness(1.4)',
+                    }}
+                  />
+                </Tooltip>,
+              );
+            } else {
+              squares.push(
+                <div
+                  key={row * 7 + column}
+                  style={{
+                    backgroundImage: 'url(' + tree4 + ')',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    width: '50px',
+                    height: '50px',
+                    top: top,
+                    left: left,
+                    position: 'absolute',
+                  }}
+                />,
+              );
+            }
+            break;
+          } else if (
+            i + 1 === gardenSquares.data.gardenSquares.length &&
+            !(
+              gardenSquares.data.gardenSquares[i].row === row &&
+              gardenSquares.data.gardenSquares[i].column === column
+            )
+          ) {
+            if (isHoveredOver && planting) {
+              squares.push(
+                <div
+                  key={row * 7 + column}
+                  style={{
+                    backgroundImage: 'url(' + tree4 + ')',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    width: '50px',
+                    height: '50px',
+                    top: top,
+                    left: left,
+                    position: 'absolute',
+                    backgroundColor: '#ffffff7a',
+                    filter: 'brightness(1)',
+                    cursor: 'pointer',
+                  }}
+                />,
+              );
+            } else {
+              squares.push(
+                <div
+                  key={row * 7 + column}
+                  style={{
+                    width: '50px',
+                    height: '50px',
+                    top: top,
+                    left: left,
+                    position: 'absolute',
+                  }}
+                />,
+              );
+            }
+          }
+        }
+      }
+    }
+    return squares;
+  }
+
   return (
     <>
       <div className={classes.root}>
@@ -125,15 +273,12 @@ export function Garden({ team_id, user_id }) {
           <Toolbar variant="dense">
             <Grid
               container
-              xs={12}
               justify="center"
               alignItems="center"
               style={{ marginTop: '5px' }}
             >
               {lesaPanData === undefined ? (
-                <Typography>
-                  There is no The best Lesapán or data is not et avaliable
-                </Typography>
+                <Typography>There is no The best Lesapán</Typography>
               ) : (
                 <Grid>
                   <Typography
@@ -160,81 +305,16 @@ export function Garden({ team_id, user_id }) {
       </div>
       <div>
         {gardenSquaresSet ? (
-          <div className={classes.board}>
-            {rows.map((row, index) => (
-              <>
-                {cols.map((col, index) => {
-                  for (
-                    let i = 0;
-                    i < gardenSquares.data.gardenSquares.length;
-                    i++
-                  ) {
-                    if (
-                      gardenSquares.data.gardenSquares[i].position ===
-                      row.toString() + col
-                    ) {
-                      return (
-                        <SquareInRow
-                          rowNum={row}
-                          colNum={col}
-                          tree={true}
-                          key={row * 7 + col}
-                          planting={planting}
-                          setPlanting={setPlanting}
-                          actualPoints={actualPoints}
-                          setActualPoints={setActualPoints}
-                          team_id={team_id}
-                          gardenSquares={gardenSquares}
-                          display_name={
-                            gardenSquares.data.gardenSquares[i].display_name
-                          }
-                        />
-                      );
-                    }
-                  }
-                  return (
-                    <SquareInRow
-                      rowNum={row}
-                      colNum={col}
-                      tree={false}
-                      key={row * 7 + col}
-                      planting={planting}
-                      setPlanting={setPlanting}
-                      actualPoints={actualPoints}
-                      setActualPoints={setActualPoints}
-                      team_id={team_id}
-                      gardenSquares={gardenSquares}
-                      display_name="empty"
-                    />
-                  );
-                })}
-              </>
-            ))}
+          <div
+            id="park"
+            className={classes.board}
+            onMouseMove={handleMouseMove}
+            onClick={handleGardenClick}
+          >
+            {drawPark(gardenSquares)}
           </div>
         ) : (
-          <div className={classes.board}>
-            {rows.map((row, index) => (
-              <>
-                {cols.map((col, index) => {
-                  return (
-                    <SquareInRow
-                      rowNum={row}
-                      colNum={col}
-                      tree={false}
-                      key={row * 7 + col}
-                      planting={planting}
-                      setPlanting={setPlanting}
-                      actualPoints={actualPoints}
-                      setActualPoints={setActualPoints}
-                      team_id={team_id}
-                      gardenSquares={gardenSquares}
-                      display_name="empty"
-                    />
-                  );
-                })}
-              </>
-            ))}
-          </div>
+          <div id="park" className={classes.board}></div>
         )}
       </div>
     </>

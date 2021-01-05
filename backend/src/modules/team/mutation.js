@@ -54,12 +54,12 @@ export const AddUserToTeam = async (
 
 export const PlantTree = async (
   _,
-  { team_id, user_id, display_name, position },
+  { team_id, user_id, display_name, row, column },
   { dbConnection },
 ) => {
   const PlantTree = await dbConnection.query(
-    `INSERT INTO garden (team_id, user_id, display_name, position) VALUES (?, ?, ?, ?)`,
-    [team_id, user_id, display_name, position],
+    `INSERT INTO garden (team_id, user_id, display_name, row, column) VALUES (?, ?, ?, ?, ?)`,
+    [team_id, user_id, display_name, row, column],
   );
 
   return PlantTree.warningStatus === 0;
