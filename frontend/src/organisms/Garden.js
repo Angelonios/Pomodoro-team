@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { gql, useQuery } from '@apollo/client';
+import { gql, useMutation, useQuery } from '@apollo/client';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -11,6 +11,7 @@ import Gravatar from 'react-gravatar';
 import grass4 from 'src/assets/grass4.jpg';
 import tree4 from 'src/assets/tree4.png';
 import { Loading } from 'src/atoms';
+import { useAuth } from 'src/utils/auth';
 
 const useStyles = makeStyles((theme) => ({
   board: {
@@ -31,7 +32,7 @@ const GET_GARDEN_SQUARES = gql`
   query gardenSquares($team_id: Int!) {
     gardenSquares(team_id: $team_id) {
       row
-      column
+      col
       display_name
     }
   }
@@ -51,6 +52,30 @@ const GET_LESAPAN = gql`
   }
 `;
 
+const PLANT_TREE = gql`
+  mutation PlantTree(
+    $team_id: Int!
+    $user_id: Int!
+    $display_name: String!
+    $row: Int!
+    $col: Int!
+  ) {
+    PlantTree(
+      team_id: $team_id
+      user_id: $user_id
+      display_name: $display_name
+      row: $row
+      col: $col
+    )
+  }
+`;
+
+const SPEND_POINTS = gql`
+  mutation SpendPoints($user_id: Int!) {
+    SpendPoints(user_id: $user_id)
+  }
+`;
+
 function getSquarePosition(row, column) {
   return {
     top: (row - 1) * 50,
@@ -67,12 +92,17 @@ function getMousePosition(x, y) {
 
 export function Garden({ team_id, user_id }) {
   const classes = useStyles();
+  const { user } = useAuth();
   const ROW_COUNT = 7;
   const COLUMN_COUNT = 7;
   const squares = [];
   const [planting, setPlanting] = useState(false);
   const [hoveredSquare, setHoveredSquare] = useState(null);
   const [actualPoints, setActualPoints] = useState(null);
+  const [spendPoints] = useMutation(SPEND_POINTS);
+  const [plantTree] = useMutation(PLANT_TREE, {
+    onCompleted: () => spendPoints({ variables: { user_id: user.user_id } }),
+  });
   const points = useQuery(GET_USER_POINTS, {
     variables: { user_id: user_id },
     onCompleted: () => setActualPoints(points.data.userPoints),
@@ -110,11 +140,40 @@ export function Garden({ team_id, user_id }) {
   const handleGardenClick = (e) => {
     if (planting) {
       var park = document.getElementById('park');
-      console.log(
-        `Sázíme na ${JSON.stringify(
-          getMousePosition(e.pageX - park.offsetLeft, e.pageY - park.offsetTop),
-        )}`,
+      const plantingPosition = getMousePosition(
+        e.pageX - park.offsetLeft,
+        e.pageY - park.offsetTop,
       );
+      const planted = gardenSquares.data.gardenSquares.find((tree) => {
+        return (
+          tree.row === plantingPosition.row &&
+          tree.col === plantingPosition.column
+        );
+      });
+      if (planted) {
+        console.log('Zde už je zasazený strom!');
+      } else {
+        plantTree({
+          variables: {
+            team_id: team_id,
+            user_id: user.user_id,
+            display_name: user.display_name,
+            row: plantingPosition.row,
+            col: plantingPosition.column,
+          },
+        });
+        console.log(
+          `Sázíme na ${JSON.stringify(
+            getMousePosition(
+              e.pageX - park.offsetLeft,
+              e.pageY - park.offsetTop,
+            ),
+          )}`,
+        );
+        setPlanting(!planting);
+        setActualPoints(actualPoints - 10);
+        gardenSquares.refetch();
+      }
     }
   };
 
@@ -126,13 +185,32 @@ export function Garden({ team_id, user_id }) {
           hoveredSquare &&
           hoveredSquare.row === row &&
           hoveredSquare.column === column;
-        for (let i = 0; i < gardenSquares.data.gardenSquares.length; i++) {
-          if (
-            gardenSquares.data.gardenSquares[i].row === row &&
-            gardenSquares.data.gardenSquares[i].column === column
-          ) {
-            if (planting) {
-              squares.push(
+        const planted = plantedTrees.data.gardenSquares.find((tree) => {
+          return tree.row === row && tree.col === column;
+        });
+        //console.log(row + ' X ' + column);
+        if (planted) {
+          if (planting) {
+            squares.push(
+              <div
+                key={row * 7 + column}
+                style={{
+                  backgroundImage: 'url(' + tree4 + ')',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  width: '50px',
+                  height: '50px',
+                  top: top,
+                  left: left,
+                  position: 'absolute',
+                  filter: 'brightness(0.2)',
+                  backgroundColor: '#ffffffe0',
+                }}
+              />,
+            );
+          } else if (isHoveredOver) {
+            squares.push(
+              <Tooltip title={planted.display_name}>
                 <div
                   key={row * 7 + column}
                   style={{
@@ -144,90 +222,61 @@ export function Garden({ team_id, user_id }) {
                     top: top,
                     left: left,
                     position: 'absolute',
-                    filter: 'brightness(0.2)',
-                    backgroundColor: '#ffffffe0',
+                    filter: 'brightness(1.4)',
                   }}
-                />,
-              );
-            } else if (isHoveredOver) {
-              squares.push(
-                <Tooltip
-                  title={gardenSquares.data.gardenSquares[i].display_name}
-                >
-                  <div
-                    key={row * 7 + column}
-                    style={{
-                      backgroundImage: 'url(' + tree4 + ')',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center',
-                      width: '50px',
-                      height: '50px',
-                      top: top,
-                      left: left,
-                      position: 'absolute',
-                      filter: 'brightness(1.4)',
-                    }}
-                  />
-                </Tooltip>,
-              );
-            } else {
-              squares.push(
-                <div
-                  key={row * 7 + column}
-                  style={{
-                    backgroundImage: 'url(' + tree4 + ')',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center',
-                    width: '50px',
-                    height: '50px',
-                    top: top,
-                    left: left,
-                    position: 'absolute',
-                  }}
-                />,
-              );
-            }
-            break;
-          } else if (
-            i + 1 === gardenSquares.data.gardenSquares.length &&
-            !(
-              gardenSquares.data.gardenSquares[i].row === row &&
-              gardenSquares.data.gardenSquares[i].column === column
-            )
-          ) {
-            if (isHoveredOver && planting) {
-              squares.push(
-                <div
-                  key={row * 7 + column}
-                  style={{
-                    backgroundImage: 'url(' + tree4 + ')',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center',
-                    width: '50px',
-                    height: '50px',
-                    top: top,
-                    left: left,
-                    position: 'absolute',
-                    backgroundColor: '#ffffff7a',
-                    filter: 'brightness(1)',
-                    cursor: 'pointer',
-                  }}
-                />,
-              );
-            } else {
-              squares.push(
-                <div
-                  key={row * 7 + column}
-                  style={{
-                    width: '50px',
-                    height: '50px',
-                    top: top,
-                    left: left,
-                    position: 'absolute',
-                  }}
-                />,
-              );
-            }
+                />
+              </Tooltip>,
+            );
+          } else {
+            squares.push(
+              <div
+                key={row * 7 + column}
+                style={{
+                  backgroundImage: 'url(' + tree4 + ')',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  width: '50px',
+                  height: '50px',
+                  top: top,
+                  left: left,
+                  position: 'absolute',
+                }}
+              />,
+            );
+          }
+        } else {
+          if (isHoveredOver && planting) {
+            squares.push(
+              <div
+                key={row * 7 + column}
+                style={{
+                  backgroundImage: 'url(' + tree4 + ')',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  width: '50px',
+                  height: '50px',
+                  top: top,
+                  left: left,
+                  position: 'absolute',
+                  backgroundColor: '#ffffff7a',
+                  filter: 'brightness(1)',
+                  cursor: 'pointer',
+                }}
+              />,
+            );
+          } else {
+            squares.push(
+              <div
+                key={row * 7 + column}
+                style={{
+                  width: '50px',
+                  height: '50px',
+                  top: top,
+                  left: left,
+                  position: 'absolute',
+                }}
+              />,
+            );
           }
         }
       }

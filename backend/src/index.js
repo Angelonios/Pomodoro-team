@@ -69,7 +69,7 @@ const typeDefs = gql`
     user_id: Int!
     display_name: String!
     row: Int!
-    column: Int!
+    col: Int!
   }
 
   enum State {
@@ -112,7 +112,7 @@ const typeDefs = gql`
       user_id: Int!
       display_name: String!
       row: Int!
-      column: Int!
+      col: Int!
     ): Boolean
 
     savePomodoroDuration(user_id: Int!, duration: Int!): String!
