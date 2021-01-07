@@ -172,11 +172,18 @@ export function TeamDetailPageTemplate() {
                             key={index}
                             shareId={teamMemberPomodoro.share_id}
                           />
-                          <KickButton
-                            user_id={teamMemberPomodoro.user_id}
-                            team_id={teamId}
-                            owner_id={leader.data.team.owner_id}
-                          ></KickButton>
+                          <Grid
+                            item
+                            style={{
+                              margin: 'auto',
+                            }}
+                          >
+                            <KickButton
+                              user_id={teamMemberPomodoro.user_id}
+                              team_id={teamId}
+                              owner_id={leader.data.team.owner_id}
+                            ></KickButton>
+                          </Grid>
                           <div
                             style={{
                               border: '1px solid',
