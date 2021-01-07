@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 
 import { LeaveTeamButton, AddUserToTeam, KickButton } from 'src/molecules';
-import { TeamPageName } from 'src/atoms';
+import { Loading, TeamPageName } from 'src/atoms';
 import { Garden, SharedPomodoro } from 'src/organisms';
 import { useAuth } from 'src/utils/auth';
 import { ForbiddenPage } from 'src/pages/ForbiddenPage';
@@ -64,7 +64,7 @@ export function TeamDetailPageTemplate() {
             >
               <Grid item xs={12}>
                 <Typography align={'center'} variant={'h3'}>
-                  <div>loading...</div>
+                  <Loading />
                 </Typography>
               </Grid>
             </Grid>

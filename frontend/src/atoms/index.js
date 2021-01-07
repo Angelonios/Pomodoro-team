@@ -11,3 +11,4 @@ export { TeamPageName } from './TeamPageName';
 export { ThemeChange } from './ThemeChange';
 export { PomodoroBotAvatar } from './PomodorBotAvatar';
 export { BetaModeSwitch } from './BetaModeSwitch';
+export { Loading } from './Loading';
