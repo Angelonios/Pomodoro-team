@@ -64,3 +64,16 @@ export const PlantTree = async (
 
   return PlantTree.warningStatus === 0;
 };
+
+export const SetNewTeamOwner = async (
+  _,
+  { team_id, new_owner_user_id },
+  { dbConnection },
+) => {
+  const SetNewTeamOwner = await dbConnection.query(
+    `UPDATE teams SET owner_id = ? WHERE teams.team_id = ?`,
+    [new_owner_user_id, team_id],
+  );
+
+  return SetNewTeamOwner.warningStatus === 0;
+};

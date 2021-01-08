@@ -116,6 +116,8 @@ const typeDefs = gql`
     ): Boolean
 
     savePomodoroDuration(user_id: Int!, duration: Int!): String!
+
+    SetNewTeamOwner(team_id: Int!, new_owner_user_id: Int!): Boolean
   }
 
   type AuthUser {
