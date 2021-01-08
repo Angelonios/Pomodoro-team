@@ -1,7 +1,3 @@
-import { useMutation } from '@apollo/client';
-import { SAVE_TASK } from './serverSync';
-import { useAuth } from './auth';
-
 const CURRENT_TASK = 'CURRENT_TASK';
 
 /**
@@ -20,8 +16,8 @@ export const addTask = (newTask, auth, saveTaskMutation) => {
     return true;
   }
 
-  if (AreTasksSimilar(currentTask, newTask)) {
-    localStorage.setItem('task' + localStorage.length, currentTask);
+  if (!areTasksSimilar(currentTask, newTask)) {
+    localStorage.setItem('task-' + (new Date()).getTime(), currentTask);
     localStorage.setItem(CURRENT_TASK, newTask);
     persistTask(newTask, auth, saveTaskMutation);
 
@@ -48,7 +44,7 @@ export const GetCurrentTask = () => {
  * @param task1
  * @param task2
  */
-const AreTasksSimilar = (task1, task2) => {
+const areTasksSimilar = (task1, task2) => {
   const wordsInTask1 = task1.split(' ');
   const wordsInTask2 = task2.split(' ');
 
@@ -59,7 +55,7 @@ const AreTasksSimilar = (task1, task2) => {
 
   const similarWords = wordsInTask1.map((word1, index) => {
     const word2 = wordsInTask2[index];
-    const editDistance = GetDistanceBetweenStrings(word1, word2);
+    const editDistance = getDistanceBetweenStrings(word1, word2);
     return !(editDistance > 1);
   }).filter(Boolean).length;
 
@@ -78,7 +74,7 @@ const AreTasksSimilar = (task1, task2) => {
  * @param string2
  * @returns {number|*}
  */
-const GetDistanceBetweenStrings = (string1, string2) => {
+const getDistanceBetweenStrings = (string1, string2) => {
   if (!string1 || string1.length === 0) {
     return string2.length;
   }
@@ -88,11 +84,11 @@ const GetDistanceBetweenStrings = (string1, string2) => {
   let [head1, ...tail1] = string1;
   let [head2, ...tail2] = string2;
   if (head1 === head2) {
-    return GetDistanceBetweenStrings(tail1, tail2);
+    return getDistanceBetweenStrings(tail1, tail2);
   }
-  const l1 = GetDistanceBetweenStrings(string1, tail2);
-  const l2 = GetDistanceBetweenStrings(tail1, string2);
-  const l3 = GetDistanceBetweenStrings(tail1, tail2);
+  const l1 = getDistanceBetweenStrings(string1, tail2);
+  const l2 = getDistanceBetweenStrings(tail1, string2);
+  const l3 = getDistanceBetweenStrings(tail1, tail2);
   return 1 + Math.min(l1, l2, l3);
 };
 

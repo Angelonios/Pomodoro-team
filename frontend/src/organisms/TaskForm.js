@@ -3,29 +3,20 @@ import TextField from '@material-ui/core/TextField';
 import { useAuth } from 'src/utils/auth';
 import { usePomodoroDispatch, usePomodoroState } from 'src/utils/PomodoroContext';
 import { SET_TASK_NAME } from 'src/utils/pomodoroReducer';
-import { SAVE_TASK, timerStates } from 'src/utils/serverSync';
+import { SAVE_TASK } from 'src/utils/serverSync';
 import { addTask, GetCurrentTask } from 'src/utils/TaskHelper';
 import { useMutation } from '@apollo/client';
 
 
 export function TaskForm() {
   const auth = useAuth();
-  const pomodoro = usePomodoroState();
   const dispatch = usePomodoroDispatch();
   const [task, setTask] = useState(GetCurrentTask());
   const [saveTask] = useMutation(SAVE_TASK);
 
   const handleTaskFormEdit = () => {
-    const pomodoroIsRunning = pomodoro.pomodoroTimerState === timerStates.running;
-    const taskNotEmpty = task.trim().length !== 0;
-    const newTaskAlreadySet = pomodoro.taskName === task;
-
-    if (taskNotEmpty
-      && !pomodoroIsRunning
-      && !newTaskAlreadySet
-    ) dispatch({ type: SET_TASK_NAME, newName: task });
-
-    if (taskNotEmpty && pomodoroIsRunning) addTask(task, auth, saveTask);
+    addTask(task, auth, saveTask);
+    dispatch({ type: SET_TASK_NAME, newName: task });
   }
 
   return <>
@@ -37,7 +28,7 @@ export function TaskForm() {
         setTask(e.target.value);
       }}
       defaultValue={GetCurrentTask()}
-      onBlurOrSubmit={handleTaskFormEdit}
+      onBlur={() => handleTaskFormEdit()}
     />}
   </>;
 
