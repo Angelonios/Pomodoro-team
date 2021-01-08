@@ -9,7 +9,6 @@ import {
   Grid,
   Typography,
   Hidden,
-  Button,
 } from '@material-ui/core';
 
 import { LeaveTeamButton, AddUserToTeam, KickButton } from 'src/molecules';
@@ -201,7 +200,11 @@ export function TeamDetailPageTemplate() {
                     )}
                   </Grid>
                   <Grid item>
-                    <LeaveTeamButton team_id={teamId} />
+                    <LeaveTeamButton
+                      team_id={teamId}
+                      owner={leader.data.team.owner_id === user.user_id}
+                      teamMembers={data.teamMembersPomodoro}
+                    />
                   </Grid>
                   <Grid item>
                     <AddUserToTeam team_id={teamId} team_name={teamName} />

@@ -12,3 +12,4 @@ export { ThemeChange } from './ThemeChange';
 export { PomodoroBotAvatar } from './PomodorBotAvatar';
 export { BetaModeSwitch } from './BetaModeSwitch';
 export { Loading } from './Loading';
+export { TeamDetailAvatar } from './TeamDetailAvatar';

@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { gql, useMutation } from '@apollo/client';
 import { route } from '../Routes';
 import { useAuth } from '../utils/auth';
+import { LeaveTeamDialog } from 'src/organisms';
 
 const LEAVE_TEAM = gql`
   mutation LeaveTeam($team_id: Int!, $user_id: Int!) {
@@ -16,7 +12,7 @@ const LEAVE_TEAM = gql`
   }
 `;
 
-export function LeaveTeamButton({ team_id }) {
+export function LeaveTeamButton({ team_id, owner, teamMembers }) {
   const { user } = useAuth();
   const history = useHistory();
   const [leaveTeam] = useMutation(LEAVE_TEAM, {
@@ -33,7 +29,7 @@ export function LeaveTeamButton({ team_id }) {
     setOpen(false);
   };
 
-  const handleYes = () => {
+  const handleConfirm = () => {
     leaveTeam({
       variables: {
         team_id: team_id,
@@ -42,32 +38,21 @@ export function LeaveTeamButton({ team_id }) {
     });
   };
 
+  console.log(teamMembers);
+
   return (
     <div>
       <Button color="primary" variant="contained" onClick={handleClickOpen}>
         Leave Team
       </Button>
-      <Dialog
+      <LeaveTeamDialog
+        owner={owner}
         open={open}
-        onClose={handleCancel}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{'Leave Team?'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to leave group {''}?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCancel} color="primary" variant="contained">
-            Cancel
-          </Button>
-          <Button onClick={handleYes} color="secondary" variant="contained">
-            Yes, leave
-          </Button>
-        </DialogActions>
-      </Dialog>
+        handleCancel={handleCancel}
+        handleConfirm={handleConfirm}
+        teamMembers={teamMembers}
+        user={user}
+      />
     </div>
   );
 }
