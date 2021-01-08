@@ -20,12 +20,12 @@ export const pomodoro = async (_, { shareId }, { dbConnection }) => {
         case 'RUNNING':
           pomodoro.seconds_since_start_at_pause
             ? (secondsSinceStart =
-            currentTime['CURRENT_TIMESTAMP()'] / 1000 -
-            pomodoro.last_updated / 1000 +
-            pomodoro.seconds_since_start_at_pause)
+                currentTime['CURRENT_TIMESTAMP()'] / 1000 -
+                pomodoro.last_updated / 1000 +
+                pomodoro.seconds_since_start_at_pause)
             : (secondsSinceStart =
-            currentTime['CURRENT_TIMESTAMP()'] / 1000 -
-            pomodoro.last_updated / 1000);
+                currentTime['CURRENT_TIMESTAMP()'] / 1000 -
+                pomodoro.last_updated / 1000);
           break;
       }
 
@@ -34,7 +34,7 @@ export const pomodoro = async (_, { shareId }, { dbConnection }) => {
       //Return offline if no action in 45 minutes
       if (
         currentTime['CURRENT_TIMESTAMP()'] / 1000 -
-        pomodoro.last_updated / 1000 >=
+          pomodoro.last_updated / 1000 >=
         MINUTE * 45
       ) {
         state = 'OFFLINE';
@@ -78,20 +78,23 @@ export const pomodoroStatistics = async (
 
   const pomodoroStatistics = await getPomodoroStatistics(user_id, dbConnection);
 
-  return pomodoroStatistics;
+  //Return empty task array if the SQL SELECT returns task array with null inside
+  const result = pomodoroStatistics.map((p) =>
+    p.tasks[0] === null ? { ...p, tasks: [] } : p,
+  );
+
+  return result;
 };
 
 async function getPomodoroStatistics(user_id, dbConnection) {
   const result = await dbConnection.query(
     `SELECT stats.id,stats.user_id, stats.finished_at,stats.duration, 
     JSON_ARRAYAGG(
-      IF (
-        tasks.task_id IS NULL, 
-          NULL, 
-          JSON_OBJECT('task_id', tasks.task_id, 'pomodoro_statistic_id', tasks.pomodoro_statistic_id, 'task_description', tasks.task_description)
-          )
-        ) 
-      AS tasks
+      CASE 
+      WHEN tasks.task_id IS NOT NULL
+      THEN JSON_OBJECT('task_id', tasks.task_id, 'pomodoro_statistic_id', tasks.pomodoro_statistic_id, 'task_description', tasks.task_description)
+      END
+    ) as tasks
     FROM pomodoro_statistics AS stats
     LEFT JOIN tasks ON stats.id=tasks.pomodoro_statistic_id  
     WHERE stats.user_id = ?
@@ -115,11 +118,7 @@ export const userPoints = async (_, { user_id }, { dbConnection }) => {
   return countedPoints;
 };
 
-export const getCurrentTask = async (
-  _,
-  { user_id },
-  { dbConnection },
-) => {
+export const getCurrentTask = async (_, { user_id }, { dbConnection }) => {
   // const today = new Date();
   const result = await dbConnection.query(
     `SELECT 
@@ -132,7 +131,8 @@ export const getCurrentTask = async (
      WHERE pomodoro_statistics.finished_at = DATE_FORMAT(NOW(), '%Y-%m-%d')
      AND pomodoro_statistics.user_id = ?
      ORDER BY tasks.task_id DESC LIMIT 1`,
-    [ user_id]);
+    [user_id],
+  );
   return {
     task_id: result[0].task_id,
     user_id: result[0].user_id,
