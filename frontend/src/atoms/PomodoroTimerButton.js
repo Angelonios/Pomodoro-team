@@ -22,7 +22,6 @@ import {
 import { timerStates } from 'src/utils/serverSync';
 
 export function PomodoroTimerButton({ text, size }) {
-  debugger;
   const state = usePomodoroState();
 
   const getStartIcon = () => {

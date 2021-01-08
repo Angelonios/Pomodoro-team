@@ -1,44 +1,58 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { useAuth } from 'src/utils/auth';
-import { usePomodoroDispatch, usePomodoroState } from 'src/utils/PomodoroContext';
+import { usePomodoroDispatch } from 'src/utils/PomodoroContext';
 import { SET_TASK_NAME } from 'src/utils/pomodoroReducer';
-import { SAVE_TASK, timerStates } from 'src/utils/serverSync';
-import { addTask, GetCurrentTask } from 'src/utils/TaskHelper';
-import { useMutation } from '@apollo/client';
+import { GET_CURRENT_TASK, SAVE_TASK } from 'src/utils/serverSync';
+import { useMutation, useQuery } from '@apollo/client';
 
 
 export function TaskForm() {
   const auth = useAuth();
-  const pomodoro = usePomodoroState();
   const dispatch = usePomodoroDispatch();
-  const [task, setTask] = useState(GetCurrentTask());
+  const { loading, data } = useQuery(GET_CURRENT_TASK, {
+    variables: {
+      user_id: auth.user.user_id,
+    },
+    onCompleted: () => setTask(data.getCurrentTask.task_description),
+  });
+
+  const [task, setTask] = useState('');
   const [saveTask] = useMutation(SAVE_TASK);
 
   const handleTaskFormEdit = () => {
-    const pomodoroIsRunning = pomodoro.pomodoroTimerState === timerStates.running;
-    const taskNotEmpty = task.trim().length !== 0;
-    const newTaskAlreadySet = pomodoro.taskName === task;
-
-    if (taskNotEmpty
-      && !pomodoroIsRunning
-      && !newTaskAlreadySet
-    ) dispatch({ type: SET_TASK_NAME, newName: task });
-
-    if (taskNotEmpty && pomodoroIsRunning) addTask(task, auth, saveTask);
-  }
+    if(task.trim().length === 0){
+      setTask(data.getCurrentTask.task_description);
+      return;
+    }
+    dispatch({ type: SET_TASK_NAME, newName: task });
+    saveTask({
+      variables: {
+        user_id: auth.user.user_id,
+        task_description: task,
+      },
+    }).catch(e => console.error(e));
+  };
 
   return <>
-    {auth.user && <TextField
-      id="task_input"
-      label="Task"
-      onChange={(e) => {
-        e.preventDefault();
-        setTask(e.target.value);
-      }}
-      defaultValue={GetCurrentTask()}
-      onBlurOrSubmit={handleTaskFormEdit}
-    />}
+    {auth.user &&
+    (!loading)
+      ? <TextField
+        id="task_input"
+        label="Task"
+        onChange={(e) => {
+          e.preventDefault();
+          setTask(e.target.value);
+        }}
+        value={task}
+        onBlur={() => handleTaskFormEdit()}
+      />
+      : <TextField
+        id="task_input"
+        label="Task"
+        value={"Loading..."}
+      />
+    }
   </>;
 
 }
