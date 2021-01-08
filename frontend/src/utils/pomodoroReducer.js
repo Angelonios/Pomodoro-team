@@ -60,6 +60,7 @@ const getRemainingSeconds = (state) => {
 
 const setPomodoroState = (state, newState) => {
   const updatedState = {
+    ...state,
     position: newState.position,
     secondsSinceStart: newState.secondsSinceStart,
     timerState: newState.state,
@@ -93,8 +94,8 @@ const setTaskName = (state, name) => {
   return {
     ...state,
     taskName: name,
-  }
-}
+  };
+};
 
 export function pomodoroReducer(state, action) {
   switch (action.type) {
