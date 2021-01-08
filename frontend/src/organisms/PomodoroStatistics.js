@@ -30,6 +30,7 @@ export function PomodoroStatistics() {
       return {
         duration: ps.duration,
         finished_at: workDate,
+        tasks: ps.tasks,
       };
     });
     const preparedWeeks = PrepareWeeks();
@@ -38,6 +39,7 @@ export function PomodoroStatistics() {
         return {
           date: day,
           work: 0,
+          tasks: [],
         };
       }),
     );
@@ -54,6 +56,7 @@ export function PomodoroStatistics() {
           const workDay = workDurations[k];
           if (day.date.getTime() === workDay.finished_at.getTime()) {
             day.work = workDay.duration;
+            day.tasks = workDay.tasks;
             console.log('mapped work to day: ' + day);
           }
         }

@@ -47,6 +47,10 @@ export const POMODORO_STATISTICS = gql`
     pomodoroStatistics(user_id: $user_id) {
       finished_at
       duration
+      tasks {
+        task_id
+        task_description
+      }
     }
   }
 `;
@@ -106,8 +110,8 @@ export const ADD_USER = gql`
 `;
 
 export const GET_CURRENT_TASK = gql`
-  query getCurrentTask($user_id: Int!){
-    getCurrentTask(user_id: $user_id){
+  query getCurrentTask($user_id: Int!) {
+    getCurrentTask(user_id: $user_id) {
       task_id
       user_id
       pomodoro_statistic_id
