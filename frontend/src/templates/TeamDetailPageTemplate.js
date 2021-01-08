@@ -167,6 +167,10 @@ export function TeamDetailPageTemplate() {
                           <TeamPageName
                             email={teamMemberPomodoro.email}
                             name={teamMemberPomodoro.display_name}
+                            owner={
+                              leader.data.team.owner_id ===
+                              teamMemberPomodoro.user_id
+                            }
                           />
                           <SharedPomodoro
                             key={index}
