@@ -207,7 +207,11 @@ export function TeamDetailPageTemplate() {
                     />
                   </Grid>
                   <Grid item>
-                    <AddUserToTeam team_id={teamId} team_name={teamName} />
+                    <AddUserToTeam
+                      team_id={teamId}
+                      team_name={teamName}
+                      teamMembers={data.teamMembersPomodoro}
+                    />
                   </Grid>
                 </Grid>
               </div>

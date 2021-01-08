@@ -15,7 +15,7 @@ const ADD_USER = gql`
   }
 `;
 
-export function AddUserToTeam({ team_id, team_name }) {
+export function AddUserToTeam({ team_id, team_name, teamMembers }) {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [emailErrorText, updateEmailErrorText] = useState('');
@@ -59,12 +59,17 @@ export function AddUserToTeam({ team_id, team_name }) {
     } else {
       email = true;
       updateEmailError(true);
-      updateEmailErrorText('Enter a valid email adress !');
+      updateEmailErrorText('Enter a valid email adress!');
     }
     if (!email) {
-      addUserToTeam({
-        variables: { team_id: team_id, email: formData.email },
-      });
+      if (teamMembers.some((e) => e.email === formData.email)) {
+        updateEmailError(true);
+        updateEmailErrorText('This user is already in the team!');
+      } else {
+        addUserToTeam({
+          variables: { team_id: team_id, email: formData.email },
+        });
+      }
     }
   };
 
