@@ -41,7 +41,7 @@ export function KickButton({ user_id, team_id, owner_id }) {
       },
     });
   };
-  console.log(user_id, owner_id, user.user_id);
+  //console.log(user_id, owner_id, user.user_id);
   if (user_id === owner_id) {
     return '';
   } else if (user.user_id === owner_id) {

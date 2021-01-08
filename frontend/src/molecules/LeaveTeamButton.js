@@ -60,8 +60,6 @@ export function LeaveTeamButton({ team_id, owner, teamMembers }) {
     });
   };
 
-  console.log(teamMembers);
-
   return (
     <div>
       <Button color="primary" variant="contained" onClick={handleClickOpen}>
