@@ -98,7 +98,7 @@ export const savePomodoroDuration = async (
     [user_id],
   ))[0];
 
-  const result =  updatePomodoroDuration(
+  const result = updatePomodoroDuration(
     dbConnection,
     user_id,
     duration,
@@ -120,7 +120,7 @@ export const savePomodoroDuration = async (
  * @param finished_at - the particular date in which pomodoro was finished
  * @returns {Promise<*>}
  */
-async function updatePomodoroDuration (
+async function updatePomodoroDuration(
   dbConnection,
   user_id,
   duration,
@@ -150,7 +150,7 @@ async function updatePomodoroDuration (
  * @param duration - the duration from users client
  * @returns {Promise<*>}
  */
-async function insertPomodoroDuration (
+async function insertPomodoroDuration(
   dbConnection,
   user_id,
 ) {
@@ -172,41 +172,65 @@ export const saveTask = async (
   { user_id, task_description },
   { dbConnection },
 ) => {
-  const hasPomodoroToday = (await dbConnection.query(
+  const hasPomodoroToday = getTodaysPomodoro(dbConnection, user_id);
+
+  if (!hasPomodoroToday) {
+    return createPomodoroAndAddTask(dbConnection, user_id, task_description);
+  }
+
+  return addTask(dbConnection, task_description);
+};
+
+async function getTodaysPomodoro(
+  dbConnection,
+  user_id,
+) {
+  return await dbConnection.query(
     `SELECT * FROM pomodoro_statistics
      WHERE
       user_id = ? 
       AND finished_at = DATE_FORMAT(NOW(), '%Y-%m-%d');`,
     [user_id],
-  ))[0];
+  )[0];
+}
 
-  if (!hasPomodoroToday) {
-    const newPomodoro = await insertPomodoroDuration(dbConnection, user_id);
-    const task_id = await insertTask(
-      dbConnection,
-      newPomodoro.id,
-      task_description,
-      );
-
-    return {
-      task_id: task_id,
-      user_id: user_id,
-      pomodoro_statistic_id: hasPomodoroToday.id,
-      task_description: task_description,
-    };
-  }
-
+async function createPomodoroAndAddTask(
+  dbConnection,
+  user_id,
+  task_description,
+) {
+  const newPomodoro = await insertPomodoroDuration(dbConnection, user_id);
   const task_id = await insertTask(
     dbConnection,
-    hasPomodoroToday.id,
-    task_description);
+    newPomodoro.id,
+    task_description,
+  );
 
   return {
     task_id: task_id,
     user_id: user_id,
-    pomodoro_statistic_id: hasPomodoroToday.id,
+    pomodoro_statistic_id: newPomodoro.id,
     task_description: task_description,
   };
+}
+
+export const addTask = (dbConnection, user_id, newTask) => {
+  const tasksToday = getTodaysTasks(dbConnection);
+  const pomodoroStatisticId = tasksToday[0].pomodoro_statistic_id;
+
+  const numberOfSimilarTasks = tasksToday
+    .map(savedTask => areTasksSimilar(savedTask.task_description, newTask))
+    .filter(Boolean).length;
+
+  if (numberOfSimilarTasks === 0){
+    const task_id = insertTask(dbConnection, pomodoroStatisticId, newTask);
+    return {
+      task_id: task_id,
+      user_id: user_id,
+      pomodoro_statistic_id: pomodoroStatisticId,
+      task_description: newTask,
+    };
+  }
 };
 
 async function insertTask(
@@ -220,10 +244,84 @@ async function insertTask(
      (?, ?);`,
     [pomodoro_statistic_id,
       task_description],
-    function(err, result,) {
+    function(err, result) {
       if (err) throw err;
-      return result
+      return result;
     });
 
   return result.insertId;
 }
+
+async function getTodaysTasks(
+  dbConnection,
+) {
+  const today = new Date();
+  return dbConnection.query(
+    `SELECT tasks.task_id, tasks.pomodoro_statistic_id, tasks.task_description,
+    pomodoro_statistics.id AS pomodoro_statistic_id 
+    FROM pomodoro_statistics 
+    JOIN tasks on pomodoro_statistics.id = tasks.pomodoro_statistic_id
+    WHERE pomodoro_statistics.finished_at = ?`,
+    [today]);
+}
+
+/**
+ * This function compares two tasks and determines if they are similar.
+ * First in compares word count. If the word count doesn't match between two
+ * tasks, then tasks are not same.
+ * Otherwise when the word count between both tasks matches the function then
+ * compares edit distances between each words in both tasks and counts the
+ * number of similar words. If the edit distance between two words is 1 or 0,
+ * then the words are considered similar.
+ * If the number of similar words is same as the word count in both tasks then
+ * these tasks are similar. Otherwise they are not similar.
+ * @param task1
+ * @param task2
+ */
+const areTasksSimilar = (task1, task2) => {
+  const wordsInTask1 = task1.split(' ');
+  const wordsInTask2 = task2.split(' ');
+
+  const wordCountTask1 = wordsInTask1.length;
+  const wordCountTask2 = wordsInTask2.length;
+
+  if (wordCountTask1 !== wordCountTask2) return false;
+
+  const similarWords = wordsInTask1.map((word1, index) => {
+    const word2 = wordsInTask2[index];
+    const editDistance = getDistanceBetweenStrings(word1, word2);
+    return !(editDistance > 1);
+  }).filter(Boolean).length;
+
+  if (similarWords === wordCountTask1) {
+    return true;
+  }
+
+  return false;
+};
+
+/**
+ * This function calculates Levenshtein distance metric between two strings.
+ * The distance measures number of edits (deletion, insertion and replacement)
+ * needed to make in order to get same strings.
+ * @param string1
+ * @param string2
+ * @returns {number|*}
+ */
+const getDistanceBetweenStrings = (string1, string2) => {
+  if (!string1 || string1.length === 0) {
+    return string2.length;
+  }
+  if (!string2 || string2.length === 0) {
+    return string1.length;
+  }
+  let [head1, ...tail1] = string1;
+  let [head2, ...tail2] = string2;
+  if (head1 === head2) {
+    return getDistanceBetweenStrings(tail1, tail2);
+  }
+  const l1 = getDistanceBetweenStrings(string1, tail2);
+  const l2 = getDistanceBetweenStrings(tail1, string2);
+  const l3 = getDistanceBetweenStrings(tail1, tail2);
+  return 1 + Math.min(l1, l2, l3);
+};

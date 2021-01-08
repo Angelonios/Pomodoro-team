@@ -4,7 +4,7 @@ import { useAuth } from 'src/utils/auth';
 import { usePomodoroDispatch, usePomodoroState } from 'src/utils/PomodoroContext';
 import { SET_TASK_NAME } from 'src/utils/pomodoroReducer';
 import { SAVE_TASK } from 'src/utils/serverSync';
-import { addTask, GetCurrentTask } from 'src/utils/TaskHelper';
+import { GetCurrentTask } from 'src/utils/TaskHelper';
 import { useMutation } from '@apollo/client';
 
 
@@ -15,8 +15,13 @@ export function TaskForm() {
   const [saveTask] = useMutation(SAVE_TASK);
 
   const handleTaskFormEdit = () => {
-    addTask(task, auth, saveTask);
     dispatch({ type: SET_TASK_NAME, newName: task });
+    saveTask({
+      variables: {
+        user_id: auth.user.user_id,
+        task_description: task,
+      },
+    })
   }
 
   return <>
