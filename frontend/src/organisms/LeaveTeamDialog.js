@@ -17,15 +17,16 @@ import Gravatar from 'react-gravatar';
 export function LeaveTeamDialog({
   handleCancel,
   handleConfirm,
+  handleConfirmWithNewTeamOwner,
   open,
   owner,
   teamMembers,
   user,
 }) {
-  const [selectedIndex, setSelectedIndex] = useState();
+  const [selectedUserId, setSelectedUserId] = useState();
 
   const handleListItemClick = (event, index) => {
-    setSelectedIndex(index);
+    setSelectedUserId(index);
   };
 
   if (owner && teamMembers.length > 1)
@@ -53,7 +54,7 @@ export function LeaveTeamDialog({
                   <ListItem
                     key={teamMember.user_id}
                     button
-                    selected={selectedIndex === teamMember.user_id}
+                    selected={selectedUserId === teamMember.user_id}
                     onClick={(event) =>
                       handleListItemClick(event, teamMember.user_id)
                     }
@@ -79,10 +80,10 @@ export function LeaveTeamDialog({
             Cancel
           </Button>
           <Button
-            onClick={handleConfirm}
+            onClick={() => handleConfirmWithNewTeamOwner(selectedUserId)}
             color="secondary"
             variant="contained"
-            disabled={!selectedIndex}
+            disabled={!selectedUserId}
           >
             Confirm new owner and leave
           </Button>

@@ -12,12 +12,19 @@ const LEAVE_TEAM = gql`
   }
 `;
 
+const SET_NEW_TEAM_OWNER = gql`
+  mutation SetNewTeamOwner($team_id: Int!, $new_owner_user_id: Int!) {
+    SetNewTeamOwner(new_owner_user_id: $new_owner_user_id, team_id: $team_id)
+  }
+`;
+
 export function LeaveTeamButton({ team_id, owner, teamMembers }) {
   const { user } = useAuth();
   const history = useHistory();
   const [leaveTeam] = useMutation(LEAVE_TEAM, {
     onCompleted: () => history.push(route.home()),
   });
+  const [setNewTeamOwner] = useMutation(SET_NEW_TEAM_OWNER);
 
   const [open, setOpen] = useState(false);
 
@@ -38,6 +45,21 @@ export function LeaveTeamButton({ team_id, owner, teamMembers }) {
     });
   };
 
+  const handleConfirmWithNewTeamOwner = (newOwnerUserId) => {
+    setNewTeamOwner({
+      variables: {
+        team_id: team_id,
+        new_owner_user_id: newOwnerUserId,
+      },
+    });
+    leaveTeam({
+      variables: {
+        team_id: team_id,
+        user_id: user.user_id,
+      },
+    });
+  };
+
   console.log(teamMembers);
 
   return (
@@ -50,6 +72,7 @@ export function LeaveTeamButton({ team_id, owner, teamMembers }) {
         open={open}
         handleCancel={handleCancel}
         handleConfirm={handleConfirm}
+        handleConfirmWithNewTeamOwner={handleConfirmWithNewTeamOwner}
         teamMembers={teamMembers}
         user={user}
       />
