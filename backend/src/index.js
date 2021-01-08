@@ -22,6 +22,7 @@ const typeDefs = gql`
     gardenSquares(team_id: Int!): [SquareInGarden]
     userPoints(user_id: Int!): Int!
     lesaPan(team_id: Int!): User!
+    getCurrentTask(user_id: Int!): Task
   }
 
   type Pomodoro {
@@ -124,7 +125,7 @@ const typeDefs = gql`
 
     savePomodoroDuration(user_id: Int!, duration: Int!): String!
     
-    saveTask(user_id: Int!, task_description: String!): Task!
+    saveTask(user_id: Int!, task_description: String!): String!
   }
 
   type AuthUser {

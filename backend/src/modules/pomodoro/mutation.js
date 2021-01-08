@@ -172,13 +172,13 @@ export const saveTask = async (
   { user_id, task_description },
   { dbConnection },
 ) => {
-  const hasPomodoroToday = getTodaysPomodoro(dbConnection, user_id);
+  const hasPomodoroToday = await getTodaysPomodoro(dbConnection, user_id);
 
   if (!hasPomodoroToday) {
-    return createPomodoroAndAddTask(dbConnection, user_id, task_description);
+    return await createPomodoroAndAddTask(dbConnection, user_id, task_description);
   }
 
-  return addTask(dbConnection, task_description);
+  return await addTask(dbConnection, user_id, task_description);
 };
 
 async function getTodaysPomodoro(
@@ -191,7 +191,7 @@ async function getTodaysPomodoro(
       user_id = ? 
       AND finished_at = DATE_FORMAT(NOW(), '%Y-%m-%d');`,
     [user_id],
-  )[0];
+  );
 }
 
 async function createPomodoroAndAddTask(
@@ -200,37 +200,26 @@ async function createPomodoroAndAddTask(
   task_description,
 ) {
   const newPomodoro = await insertPomodoroDuration(dbConnection, user_id);
-  const task_id = await insertTask(
+
+  return await insertTask(
     dbConnection,
     newPomodoro.id,
     task_description,
   );
-
-  return {
-    task_id: task_id,
-    user_id: user_id,
-    pomodoro_statistic_id: newPomodoro.id,
-    task_description: task_description,
-  };
 }
 
-export const addTask = (dbConnection, user_id, newTask) => {
-  const tasksToday = getTodaysTasks(dbConnection);
+const addTask = async (dbConnection, user_id, newTask) => {
+  const tasksToday = await getTodaysTasks(dbConnection, user_id);
   const pomodoroStatisticId = tasksToday[0].pomodoro_statistic_id;
 
   const numberOfSimilarTasks = tasksToday
     .map(savedTask => areTasksSimilar(savedTask.task_description, newTask))
     .filter(Boolean).length;
 
-  if (numberOfSimilarTasks === 0){
-    const task_id = insertTask(dbConnection, pomodoroStatisticId, newTask);
-    return {
-      task_id: task_id,
-      user_id: user_id,
-      pomodoro_statistic_id: pomodoroStatisticId,
-      task_description: newTask,
-    };
+  if (numberOfSimilarTasks === 0) {
+    return await insertTask(dbConnection, pomodoroStatisticId, newTask);;
   }
+  return 'duplicate task';
 };
 
 async function insertTask(
@@ -244,26 +233,30 @@ async function insertTask(
      (?, ?);`,
     [pomodoro_statistic_id,
       task_description],
-    function(err, result) {
-      if (err) throw err;
-      return result;
-    });
+  );
 
-  return result.insertId;
+  return (result)
+    ? 'Ok'
+    : 'Error';
 }
 
 async function getTodaysTasks(
   dbConnection,
+  user_id,
 ) {
-  const today = new Date();
-  return dbConnection.query(
-    `SELECT tasks.task_id, tasks.pomodoro_statistic_id, tasks.task_description,
-    pomodoro_statistics.id AS pomodoro_statistic_id 
-    FROM pomodoro_statistics 
-    JOIN tasks on pomodoro_statistics.id = tasks.pomodoro_statistic_id
-    WHERE pomodoro_statistics.finished_at = ?`,
-    [today]);
+  return await dbConnection.query(
+    `SELECT 
+      tasks.task_id AS task_id, 
+      tasks.pomodoro_statistic_id AS pomodoro_statistic_id, 
+      tasks.task_description AS task_description, 
+      pomodoro_statistics.user_id AS user_id
+     FROM pomodoro_statistics
+     JOIN tasks ON pomodoro_statistics.id = tasks.pomodoro_statistic_id
+     WHERE pomodoro_statistics.finished_at = DATE_FORMAT(NOW(), '%Y-%m-%d')
+     AND pomodoro_statistics.user_id = ?`,
+    [user_id]);
 }
+
 
 /**
  * This function compares two tasks and determines if they are similar.
