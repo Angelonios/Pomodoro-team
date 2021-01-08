@@ -15,9 +15,7 @@ export function TaskForm() {
   const [task, setTask] = useState(GetCurrentTask());
   const [saveTask] = useMutation(SAVE_TASK);
 
-
-  useEffect(() => {
-
+  const handleTaskFormEdit = () => {
     const pomodoroIsRunning = pomodoro.pomodoroTimerState === timerStates.running;
     const taskNotEmpty = task.trim().length !== 0;
     const newTaskAlreadySet = pomodoro.taskName === task;
@@ -28,8 +26,7 @@ export function TaskForm() {
     ) dispatch({ type: SET_TASK_NAME, newName: task });
 
     if (taskNotEmpty && pomodoroIsRunning) addTask(task, auth, saveTask);
-
-  }, [task, pomodoro.pomodoroTimerState]);
+  }
 
   return <>
     {auth.user && <TextField
@@ -40,6 +37,7 @@ export function TaskForm() {
         setTask(e.target.value);
       }}
       defaultValue={GetCurrentTask()}
+      onBlurOrSubmit={handleTaskFormEdit}
     />}
   </>;
 
