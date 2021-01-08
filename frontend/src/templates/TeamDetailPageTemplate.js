@@ -72,9 +72,13 @@ export function TeamDetailPageTemplate() {
       </Container>
     );
 
-  const teamName = data ? data.teamMembersPomodoro[0].name : '';
+  const teamName = data ? data.teamMembersPomodoro[0]?.name : '';
 
-  if (!user) return <ForbiddenPage />;
+  if (
+    !user ||
+    !data.teamMembersPomodoro.some((e) => e.user_id === user.user_id)
+  )
+    return <ForbiddenPage />;
 
   return (
     <>
