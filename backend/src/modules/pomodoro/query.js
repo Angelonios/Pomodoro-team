@@ -31,7 +31,7 @@ export const pomodoro = async (_, { shareId }, { dbConnection }) => {
 
       const MINUTE = 60;
 
-      //Return offline if no action in 35 minutes
+      //Return offline if no action in 45 minutes
       if (
         currentTime['CURRENT_TIMESTAMP()'] / 1000 -
           pomodoro.last_updated / 1000 >=
@@ -83,7 +83,19 @@ export const pomodoroStatistics = async (
 
 async function getPomodoroStatistics(user_id, dbConnection) {
   const result = await dbConnection.query(
-    `SELECT * FROM pomodoro_statistics WHERE user_id = ?`,
+    `SELECT stats.id,stats.user_id, stats.finished_at,stats.duration, 
+    JSON_ARRAYAGG(
+      IF (
+        tasks.task_id IS NULL, 
+          NULL, 
+          JSON_OBJECT('task_id', tasks.task_id, 'pomodoro_statistic_id', tasks.pomodoro_statistic_id, 'task_description', tasks.task_description)
+          )
+        ) 
+      AS tasks
+    FROM pomodoro_statistics AS stats
+    LEFT JOIN tasks ON stats.id=tasks.pomodoro_statistic_id  
+    WHERE stats.user_id = ?
+    GROUP BY stats.id`,
     [user_id],
   );
   return result;

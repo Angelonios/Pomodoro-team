@@ -62,6 +62,7 @@ const typeDefs = gql`
     user_id: Int!
     finished_at: String!
     duration: Int!
+    tasks: [Task]!
   }
 
   type SquareInGarden {
@@ -71,10 +72,9 @@ const typeDefs = gql`
     row: Int!
     col: Int!
   }
-  
+
   type Task {
     task_id: Int!
-    user_id: Int!
     pomodoro_statistic_id: Int!
     task_description: String!
   }
@@ -123,7 +123,7 @@ const typeDefs = gql`
     ): Boolean
 
     savePomodoroDuration(user_id: Int!, duration: Int!): String!
-    
+
     saveTask(user_id: Int!, task_description: String!): Task!
   }
 
