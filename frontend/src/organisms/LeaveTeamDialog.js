@@ -28,7 +28,7 @@ export function LeaveTeamDialog({
     setSelectedIndex(index);
   };
 
-  if (owner)
+  if (owner && teamMembers.length > 1)
     return (
       <Dialog
         open={open}
@@ -39,13 +39,17 @@ export function LeaveTeamDialog({
         <DialogTitle id="alert-dialog-title">{'Leave Team?'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            You are owner of this team, please select a new owner.
+            You are the owner of this team, please select a new owner.
           </DialogContentText>
 
           <List component="nav">
             {teamMembers.map((teamMember) =>
               teamMember.user_id !== user.user_id ? (
-                <Tooltip title={teamMember.email} placement="left">
+                <Tooltip
+                  title={teamMember.email}
+                  placement="left"
+                  key={teamMember.user_id}
+                >
                   <ListItem
                     key={teamMember.user_id}
                     button
@@ -97,6 +101,9 @@ export function LeaveTeamDialog({
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           Are you sure you want to leave the group?
+          {teamMembers.length === 1
+            ? ' You are the only member of this team. The team will no longer have any members.'
+            : ''}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
