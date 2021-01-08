@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -8,12 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import { EmailField } from 'src/molecules';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { CreateTeamDialog } from 'src/molecules';
-
-const ADD_USER = gql`
-  mutation AddUserToTeam($team_id: Int!, $email: String!) {
-    AddUserToTeam(team_id: $team_id, email: $email)
-  }
-`;
+import { ADD_USER } from 'src/utils/serverSync';
 
 export function AddUserToTeam({ team_id, team_name }) {
   const [open, setOpen] = useState(false);

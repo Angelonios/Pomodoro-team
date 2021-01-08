@@ -76,16 +76,9 @@ async function getDbTime(dbConnection) {
 }
 
 /**
- * Saves users work duration, after finishing a pomodoro.
- * In one day, the user can finish multiple pomodoro, but in the database there
- * is only one record for each day.
- * If user finishes his first pomodoro in the day, a new record is created and
- * the work duration is saved.
- * Every other finished pomodoro in that day, by that user, updates the existing
- * record.
- * Only value of column duration is updated. The updated value is the
- * sum of duration from database and new duration, which comes from user's
- * client.
+ * This function saves users work duration, after finishing a pomodoro.
+ * In one day, the user can finish multiple pomodoros, but the duration of each
+ * pomodoro is summed in one row in the table pomodoro_statistics.
  * @param _
  * @param user_id - user identification in database
  * @param duration - the duration from users client
@@ -97,27 +90,6 @@ export const savePomodoroDuration = async (
   { user_id, duration },
   { dbConnection },
 ) => {
-  const result = upsertPomodoroDuration(dbConnection, user_id, duration);
-
-  return (result)
-    ? 'ok'
-    : 'error';
-};
-
-/**
- * This method handles upsert logic for savePomodoroDuration method. It checks
- * whether a record of pomodoro duration exist for given user in particular day.
- * If this record exists, it will be updated. If not it will be inserted.
- * @param dbConnection - database connection object
- * @param user_id - user identification in database
- * @param duration - the duration from users client
- * @returns {Promise<Promise<*>|Promise<*>>}
- */
-async function upsertPomodoroDuration (
-  dbConnection,
-  user_id,
-  duration,
-) {
   const hasPomodoroToday = (await dbConnection.query(
     `SELECT * FROM pomodoro_statistics
      WHERE
@@ -126,18 +98,17 @@ async function upsertPomodoroDuration (
     [user_id],
   ))[0];
 
-  return (hasPomodoroToday)
-    ? updatePomodoroDuration(
-        dbConnection,
-        user_id,
-        duration,
-        hasPomodoroToday.duration,
-        hasPomodoroToday.finished_at)
-    : insertPomodoroDuration(
-        dbConnection,
-        user_id,
-        duration);
-}
+  const result =  updatePomodoroDuration(
+    dbConnection,
+    user_id,
+    duration,
+    hasPomodoroToday.duration,
+    hasPomodoroToday.finished_at);
+
+  return (result)
+    ? 'ok'
+    : 'error';
+};
 
 /**
  * Updates work duration after finishing another pomodoro
@@ -182,16 +153,77 @@ async function updatePomodoroDuration (
 async function insertPomodoroDuration (
   dbConnection,
   user_id,
-  duration,
 ) {
   const date = new Date();
+  const INITIAL_DURATION = 0;
 
   const result = await dbConnection.query(
     `INSERT INTO pomodoro_statistics (user_id, finished_at, duration)
      VALUES 
       (?, ?, ?);`,
-    [user_id, date, duration],
+    [user_id, date, INITIAL_DURATION],
   )[0];
 
   return result;
+}
+
+export const saveTask = async (
+  _,
+  { user_id, task_description },
+  { dbConnection },
+) => {
+  const hasPomodoroToday = (await dbConnection.query(
+    `SELECT * FROM pomodoro_statistics
+     WHERE
+      user_id = ? 
+      AND finished_at = DATE_FORMAT(NOW(), '%Y-%m-%d');`,
+    [user_id],
+  ))[0];
+
+  if (!hasPomodoroToday) {
+    const newPomodoro = await insertPomodoroDuration(dbConnection, user_id);
+    const task_id = await insertTask(
+      dbConnection,
+      newPomodoro.id,
+      task_description,
+      );
+
+    return {
+      task_id: task_id,
+      user_id: user_id,
+      pomodoro_statistic_id: hasPomodoroToday.id,
+      task_description: task_description,
+    };
+  }
+
+  const task_id = await insertTask(
+    dbConnection,
+    hasPomodoroToday.id,
+    task_description);
+
+  return {
+    task_id: task_id,
+    user_id: user_id,
+    pomodoro_statistic_id: hasPomodoroToday.id,
+    task_description: task_description,
+  };
+};
+
+async function insertTask(
+  dbConnection,
+  pomodoro_statistic_id,
+  task_description,
+) {
+  const result = await dbConnection.query(
+    `INSERT INTO tasks (pomodoro_statistic_id, task_description)
+     VALUES 
+     (?, ?);`,
+    [pomodoro_statistic_id,
+      task_description],
+    function(err, result,) {
+      if (err) throw err;
+      return result
+    });
+
+  return result.insertId;
 }

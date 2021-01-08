@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   Button,
@@ -22,6 +22,7 @@ import {
 import { timerStates } from 'src/utils/serverSync';
 
 export function PomodoroTimerButton({ text, size }) {
+  debugger;
   const state = usePomodoroState();
 
   const getStartIcon = () => {
@@ -85,6 +86,7 @@ export function PomodoroTimerButton({ text, size }) {
       >
         <Button
           startIcon={getStartIcon()}
+          disabled={(state.taskName.length === 0)}
           onClick={() => state.performAction({ type: 'primary' })}
         >
           {buttonText}
@@ -95,6 +97,7 @@ export function PomodoroTimerButton({ text, size }) {
           aria-expanded={open ? 'true' : undefined}
           aria-label="select merge strategy"
           aria-haspopup="menu"
+          disabled={(state.taskName.length === 0)}
           onClick={handleToggle}
         >
           <ArrowDropDownIcon />
