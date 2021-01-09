@@ -119,7 +119,6 @@ export const userPoints = async (_, { user_id }, { dbConnection }) => {
 };
 
 export const getCurrentTask = async (_, { user_id }, { dbConnection }) => {
-  // const today = new Date();
   const result = await dbConnection.query(
     `SELECT 
       tasks.task_id AS task_id, 

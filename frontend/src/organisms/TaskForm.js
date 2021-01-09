@@ -10,15 +10,19 @@ import { useMutation, useQuery } from '@apollo/client';
 export function TaskForm() {
   const auth = useAuth();
   const dispatch = usePomodoroDispatch();
+  const [task, setTask] = useState('');
   const { loading, data } = useQuery(GET_CURRENT_TASK, {
     variables: {
       skip: !auth.user,
       user_id: auth.user?.user_id,
     },
-    onCompleted: () => setTask(data.getCurrentTask.task_description),
+    onCompleted: () => {
+      const fetchedTask = data.getCurrentTask.task_description
+      setTask(fetchedTask);
+      dispatch({ type: SET_TASK_NAME, newName: fetchedTask});
+    },
   });
 
-  const [task, setTask] = useState('');
   const [saveTask] = useMutation(SAVE_TASK);
 
   const handleTaskFormEdit = () => {
@@ -44,7 +48,7 @@ export function TaskForm() {
         e.preventDefault();
         setTask(e.target.value);
       }}
-      value={(!loading) ? task : "Loading..."}
+      value={(!loading) ? task : 'Loading...'}
       onBlur={() => handleTaskFormEdit()}
     />
     }

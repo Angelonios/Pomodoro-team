@@ -78,6 +78,7 @@ const typeDefs = gql`
     task_id: Int!
     pomodoro_statistic_id: Int!
     task_description: String!
+    user_id: Int
   }
 
   enum State {
