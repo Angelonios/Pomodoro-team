@@ -67,12 +67,12 @@ export function DayStatisticsDialog({
   const [confirmationDialogTaskId, setConfirmationDialogTaskId] = useState();
   const [confirmationDialogType, setConfirmationDialogType] = useState();
 
-  const [deleteTask, { deleteData }] = useMutation(DELETE_TASK, {
+  const [deleteTask] = useMutation(DELETE_TASK, {
     onCompleted() {
       refetch();
     },
   });
-  const [editTask, { editData }] = useMutation(EDIT_TASK, {
+  const [editTask] = useMutation(EDIT_TASK, {
     onCompleted() {
       refetch();
     },

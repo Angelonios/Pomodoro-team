@@ -23,30 +23,6 @@ export function PomodoroStatistics() {
     },
   });
 
-  function prepareData(data) {
-    const workDurations = data.pomodoroStatistics.map((ps) => {
-      let workDate = new Date(parseInt(ps.finished_at));
-      workDate.setHours(0, 0, 0, 0);
-      return {
-        duration: ps.duration,
-        finished_at: workDate,
-        tasks: ps.tasks,
-      };
-    });
-    const preparedWeeks = PrepareWeeks();
-    const preparedPages = preparedWeeks.map((week) =>
-      week.map((day) => {
-        return {
-          date: day,
-          work: 0,
-          tasks: [],
-        };
-      }),
-    );
-
-    return mapWorkDatesToPages(workDurations, preparedPages);
-  }
-
   function mapWorkDatesToPages(workDurations, preparedPages) {
     for (let i = 0; i < preparedPages.length; i++) {
       const week = preparedPages[i];
@@ -69,6 +45,29 @@ export function PomodoroStatistics() {
   const [pages, setPages] = useState([]);
 
   useEffect(() => {
+    function prepareData(data) {
+      const workDurations = data.pomodoroStatistics.map((ps) => {
+        let workDate = new Date(parseInt(ps.finished_at));
+        workDate.setHours(0, 0, 0, 0);
+        return {
+          duration: ps.duration,
+          finished_at: workDate,
+          tasks: ps.tasks,
+        };
+      });
+      const preparedWeeks = PrepareWeeks();
+      const preparedPages = preparedWeeks.map((week) =>
+        week.map((day) => {
+          return {
+            date: day,
+            work: 0,
+            tasks: [],
+          };
+        }),
+      );
+
+      return mapWorkDatesToPages(workDurations, preparedPages);
+    }
     if (loading) {
       return;
     }

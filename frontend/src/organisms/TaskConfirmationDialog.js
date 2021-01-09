@@ -6,13 +6,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Grid,
-  IconButton,
-  List,
-  ListItem,
-  ListItemSecondaryAction,
-  ListItemText,
-  Tooltip,
   TextField,
 } from '@material-ui/core';
 

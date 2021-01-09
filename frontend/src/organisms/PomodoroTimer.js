@@ -1,72 +1,47 @@
 import React from 'react';
-import { Box, Container, Grid, Paper } from '@material-ui/core';
-import { CircularPomodoroCountdown, ShareUrl } from 'src/molecules';
+import { Box, Grid } from '@material-ui/core';
+import { CircularPomodoroCountdown } from 'src/molecules';
 import { PomodoroTimerButton } from 'src/atoms';
-import { PomodoroBot } from 'src/organisms';
 import { usePomodoroState } from 'src/utils/PomodoroContext';
-import { TaskForm } from 'src/organisms/TaskForm';
 
 export function PomodoroTimer() {
   const state = usePomodoroState();
   return (
-    <Container component="main">
-      <Paper elevation={3}>
-        <Box p={1} pt={6}>
-          <Grid
-            container
-            spacing={10}
-            direction="row"
-            alignItems="center"
-            justify="center"
-          >
-            <Grid item xl={12} lg={12} xs={12} align="center">
-              <TaskForm />
-            </Grid>
+    <>
+      <Box p={1} pt={6}>
+        <Grid
+          container
+          spacing={10}
+          direction="row"
+          alignItems="center"
+          justify="center"
+        >
+          <Grid item xl={4} lg={4} xs={12} align="center">
+            <CircularPomodoroCountdown
+              remainingSeconds={state.remainingSeconds}
+              maxSeconds={state.maxSeconds}
+              color={state.color}
+              timeSize="h2"
+              circleSize={300}
+              pauseControls={state.pauseControls}
+              performAction={state.performAction}
+            />
           </Grid>
-          <Grid
-            container
-            spacing={10}
-            direction="row"
-            alignItems="center"
-            justify="center"
-          >
-            <Grid item xl={4} lg={4} xs={12} align="center">
-              <CircularPomodoroCountdown
-                remainingSeconds={state.remainingSeconds}
-                maxSeconds={state.maxSeconds}
-                color={state.color}
-                timeSize="h2"
-                circleSize={300}
-                pauseControls={state.pauseControls}
-                performAction={state.performAction}
-              />
-            </Grid>
-            <Grid item xl={4} lg={4} xs={12}>
-              <Grid
-                container
-                direction="column"
-                justify="center"
-                alignItems="center"
-                spacing={2}
-              >
-                <Grid item>
-                  <PomodoroTimerButton />
-                </Grid>
+          <Grid item xl={4} lg={4} xs={12}>
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item>
+                <PomodoroTimerButton />
               </Grid>
             </Grid>
           </Grid>
-        </Box>
-        <Box p={7}>
-          <PomodoroBot />
-        </Box>
-        <Box p={7}>
-          <Grid container alignItems="center" justify="center">
-            <Grid item lg={8} xs={12}>
-              <ShareUrl shareUrl={state.shareUrl} />
-            </Grid>
-          </Grid>
-        </Box>
-      </Paper>
-    </Container>
+        </Grid>
+      </Box>
+    </>
   );
 }

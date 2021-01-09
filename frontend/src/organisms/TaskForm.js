@@ -6,7 +6,6 @@ import { SET_TASK_NAME } from 'src/utils/pomodoroReducer';
 import { GET_CURRENT_TASK, SAVE_TASK } from 'src/utils/serverSync';
 import { useMutation, useQuery } from '@apollo/client';
 
-
 export function TaskForm() {
   const auth = useAuth();
   const dispatch = usePomodoroDispatch();
@@ -17,9 +16,11 @@ export function TaskForm() {
       user_id: auth.user?.user_id,
     },
     onCompleted: () => {
-      const fetchedTask = (data.getCurrentTask) ? data.getCurrentTask.task_description : ""
+      const fetchedTask = data.getCurrentTask
+        ? data.getCurrentTask.task_description
+        : '';
       setTask(fetchedTask);
-      dispatch({ type: SET_TASK_NAME, newName: fetchedTask});
+      dispatch({ type: SET_TASK_NAME, newName: fetchedTask });
     },
   });
 
@@ -28,9 +29,10 @@ export function TaskForm() {
   const handleTaskFormEdit = () => {
     if (task.trim().length === 0) {
       setTask(
-        (data !== undefined || data.getCurrentTask !== null)
+        data !== undefined || data.getCurrentTask !== null
           ? ''
-          : data.getCurrentTask.task_description);
+          : data.getCurrentTask.task_description,
+      );
       return;
     }
     dispatch({ type: SET_TASK_NAME, newName: task });
@@ -39,22 +41,26 @@ export function TaskForm() {
         user_id: auth.user.user_id,
         task_description: task,
       },
-    })
+    });
   };
 
-  return <>
-    {auth.user &&
-    <TextField
-      id="task_input"
-      label="Task"
-      onChange={(e) => {
-        e.preventDefault();
-        setTask(e.target.value);
-      }}
-      value={(!loading) ? task : 'Loading...'}
-      onBlur={() => handleTaskFormEdit()}
-    />
-    }
-  </>;
-
+  return (
+    <>
+      {auth.user && (
+        <TextField
+          id="task_input"
+          label="What are you working on?"
+          onChange={(e) => {
+            e.preventDefault();
+            setTask(e.target.value);
+          }}
+          value={!loading ? task : 'Loading...'}
+          onBlur={() => handleTaskFormEdit()}
+          fullWidth
+          inputProps={{ style: { fontSize: '2rem', textAlign: 'center' } }}
+          InputLabelProps={{ style: { textAlign: 'center' } }}
+        />
+      )}
+    </>
+  );
 }
