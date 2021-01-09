@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -14,7 +14,7 @@ export function PomodoroStatistics() {
   const auth = useAuth();
   const [currentPage, setCurrentPage] = React.useState(0);
 
-  const { loading, data } = useQuery(POMODORO_STATISTICS, {
+  const { loading, data, refetch } = useQuery(POMODORO_STATISTICS, {
     variables: { user_id: auth.user.user_id },
   });
   const tableStyle = makeStyles({
@@ -66,7 +66,14 @@ export function PomodoroStatistics() {
     return preparedPages;
   }
 
-  let pages = loading ? [] : prepareData(data);
+  const [pages, setPages] = useState([]);
+
+  useEffect(() => {
+    if (loading) {
+      return;
+    }
+    setPages(prepareData(data));
+  }, [loading, data]);
 
   const handleChangePage = (event, newPage) => {
     setCurrentPage(newPage);
@@ -98,6 +105,7 @@ export function PomodoroStatistics() {
           currentPage={currentPage}
           handleChangePage={handleChangePage}
           TablePaginationActions={tableActions}
+          refetch={refetch}
         />
       </Container>
     </>

@@ -19,10 +19,11 @@ export function StatisticsTable({
   currentPage,
   handleChangePage,
   TablePaginationActions,
+  refetch,
 }) {
   const SECONDS_IN_HOUR = 3600;
   const SECONDS_IN_MINUTE = 60;
-  const [selectedDay, setSelectedDay] = useState();
+  const [selectedDate, setSelectedDate] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
 
   function formatTime(seconds) {
@@ -54,7 +55,7 @@ export function StatisticsTable({
   );
 
   const handleOpenDayStatisticsDialog = (day) => {
-    setSelectedDay(day);
+    setSelectedDate(day.date);
     setDialogOpen(true);
   };
 
@@ -148,7 +149,10 @@ export function StatisticsTable({
       <DayStatisticsDialog
         open={dialogOpen}
         setOpen={setDialogOpen}
-        day={selectedDay}
+        date={selectedDate}
+        pages={pages}
+        currentPage={currentPage}
+        refetch={refetch}
       />
     </>
   );
