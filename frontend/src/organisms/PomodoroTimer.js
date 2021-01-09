@@ -4,6 +4,7 @@ import { CircularPomodoroCountdown, ShareUrl } from 'src/molecules';
 import { PomodoroTimerButton } from 'src/atoms';
 import { PomodoroBot } from 'src/organisms';
 import { usePomodoroState } from 'src/utils/PomodoroContext';
+import { TaskForm } from 'src/organisms/TaskForm';
 
 export function PomodoroTimer() {
   const state = usePomodoroState();
@@ -11,6 +12,17 @@ export function PomodoroTimer() {
     <Container component="main">
       <Paper elevation={3}>
         <Box p={1} pt={6}>
+          <Grid
+            container
+            spacing={10}
+            direction="row"
+            alignItems="center"
+            justify="center"
+          >
+            <Grid item xl={12} lg={12} xs={12} align="center">
+              <TaskForm />
+            </Grid>
+          </Grid>
           <Grid
             container
             spacing={10}

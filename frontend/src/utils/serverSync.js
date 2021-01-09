@@ -47,6 +47,10 @@ export const POMODORO_STATISTICS = gql`
     pomodoroStatistics(user_id: $user_id) {
       finished_at
       duration
+      tasks {
+        task_id
+        task_description
+      }
     }
   }
 `;
@@ -84,10 +88,34 @@ export const SIGN_IN = gql`
     }
   }
 `;
+
 export const GET_LEADER = gql`
   query GetLeader($team_id: Int!) {
     team(team_id: $team_id) {
       owner_id
+    }
+  }
+`;
+
+export const SAVE_TASK = gql`
+  mutation saveTask($user_id: Int!, $task_description: String!) {
+    saveTask(user_id: $user_id, task_description: $task_description)
+  }
+`;
+
+export const ADD_USER = gql`
+  mutation AddUserToTeam($team_id: Int!, $email: String!) {
+    AddUserToTeam(team_id: $team_id, email: $email)
+  }
+`;
+
+export const GET_CURRENT_TASK = gql`
+  query getCurrentTask($user_id: Int!) {
+    getCurrentTask(user_id: $user_id) {
+      task_id
+      user_id
+      pomodoro_statistic_id
+      task_description
     }
   }
 `;

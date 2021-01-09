@@ -21,6 +21,7 @@ import {
   GET_REMAINING_SECONDS,
   SET_POMODORO_STATE,
 } from 'src/utils/pomodoroReducer';
+import { GetCurrentTask } from './TaskHelper';
 
 import { useAuth } from 'src/utils/auth';
 
@@ -43,6 +44,7 @@ export function PomodoroProvider({ children }) {
     finalTime: 0,
     position: 0,
     timerState: timerStates.idle,
+    taskName: GetCurrentTask(),
   });
 
   const userPomodoroIds = useQuery(GET_USER_POMODORO_IDS, {
@@ -263,6 +265,7 @@ export function PomodoroProvider({ children }) {
         pauseControls: getPomodoroComponent(state.position).actions[
           state.timerState
         ].pauseControls?.icon,
+        taskName: state.taskName ?? "",
       }}
     >
       <PomodoroDispatchContext.Provider value={dispatch}>

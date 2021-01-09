@@ -6,6 +6,7 @@ export const GET_REMAINING_SECONDS = 'GET_REMAINING_SECONDS';
 export const SET_POMODORO_STATE = 'SET_POMODORO_STATE';
 export const PAUSE = 'PAUSE';
 export const RESUME = 'RESUME';
+export const SET_TASK_NAME = 'SET_TASK_NAME';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Calculates final time from seconds in current pomodoro component and seconds since start
@@ -59,6 +60,7 @@ const getRemainingSeconds = (state) => {
 
 const setPomodoroState = (state, newState) => {
   const updatedState = {
+    ...state,
     position: newState.position,
     secondsSinceStart: newState.secondsSinceStart,
     timerState: newState.state,
@@ -88,6 +90,13 @@ const setPomodoroState = (state, newState) => {
   };
 };
 
+const setTaskName = (state, name) => {
+  return {
+    ...state,
+    taskName: name,
+  };
+};
+
 export function pomodoroReducer(state, action) {
   switch (action.type) {
     case CLICK_MAIN_BUTTON:
@@ -96,6 +105,8 @@ export function pomodoroReducer(state, action) {
       return getRemainingSeconds(state);
     case SET_POMODORO_STATE:
       return setPomodoroState(state, action.newState);
+    case SET_TASK_NAME:
+      return setTaskName(state, action.newName);
     default:
       return state;
   }
