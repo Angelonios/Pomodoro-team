@@ -12,7 +12,8 @@ export function TaskForm() {
   const dispatch = usePomodoroDispatch();
   const { loading, data } = useQuery(GET_CURRENT_TASK, {
     variables: {
-      user_id: auth.user.user_id,
+      skip: !auth.user,
+      user_id: auth.user?.user_id,
     },
     onCompleted: () => setTask(data.getCurrentTask.task_description),
   });
@@ -21,7 +22,7 @@ export function TaskForm() {
   const [saveTask] = useMutation(SAVE_TASK);
 
   const handleTaskFormEdit = () => {
-    if(task.trim().length === 0){
+    if (task.trim().length === 0) {
       setTask(data.getCurrentTask.task_description);
       return;
     }
@@ -36,22 +37,16 @@ export function TaskForm() {
 
   return <>
     {auth.user &&
-    (!loading)
-      ? <TextField
-        id="task_input"
-        label="Task"
-        onChange={(e) => {
-          e.preventDefault();
-          setTask(e.target.value);
-        }}
-        value={task}
-        onBlur={() => handleTaskFormEdit()}
-      />
-      : <TextField
-        id="task_input"
-        label="Task"
-        value={"Loading..."}
-      />
+    <TextField
+      id="task_input"
+      label="Task"
+      onChange={(e) => {
+        e.preventDefault();
+        setTask(e.target.value);
+      }}
+      value={(!loading) ? task : "Loading..."}
+      onBlur={() => handleTaskFormEdit()}
+    />
     }
   </>;
 

@@ -162,9 +162,9 @@ async function insertPomodoroDuration(
      VALUES 
       (?, ?, ?);`,
     [user_id, date, INITIAL_DURATION],
-  )[0];
+  );
 
-  return result;
+  return result.insertId;
 }
 
 export const saveTask = async (
@@ -174,24 +174,26 @@ export const saveTask = async (
 ) => {
   const hasPomodoroToday = await getTodaysPomodoro(dbConnection, user_id);
 
-  if (!hasPomodoroToday) {
-    return await createPomodoroAndAddTask(dbConnection, user_id, task_description);
+  if (hasPomodoroToday) {
+    return await addTask(dbConnection, user_id, task_description);
   }
 
-  return await addTask(dbConnection, user_id, task_description);
+  return await createPomodoroAndAddTask(dbConnection, user_id, task_description);
 };
 
 async function getTodaysPomodoro(
   dbConnection,
   user_id,
 ) {
-  return await dbConnection.query(
+  const result = await dbConnection.query(
     `SELECT * FROM pomodoro_statistics
      WHERE
       user_id = ? 
       AND finished_at = DATE_FORMAT(NOW(), '%Y-%m-%d');`,
     [user_id],
   );
+
+  return (result.length > 0);
 }
 
 async function createPomodoroAndAddTask(
@@ -199,11 +201,11 @@ async function createPomodoroAndAddTask(
   user_id,
   task_description,
 ) {
-  const newPomodoro = await insertPomodoroDuration(dbConnection, user_id);
+  const newPomodoroId = await insertPomodoroDuration(dbConnection, user_id);
 
   return await insertTask(
     dbConnection,
-    newPomodoro.id,
+    newPomodoroId,
     task_description,
   );
 }
