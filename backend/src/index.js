@@ -131,6 +131,9 @@ const typeDefs = gql`
 
     saveTask(user_id: Int!, task_description: String!): String!
 
+    deleteTask(user_id: Int!, task_id: Int!): String!
+    
+    editTask(user_id: Int!, task_id: Int!, task_description: String!): String!
   }
 
   type AuthUser {

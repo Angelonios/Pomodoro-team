@@ -132,10 +132,15 @@ export const getCurrentTask = async (_, { user_id }, { dbConnection }) => {
      ORDER BY tasks.task_id DESC LIMIT 1`,
     [user_id],
   );
-  return {
-    task_id: result[0].task_id,
-    user_id: result[0].user_id,
-    pomodoro_statistic_id: result[0].pomodoro_statistic_id,
-    task_description: result[0].task_description,
-  };
+
+  if(result.length !==0){
+    return {
+      task_id: result[0].task_id,
+      user_id: result[0].user_id,
+      pomodoro_statistic_id: result[0].pomodoro_statistic_id,
+      task_description: result[0].task_description,
+    };
+  }
+
+  return null;
 };
