@@ -6,16 +6,24 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Grid,
+  IconButton,
   List,
   ListItem,
+  ListItemSecondaryAction,
   ListItemText,
+  Tooltip,
 } from '@material-ui/core';
 
+import CloseIcon from '@material-ui/icons/Close';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+
 export function DayStatisticsDialog({ open, setOpen, day }) {
-  console.log(day);
   const handleClose = () => {
     setOpen(false);
   };
+
   return (
     <Dialog
       open={open}
@@ -24,12 +32,21 @@ export function DayStatisticsDialog({ open, setOpen, day }) {
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        {day?.date.toLocaleString('en-us', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          weekday: 'long',
-        })}
+        <Grid container alignItems="center" spacing={4}>
+          <Grid item>
+            {day?.date.toLocaleString('en-us', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              weekday: 'long',
+            })}
+          </Grid>
+          <Grid item>
+            <IconButton aria-label="close" onClick={handleClose}>
+              <CloseIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -41,22 +58,31 @@ export function DayStatisticsDialog({ open, setOpen, day }) {
           {day?.tasks?.map((task) => (
             <ListItem
               key={task.task_id}
-              button
+              //button
               //selected={selectedUserId === teamMember.user_id}
-              onClick={
+              /* onClick={
                 (event) => alert('Click')
                 //handleListItemClick(event, teamMember.user_id)
-              }
+              } */
             >
               <ListItemText primary={task.task_description} />
+              <ListItemSecondaryAction>
+                <Tooltip title="Edit task">
+                  <IconButton edge="end" aria-label="edit">
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete task">
+                  <IconButton edge="end" aria-label="delete">
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+              </ListItemSecondaryAction>
             </ListItem>
           ))}
         </List>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary" variant="contained">
-          Close
-        </Button>
         {/*
         <Button
           onClick={() => handleConfirmWithNewTeamOwner(selectedUserId)}
