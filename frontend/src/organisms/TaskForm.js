@@ -17,7 +17,7 @@ export function TaskForm() {
       user_id: auth.user?.user_id,
     },
     onCompleted: () => {
-      const fetchedTask = data.getCurrentTask.task_description
+      const fetchedTask = (data.getCurrentTask) ? data.getCurrentTask.task_description : ""
       setTask(fetchedTask);
       dispatch({ type: SET_TASK_NAME, newName: fetchedTask});
     },
