@@ -83,15 +83,13 @@ export function DayStatisticsDialog({ open, setOpen, day }) {
         </List>
       </DialogContent>
       <DialogActions>
-        {/*
         <Button
-          onClick={() => handleConfirmWithNewTeamOwner(selectedUserId)}
+          onClick={() => alert('New task')}
           color="secondary"
           variant="contained"
-          disabled={!selectedUserId}
         >
-          Confirm new owner and leave
-        </Button> */}
+          Add another task
+        </Button>
       </DialogActions>
     </Dialog>
   );

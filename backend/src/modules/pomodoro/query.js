@@ -82,7 +82,6 @@ export const pomodoroStatistics = async (
   const result = pomodoroStatistics.map((p) =>
     p.tasks[0] === null ? { ...p, tasks: [] } : p,
   );
-
   return result;
 };
 
@@ -90,10 +89,11 @@ async function getPomodoroStatistics(user_id, dbConnection) {
   const result = await dbConnection.query(
     `SELECT stats.id,stats.user_id, stats.finished_at,stats.duration, 
     JSON_ARRAYAGG(
-      CASE 
-      WHEN tasks.task_id IS NOT NULL
-      THEN JSON_OBJECT('task_id', tasks.task_id, 'pomodoro_statistic_id', tasks.pomodoro_statistic_id, 'task_description', tasks.task_description)
-      END
+      IF(
+        tasks.task_id IS NOT NULL, 
+        JSON_OBJECT('task_id', tasks.task_id, 'pomodoro_statistic_id', tasks.pomodoro_statistic_id, 'task_description', tasks.task_description),
+        NULL
+      )
     ) as tasks
     FROM pomodoro_statistics AS stats
     LEFT JOIN tasks ON stats.id=tasks.pomodoro_statistic_id  
