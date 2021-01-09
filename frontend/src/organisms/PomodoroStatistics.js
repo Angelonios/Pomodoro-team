@@ -24,37 +24,41 @@ export function PomodoroStatistics() {
   });
 
   function prepareData(data) {
-    const workDurations = data.pomodoroStatistics.map(ps => {
+    const workDurations = data.pomodoroStatistics.map((ps) => {
       let workDate = new Date(parseInt(ps.finished_at));
-      workDate.setHours(0,0,0,0);
-      return ({
+      workDate.setHours(0, 0, 0, 0);
+      return {
         duration: ps.duration,
         finished_at: workDate,
-      })
+        tasks: ps.tasks,
+      };
     });
     const preparedWeeks = PrepareWeeks();
-    const preparedPages = preparedWeeks.map(week =>
-      week.map(day => {
-        return ({
+    const preparedPages = preparedWeeks.map((week) =>
+      week.map((day) => {
+        return {
           date: day,
           work: 0,
-        });
+          tasks: [],
+        };
       }),
     );
 
     return mapWorkDatesToPages(workDurations, preparedPages);
   }
 
-  function mapWorkDatesToPages(workDurations, preparedPages){
-    for (let i = 0; i < preparedPages.length; i++){
+  function mapWorkDatesToPages(workDurations, preparedPages) {
+    for (let i = 0; i < preparedPages.length; i++) {
       const week = preparedPages[i];
-      for (let j = 0; j < week.length; j++){
+      week.sort((a, b) => a.date - b.date);
+      for (let j = 0; j < week.length; j++) {
         const day = week[j];
-        for (let k = 0; k < workDurations.length; k++){
+        for (let k = 0; k < workDurations.length; k++) {
           const workDay = workDurations[k];
-          if(day.date.getTime() === workDay.finished_at.getTime()){
+          if (day.date.getTime() === workDay.finished_at.getTime()) {
             day.work = workDay.duration;
-            console.log("mapped work to day: " + day);
+            day.tasks = workDay.tasks;
+            console.log('mapped work to day: ' + day);
           }
         }
       }
@@ -62,7 +66,7 @@ export function PomodoroStatistics() {
     return preparedPages;
   }
 
-  let pages = (loading) ? [] : prepareData(data);
+  let pages = loading ? [] : prepareData(data);
 
   const handleChangePage = (event, newPage) => {
     setCurrentPage(newPage);
@@ -84,15 +88,18 @@ export function PomodoroStatistics() {
     rowsPerPage: PropTypes.number.isRequired,
   };
 
-  return <>
-    <Container component="main">
-      <StatisticsTable classes={tableStyle()}
-                       rowsPerPage={ROWS_PER_PAGE}
-                       pages={pages}
-                       currentPage={currentPage}
-                       handleChangePage={handleChangePage}
-                       TablePaginationActions={tableActions}
-      />
-    </Container>
-  </>;
+  return (
+    <>
+      <Container component="main">
+        <StatisticsTable
+          classes={tableStyle()}
+          rowsPerPage={ROWS_PER_PAGE}
+          pages={pages}
+          currentPage={currentPage}
+          handleChangePage={handleChangePage}
+          TablePaginationActions={tableActions}
+        />
+      </Container>
+    </>
+  );
 }
