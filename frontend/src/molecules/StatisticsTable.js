@@ -114,10 +114,8 @@ export function StatisticsTable({
                       </TableRow>
                     ))
                   ) : (
-                    <TableRow component="th" scope="row">
-                      <TableCell style={{ width: 160 }} align="right">
-                        No data available.
-                      </TableCell>
+                    <TableRow>
+                      <TableCell>No data available.</TableCell>
                     </TableRow>
                   )}
                 </TableBody>

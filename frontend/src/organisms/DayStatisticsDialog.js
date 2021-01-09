@@ -146,59 +146,54 @@ export function DayStatisticsDialog({
           )}
           <List component="nav">
             {pages[currentPage][selectedDayIndex].tasks.map((task) => (
-              <>
-                <ListItem
-                  key={task.task_id}
-                  divider={true}
-                  //button
-                  //selected={selectedUserId === teamMember.user_id}
-                  /* onClick={
+              <ListItem
+                key={task.task_id}
+                divider={true}
+                //button
+                //selected={selectedUserId === teamMember.user_id}
+                /* onClick={
                 (event) => alert('Click')
                 //handleListItemClick(event, teamMember.user_id)
               } */
-                >
-                  <Grid container>
-                    <Grid item>
-                      <ListItemText
-                        primary={task.task_description}
-                        style={{ paddingRight: '100px' }}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <ListItemSecondaryAction>
-                        <Tooltip title="Edit task">
-                          <IconButton
-                            edge="end"
-                            aria-label="edit"
-                            onClick={() =>
-                              handleEditTask(
-                                task.task_id,
-                                task.task_description,
-                              )
-                            }
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Delete task">
-                          <IconButton
-                            edge="end"
-                            aria-label="delete"
-                            onClick={() =>
-                              handleDeleteTask(
-                                task.task_id,
-                                task.task_description,
-                              )
-                            }
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </ListItemSecondaryAction>
-                    </Grid>
+              >
+                <Grid container>
+                  <Grid item>
+                    <ListItemText
+                      primary={task.task_description}
+                      style={{ paddingRight: '100px' }}
+                    />
                   </Grid>
-                </ListItem>
-              </>
+                  <Grid item>
+                    <ListItemSecondaryAction>
+                      <Tooltip title="Edit task">
+                        <IconButton
+                          edge="end"
+                          aria-label="edit"
+                          onClick={() =>
+                            handleEditTask(task.task_id, task.task_description)
+                          }
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Delete task">
+                        <IconButton
+                          edge="end"
+                          aria-label="delete"
+                          onClick={() =>
+                            handleDeleteTask(
+                              task.task_id,
+                              task.task_description,
+                            )
+                          }
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </ListItemSecondaryAction>
+                  </Grid>
+                </Grid>
+              </ListItem>
             ))}
           </List>
         </DialogContent>

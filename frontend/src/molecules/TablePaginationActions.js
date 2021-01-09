@@ -47,8 +47,13 @@ export function TablePaginationActions(paginationData) {
       <IconButton
         onClick={handleBackButtonClick}
         disabled={page === 0}
-        aria-label="previous page">
-        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+        aria-label="previous page"
+      >
+        {theme.direction === 'rtl' ? (
+          <KeyboardArrowRight />
+        ) : (
+          <KeyboardArrowLeft />
+        )}
       </IconButton>
 
       <IconButton
@@ -56,16 +61,11 @@ export function TablePaginationActions(paginationData) {
         // disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="next page"
       >
-        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-      </IconButton>
-
-
-      <IconButton
-        onClick={handleLastPageButtonClick}
-        // disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="last page"
-      >
-        {/*{theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}*/}
+        {theme.direction === 'rtl' ? (
+          <KeyboardArrowLeft />
+        ) : (
+          <KeyboardArrowRight />
+        )}
       </IconButton>
     </div>
   );
