@@ -50,6 +50,7 @@ export function PomodoroStatistics() {
   function mapWorkDatesToPages(workDurations, preparedPages) {
     for (let i = 0; i < preparedPages.length; i++) {
       const week = preparedPages[i];
+      week.sort((a, b) => b.date - a.date);
       for (let j = 0; j < week.length; j++) {
         const day = week[j];
         for (let k = 0; k < workDurations.length; k++) {

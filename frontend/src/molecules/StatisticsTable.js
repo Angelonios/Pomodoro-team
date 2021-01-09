@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -10,6 +10,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import { GetWeekNumberFromDate } from '../utils/DateHelper';
 import { Box, Container, Grid, Typography } from '@material-ui/core';
+import { DayStatisticsDialog } from 'src/organisms';
 
 export function StatisticsTable({
   classes,
@@ -21,6 +22,8 @@ export function StatisticsTable({
 }) {
   const SECONDS_IN_HOUR = 3600;
   const SECONDS_IN_MINUTE = 60;
+  const [selectedDay, setSelectedDay] = useState();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   function formatTime(seconds) {
     if (seconds === 0) {
@@ -45,98 +48,108 @@ export function StatisticsTable({
     return result;
   }
 
-  const week =
-    pages.length !== 0
-      ? pages[currentPage].sort((d1, d2) => (d1 > d2 ? 1 : -1))
-      : [];
+  const week = pages.length !== 0 ? pages[currentPage] : [];
   const weekNumber = GetWeekNumberFromDate(
     pages.length !== 0 ? week[0].date : new Date(),
   );
 
-  console.log('week', week);
+  const handleOpenDayStatisticsDialog = (day) => {
+    setSelectedDay(day);
+    setDialogOpen(true);
+  };
 
   return (
-    <Container component="main">
-      <Paper elevation={3}>
-        <Box p={3}>
-          <Grid item xs={12} style={{ textAlign: 'center' }}>
-            <Typography align={'center'} variant={'h3'}>
-              Week {weekNumber}.
-            </Typography>
-          </Grid>
-          <TableContainer component={Paper}>
-            <Table
-              className={classes.table}
-              aria-label="custom pagination table"
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell>Date</TableCell>
-                  <TableCell>Duration</TableCell>
-                  <TableCell align="right">Tasks</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {pages.length !== 0 ? (
-                  week.map((day) => (
-                    <TableRow
-                      key={day.date.toLocaleString('en-us', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        weekday: 'long',
-                      })}
-                    >
-                      <TableCell component="th" scope="row">
-                        {day.date.toLocaleString('en-us', {
+    <>
+      <Container component="main">
+        <Paper elevation={3}>
+          <Box p={3}>
+            <Grid item xs={12} style={{ textAlign: 'center' }}>
+              <Typography align={'center'} variant={'h3'}>
+                Week {weekNumber}.
+              </Typography>
+            </Grid>
+            <TableContainer component={Paper}>
+              <Table
+                className={classes.table}
+                aria-label="custom pagination table"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Date</TableCell>
+                    <TableCell>Duration</TableCell>
+                    <TableCell align="right">Tasks</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {pages.length !== 0 ? (
+                    week.map((day) => (
+                      <TableRow
+                        hover
+                        onClick={() => handleOpenDayStatisticsDialog(day)}
+                        style={{ cursor: 'pointer' }}
+                        key={day.date.toLocaleString('en-us', {
                           year: 'numeric',
                           month: 'long',
                           day: 'numeric',
                           weekday: 'long',
                         })}
-                      </TableCell>
+                      >
+                        <TableCell component="th" scope="row">
+                          {day.date.toLocaleString('en-us', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            weekday: 'long',
+                          })}
+                        </TableCell>
 
-                      <TableCell style={{ width: 160 }}>
-                        {formatTime(day.work)}
-                      </TableCell>
+                        <TableCell style={{ width: 160 }}>
+                          {formatTime(day.work)}
+                        </TableCell>
 
+                        <TableCell style={{ width: 160 }} align="right">
+                          {day.tasks.length}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow component="th" scope="row">
                       <TableCell style={{ width: 160 }} align="right">
-                        {day.tasks.length}
+                        No data available.
                       </TableCell>
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow component="th" scope="row">
-                    <TableCell style={{ width: 160 }} align="right">
-                      No data available.
-                    </TableCell>
+                  )}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TablePagination
+                      colSpan={3}
+                      count={pages.length}
+                      rowsPerPage={rowsPerPage}
+                      labelDisplayedRows={() => {
+                        '';
+                      }}
+                      page={currentPage}
+                      SelectProps={{
+                        inputProps: { 'aria-label': 'rows per page' },
+                        native: true,
+                      }}
+                      rowsPerPageOptions={[]}
+                      onChangePage={handleChangePage}
+                      ActionsComponent={TablePaginationActions}
+                    />
                   </TableRow>
-                )}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TablePagination
-                    colSpan={3}
-                    count={pages.length}
-                    rowsPerPage={rowsPerPage}
-                    labelDisplayedRows={() => {
-                      '';
-                    }}
-                    page={currentPage}
-                    SelectProps={{
-                      inputProps: { 'aria-label': 'rows per page' },
-                      native: true,
-                    }}
-                    rowsPerPageOptions={[]}
-                    onChangePage={handleChangePage}
-                    ActionsComponent={TablePaginationActions}
-                  />
-                </TableRow>
-              </TableFooter>
-            </Table>
-          </TableContainer>
-        </Box>
-      </Paper>
-    </Container>
+                </TableFooter>
+              </Table>
+            </TableContainer>
+          </Box>
+        </Paper>
+      </Container>
+      <DayStatisticsDialog
+        open={dialogOpen}
+        setOpen={setDialogOpen}
+        day={selectedDay}
+      />
+    </>
   );
 }
