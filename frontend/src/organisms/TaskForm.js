@@ -26,6 +26,7 @@ export function TaskForm() {
   const [saveTask] = useMutation(SAVE_TASK);
 
   const handleTaskFormEdit = () => {
+    debugger;
     if (task.trim().length === 0) {
       setTask(
         (data !== undefined || data.getCurrentTask !== null)
@@ -39,7 +40,7 @@ export function TaskForm() {
         user_id: auth.user.user_id,
         task_description: task,
       },
-    }).catch(e => console.error(e));
+    })
   };
 
   return <>

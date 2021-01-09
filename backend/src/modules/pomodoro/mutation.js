@@ -174,8 +174,8 @@ export const saveTask = async (
 ) => {
   const hasPomodoroToday = await getTodaysPomodoro(dbConnection, user_id);
 
-  if (hasPomodoroToday) {
-    return await addTask(dbConnection, user_id, task_description);
+  if (hasPomodoroToday.length > 0) {
+    return await addTask(dbConnection, user_id, task_description, hasPomodoroToday[0].id);
   }
 
   return await createPomodoroAndAddTask(dbConnection, user_id, task_description);
@@ -193,7 +193,7 @@ async function getTodaysPomodoro(
     [user_id],
   );
 
-  return (result.length > 0);
+  return result;
 }
 
 async function createPomodoroAndAddTask(
@@ -210,9 +210,12 @@ async function createPomodoroAndAddTask(
   );
 }
 
-const addTask = async (dbConnection, user_id, newTask) => {
+const addTask = async (dbConnection, user_id, newTask, pomodoroStatisticId) => {
   const tasksToday = await getTodaysTasks(dbConnection, user_id);
-  const pomodoroStatisticId = tasksToday[0].pomodoro_statistic_id;
+
+  if(tasksToday.length === 0){
+    return await insertTask(dbConnection, pomodoroStatisticId, newTask);
+  }
 
   const numberOfSimilarTasks = tasksToday
     .map(savedTask => areTasksSimilar(savedTask.task_description, newTask))
@@ -220,7 +223,6 @@ const addTask = async (dbConnection, user_id, newTask) => {
 
   if (numberOfSimilarTasks === 0) {
     return await insertTask(dbConnection, pomodoroStatisticId, newTask);
-    ;
   }
   return 'duplicate task';
 };
