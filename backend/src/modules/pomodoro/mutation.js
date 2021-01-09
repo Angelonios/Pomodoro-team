@@ -219,7 +219,8 @@ const addTask = async (dbConnection, user_id, newTask) => {
     .filter(Boolean).length;
 
   if (numberOfSimilarTasks === 0) {
-    return await insertTask(dbConnection, pomodoroStatisticId, newTask);;
+    return await insertTask(dbConnection, pomodoroStatisticId, newTask);
+    ;
   }
   return 'duplicate task';
 };
@@ -320,3 +321,69 @@ const getDistanceBetweenStrings = (string1, string2) => {
   const l3 = getDistanceBetweenStrings(tail1, tail2);
   return 1 + Math.min(l1, l2, l3);
 };
+
+export const deleteTask = async (
+  _,
+  { user_id, task_id },
+  { dbConnection },
+) => {
+  if (user_id === null || task_id === null) {
+    return 'wrong parameters';
+  }
+
+  const taskExists = await existingTaskFromUser(dbConnection, user_id, task_id);
+
+  if (taskExists.length !== 0) {
+    dbConnection.query(
+      `DELETE 
+       FROM tasks 
+       WHERE task_id = ?`,
+      [taskExists[0].task_id],
+    );
+    return 'task deleted';
+  }
+
+  return 'task does not exist';
+};
+
+export const editTask = async (
+  _,
+  { user_id, task_id, task_description },
+  { dbConnection },
+) => {
+  if (user_id === null || task_id === null) {
+    return 'wrong parameters';
+  }
+
+  const taskExists = await existingTaskFromUser(dbConnection, user_id, task_id);
+
+  if (taskExists.length !== 0) {
+    dbConnection.query(
+      `UPDATE tasks 
+       SET task_description=? 
+       WHERE task_id = ?`,
+      [task_description, taskExists[0].task_id]
+    );
+    return 'task updated'
+  }
+
+  return 'task does not exists'
+};
+
+async function existingTaskFromUser(
+  dbConnection,
+  user_id,
+  task_id){
+  const result = await dbConnection.query(
+    `SELECT 
+      tasks.task_id AS task_id, 
+      pomodoro_statistics.user_id AS user_id
+     FROM pomodoro_statistics
+     JOIN tasks ON pomodoro_statistics.id = tasks.pomodoro_statistic_id
+     WHERE user_id = ?
+     AND task_id = ?`,
+    [user_id, task_id],
+  );
+
+  return result;
+}
