@@ -27,7 +27,10 @@ export function TaskForm() {
 
   const handleTaskFormEdit = () => {
     if (task.trim().length === 0) {
-      if (data !== undefined) setTask(data.getCurrentTask.task_description)
+      setTask(
+        (data !== undefined || data.getCurrentTask !== null)
+          ? ''
+          : data.getCurrentTask.task_description);
       return;
     }
     dispatch({ type: SET_TASK_NAME, newName: task });
