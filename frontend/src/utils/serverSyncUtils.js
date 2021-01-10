@@ -206,6 +206,16 @@ export const DELETE_TASK = gql`
   }
 `;
 
+export const ADD_TASK = gql`
+  mutation SaveTask($user_id: Int!, $task_description: String!, $date: String) {
+    saveTask(
+      user_id: $user_id
+      task_description: $task_description
+      date: $date
+    )
+  }
+`;
+
 export const GET_GARDEN_SQUARES = gql`
   query gardenSquares($team_id: Int!) {
     gardenSquares(team_id: $team_id) {
