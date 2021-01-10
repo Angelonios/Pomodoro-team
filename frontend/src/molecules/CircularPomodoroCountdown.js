@@ -14,9 +14,8 @@ export function CircularPomodoroCountdown({
   pauseControls,
   performAction,
 }) {
-  let progressValue = (remainingSeconds >= 0)
-    ? (remainingSeconds / maxSeconds) * 100
-    : 0;
+  let progressValue =
+    remainingSeconds >= 0 ? (remainingSeconds / maxSeconds) * 100 : 0;
   return (
     <Box position="relative" display="inline-flex">
       <CircularProgress

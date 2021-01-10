@@ -48,8 +48,8 @@ export function PomodoroTimerButton() {
   const dropDownOptions = state.actions.secondary;
 
   const buttonText =
-    (state.pomodoroTimerState === timerStates.running
-    || state.pomodoroTimerState === timerStates.paused)
+    state.pomodoroTimerState === timerStates.running ||
+    state.pomodoroTimerState === timerStates.paused
       ? 'Finish'
       : state.buttonText;
 

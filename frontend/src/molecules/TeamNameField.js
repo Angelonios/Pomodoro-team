@@ -3,12 +3,12 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 
 export function TeamNameField({
-                             formData,
-                             handleChange,
-                             formErrors,
-                             helperText,
-                             data,
-                           }) {
+  formData,
+  handleChange,
+  formErrors,
+  helperText,
+  data,
+}) {
   return (
     <Grid item xs={12}>
       <TextField

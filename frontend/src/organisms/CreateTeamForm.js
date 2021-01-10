@@ -12,7 +12,6 @@ import { useAuth } from 'src/utils/auth';
 import { FormButton } from 'src/atoms';
 import { CREATE_TEAM } from 'src/utils/serverSyncUtils';
 
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(2),

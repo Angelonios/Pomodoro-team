@@ -5,8 +5,6 @@ import { useQuery } from '@apollo/client';
 import { GET_DATA_FOR_USER_POINTS } from 'src/utils/serverSyncUtils';
 
 export function UserPoints({ user_id }) {
-
-
   const { loading, data } = useQuery(GET_DATA_FOR_USER_POINTS, {
     variables: {
       user_id: user_id,

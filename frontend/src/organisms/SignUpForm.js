@@ -42,7 +42,6 @@ export function SignUpForm({
   rePasswordError,
   updateRePasswordError,
 }) {
-
   const classes = useStyles();
 
   const initialFormData = Object.freeze({
