@@ -56,6 +56,7 @@ export function Garden({ team_id, user_id }) {
     onCompleted: () => {
       spendPoints({ variables: { user_id: user.user_id } });
       setActualPoints(actualPoints - 10);
+      gardenSquares.refetch();
     },
     onError: () => setOpen(true),
   });
@@ -135,7 +136,6 @@ export function Garden({ team_id, user_id }) {
           },
         });
         setPlanting(!planting);
-        gardenSquares.refetch();
       }
     }
   };
