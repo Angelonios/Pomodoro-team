@@ -21,6 +21,8 @@ const typeDefs = gql`
     pomodoroStatistics(user_id: Int!): [PomodoroStatistic]!
     gardenSquares(team_id: Int!): [SquareInGarden]
     userPoints(user_id: Int!): Int!
+    lesaPan(team_id: Int!): User!
+    getCurrentTask(user_id: Int!): Task
   }
 
   type Pomodoro {
@@ -36,6 +38,7 @@ const typeDefs = gql`
     email: String!
     user_id: Int!
     display_name: String!
+    name: String!
   }
 
   type Ids {
@@ -60,13 +63,22 @@ const typeDefs = gql`
     user_id: Int!
     finished_at: String!
     duration: Int!
+    tasks: [Task]!
   }
 
   type SquareInGarden {
     team_id: Int!
     user_id: Int!
     display_name: String!
-    position: String!
+    row: Int!
+    col: Int!
+  }
+
+  type Task {
+    task_id: Int!
+    pomodoro_statistic_id: Int!
+    task_description: String!
+    user_id: Int
   }
 
   enum State {
@@ -108,13 +120,20 @@ const typeDefs = gql`
       team_id: Int!
       user_id: Int!
       display_name: String!
-      position: String!
+      row: Int!
+      col: Int!
     ): Boolean
 
-    savePomodoroDuration(
-      user_id: Int!
-      duration: Int!
-    ): String!
+    savePomodoroDuration(user_id: Int!, duration: Int!): String!
+
+
+    SetNewTeamOwner(team_id: Int!, new_owner_user_id: Int!): Boolean
+
+    saveTask(user_id: Int!, task_description: String!, date: String): String!
+
+    deleteTask(user_id: Int!, task_id: Int!): String!
+    
+    editTask(user_id: Int!, task_id: Int!, task_description: String!): String!
   }
 
   type AuthUser {

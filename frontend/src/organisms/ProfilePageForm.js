@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Paper, Grid } from '@material-ui/core';
 import { NameChangeForm } from 'src/molecules';
 import { BetaModeSwitch } from 'src/atoms';
-import { useAuth } from '../utils/auth';
+import { useAuth } from 'src/utils/auth';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
   },
 }));
-export function ProfilePageForm({ email }) {
+export function ProfilePageForm() {
   const { user } = useAuth();
   const classes = useStyles();
 

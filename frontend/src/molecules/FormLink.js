@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
-import { NavLink } from 'src/atoms/';
+import { NavLink } from 'src/atoms/NavLink';
 
 export function FormLink({ link, children }) {
   return (

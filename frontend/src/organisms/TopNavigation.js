@@ -65,27 +65,39 @@ export function TopNavigation({ currentUser }) {
       <div className={classes.root}>
         <AppBar position="relative">
           <Toolbar>
-            <Typography variant="h6" className={classes.title}>
-              <NavLink
-                to={route.home()}
-                style={{ textDecoration: 'none', color: 'white' }}
-              >
-                Team Pomodori
-              </NavLink>
-            </Typography>
-            <Grid item xs={12} style={{ textAlign: 'end' }}>
-              <ThemeChange />
+            <Grid container style={{ maxWidth: 'max-content' }}>
+              <Grid item>
+                <Typography variant="h6" className={classes.title}>
+                  <NavLink
+                    to={route.home()}
+                    style={{ textDecoration: 'none', color: 'white' }}
+                  >
+                    Team Pomodori
+                  </NavLink>
+                </Typography>
+              </Grid>
             </Grid>
-            <Typography align="right">
-              Hello!{' '}
-              <NavLink to={route.signIn()} style={{ textDecoration: 'none' }}>
-                <b style={{ color: 'white' }}>Sign-in</b>
-              </NavLink>{' '}
-              or{' '}
-              <NavLink to={route.signUp()} style={{ textDecoration: 'none' }}>
-                <b style={{ color: 'white' }}>create account</b>
-              </NavLink>
-            </Typography>
+            <Grid container>
+              <Grid item xs={12} style={{ textAlign: 'end' }}>
+                <Typography align="right">
+                  <ThemeChange />
+                  Hello!{' '}
+                  <NavLink
+                    to={route.signIn()}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <b style={{ color: 'white' }}>Sign-in</b>
+                  </NavLink>{' '}
+                  or{' '}
+                  <NavLink
+                    to={route.signUp()}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <b style={{ color: 'white' }}>create account</b>
+                  </NavLink>
+                </Typography>
+              </Grid>
+            </Grid>
           </Toolbar>
         </AppBar>
       </div>

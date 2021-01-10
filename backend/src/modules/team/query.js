@@ -54,14 +54,18 @@ export const getUsersFromTeam = async (_, { team_id }, { dbConnection }) => {
   if (!usersFromTeam) {
     return null;
   }
-
   return usersFromTeam;
 };
 
 export const teamMembersPomodoro = async (_, { team_id }, { dbConnection }) => {
   const teamMembersPomodoro = await dbConnection.query(
-    `SELECT users.email, users.user_id, pomodoros.share_id, users.display_name FROM in_team
-    JOIN users ON in_team.user_id = users.user_id JOIN pomodoros ON users.pomodoro_id = pomodoros.pomodoro_id WHERE in_team.team_id = ?`,
+    `
+    SELECT users.email, users.user_id, pomodoros.share_id, users.display_name, teams.name
+    FROM teams
+    JOIN in_team ON teams.team_id = in_team.team_id
+    JOIN users ON in_team.user_id = users.user_id
+    JOIN pomodoros ON users.pomodoro_id = pomodoros.pomodoro_id
+    WHERE in_team.team_id = ?`,
     [team_id],
   );
 
@@ -81,4 +85,22 @@ export const gardenSquares = async (_, { team_id }, { dbConnection }) => {
     return null;
   }
   return gardenSquares;
+};
+
+export const lesaPan = async (_, { team_id }, { dbConnection }) => {
+  const teamTreeCounts = await dbConnection.query(
+    `
+    SELECT user_id, COUNT(user_id) FROM garden WHERE team_id = ? GROUP BY user_id
+    ORDER BY COUNT(user_id)  DESC`,
+    [team_id],
+  );
+
+  const user_id = teamTreeCounts[0].user_id;
+  const user = (
+    await dbConnection.query(`SELECT * FROM users WHERE user_id = ?`, [user_id])
+  )[0];
+  if (!user) {
+    return null;
+  }
+  return user;
 };

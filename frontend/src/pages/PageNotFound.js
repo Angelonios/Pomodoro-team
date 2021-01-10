@@ -2,10 +2,12 @@ import React from 'react';
 import { Box, Container, Grid, Paper, Typography } from '@material-ui/core';
 import { TopNavigation } from 'src/organisms';
 import sadTomato from 'src/assets/tomatoes/sadTomato.svg';
+import { PageTitle } from 'src/utils/userNotification/PageTitle';
 
 export function PageNotFound() {
   return (
     <>
+      <PageTitle pageName="Oops 😢" />
       <TopNavigation />
       <Container component="main">
         <Paper elevation={3}>

@@ -8,7 +8,7 @@ import { Button, IconButton } from '@material-ui/core';
 import { TeamsViewMenu } from 'src/molecules';
 import { LogOut } from 'src/atoms';
 import { useHistory } from 'react-router-dom';
-import { route } from '../Routes';
+import { route } from 'src/Routes';
 
 export function MenuUser({ user_id, logOut }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -39,7 +39,7 @@ export function MenuUser({ user_id, logOut }) {
         onClose={handleClose}
       >
         <MenuItem>
-          <Button onClick={() => history.push('/profile')}>Profile</Button>
+          <Button onClick={() => history.push(route.profile())}>Profile</Button>
         </MenuItem>
         <MenuItem style={{ color: 'red' }}>
           <TeamsViewMenu

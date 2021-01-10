@@ -82,6 +82,7 @@ export function GardenRow({
                 />
               );
             }
+            return '';
           })}
         </div>
       ) : (

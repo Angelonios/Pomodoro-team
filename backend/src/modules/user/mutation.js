@@ -50,7 +50,6 @@ export const SignUp = async (
   )[0];
 
   if (userByEmail) {
-    console.log(userByEmail);
     throw new Error('Email already registered');
   }
 

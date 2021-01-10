@@ -3,6 +3,7 @@ import { Typography, Container, Paper, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { MyAvatar } from 'src/molecules';
 import { TopNavigation, ProfilePageForm } from 'src/organisms';
+import { PageTitle } from 'src/utils/userNotification/PageTitle';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,6 +21,7 @@ export function ProfilePageTemplate({ email }) {
 
   return (
     <>
+      <PageTitle pageName="Profile" />
       <TopNavigation />
       <Container component="main">
         <Grid container spacing={3}>

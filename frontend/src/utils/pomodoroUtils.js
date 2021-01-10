@@ -1,4 +1,4 @@
-export const convertSecondsToMinutesSting = (seconds) => {
+export const convertSecondsToMinutesString = (seconds) => {
   let min = parseInt(seconds / 60);
   let sec = parseInt(seconds % 60);
 

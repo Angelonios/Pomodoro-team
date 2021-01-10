@@ -14,7 +14,9 @@ import {
   GET_USER_POMODORO_IDS,
   SAVE_POMODORO_DURATION,
   timerStates,
-} from 'src/utils/serverSync';
+  calcDuration,
+  timerComponents,
+} from 'src/utils/serverSyncUtils';
 import {
   pomodoroReducer,
   CLICK_MAIN_BUTTON,
@@ -22,38 +24,41 @@ import {
   SET_POMODORO_STATE,
 } from 'src/utils/pomodoroReducer';
 
-import { convertSecondsToMinutesSting } from 'src/utils/pomodoroUtils';
 import { useAuth } from 'src/utils/auth';
-import sound1 from 'src/assets/nuclear.mp3';
-import useSound from 'use-sound';
 
 const PomodoroStateContext = createContext();
 const PomodoroDispatchContext = createContext();
 
 export function PomodoroProvider({ children }) {
+  // States
   const [communicationId, setCommunicationId] = useState('');
   const [shareId, setShareId] = useState('');
   const [shareUrl, setShareUrl] = useState();
+  const [userId, setUserId] = useState(0);
+  const { user } = useAuth();
+
+  // Queries
   const serverPomodoro = useQuery(POMODORO_QUERY, { variables: { shareId } });
+  const userPomodoroIds = useQuery(GET_USER_POMODORO_IDS, {
+    variables: { user_id: userId },
+    skip: !user,
+  });
+
+  // Mutations
   const [updateMutation] = useMutation(UPDATE_POMODORO_MUTATION);
   const [savePomodoroDuration] = useMutation(SAVE_POMODORO_DURATION);
-  const { user } = useAuth();
-  const [userId, setUserId] = useState(0);
-  const [play] = useSound(sound1, { volume: 0.5, playbackRate: 1.5 });
 
+  // Main reducer
   const [state, dispatch] = useReducer(pomodoroReducer, {
     remainingSeconds: 1500,
     secondsSinceStart: 0,
     finalTime: 0,
     position: 0,
     timerState: timerStates.idle,
+    taskName: '',
   });
 
-  const userPomodoroIds = useQuery(GET_USER_POMODORO_IDS, {
-    variables: { user_id: userId },
-    skip: !user,
-  });
-
+  // Set communication and share IDs (used for communication with server)
   useEffect(() => {
     if (!userPomodoroIds.loading && !userPomodoroIds.error && user) {
       const ids = initServerCommunication(
@@ -71,12 +76,14 @@ export function PomodoroProvider({ children }) {
     }
   }, [userPomodoroIds, user]);
 
+  // Set userId after login
   useEffect(() => {
     if (user) {
       setUserId(user.user_id);
     }
   }, [user]);
 
+  // Determine what to do when user selects a secondary action (in dropdown submenu of the main button).
   const handleSecondaryActions = (index) => {
     let newTimerState = state.timerState;
     let newPosition = state.position;
@@ -107,17 +114,11 @@ export function PomodoroProvider({ children }) {
     }
   };
 
-  function calcDuration() {
-    const remainingSeconds = state.remainingSeconds;
-    const pomodoroDuration = getPomodoroComponent(state.position).seconds;
-    const DURATION_LIMIT = -1200;
-    const MAX_DURATION = 2700;
-    if (remainingSeconds <= DURATION_LIMIT) {
-      return MAX_DURATION;
-    }
-    return pomodoroDuration - remainingSeconds;
-  }
-
+  // Perform action after user's button click based on action type and current pomodoro component
+  // Types:
+  //    primary: main button,
+  //    secondary: items in dropdown submenu of the main button,
+  //    pause: pause button
   const performAction = ({ type, index }) => {
     let newTimerState;
     let newPosition;
@@ -129,13 +130,18 @@ export function PomodoroProvider({ children }) {
           state.timerState !== timerStates.offline
         ) {
           newTimerState = timerStates.idle;
-          //statistics
-          getPomodoroComponent(state.position).type === 1 &&
+          //Save pomodoro duration to statistics if component type is pomodoro and user is logged in
+          getPomodoroComponent(state.position).type ===
+            timerComponents.pomodoro &&
             user &&
             savePomodoroDuration({
               variables: {
                 user_id: user.user_id,
-                duration: calcDuration(),
+                duration: calcDuration({
+                  remainingSeconds: state.remainingSeconds,
+                  pomodoroDuration: getPomodoroComponent(state.position)
+                    .seconds,
+                }),
               },
             });
         } else {
@@ -194,12 +200,13 @@ export function PomodoroProvider({ children }) {
     });
   };
 
+  // Memoized pomodoro data from server
   const cachedServerData = useMemo(() => {
     if (serverPomodoro.loading || serverPomodoro.error) {
       return null;
     }
     if (!user && serverPomodoro.data.pomodoro === null) {
-      //If backend returns null, then we have to send mutation with new share and communication ids
+      //If backend returns null, then we have to send mutation with new share and communication ids in order to create a new entry in DB
       updateMutation({
         variables: {
           state: timerStates.idle,
@@ -210,12 +217,10 @@ export function PomodoroProvider({ children }) {
       });
       return null;
     }
-    if (user && serverPomodoro.data.pomodoro === null) {
-      //If backend returns null for a logged in user, it means error. TODO: handle error
-      console.log('Error fetching pomodoro data for logged in user.');
+    if (user && serverPomodoro.data?.pomodoro === null) {
       return null;
     }
-    //return query result here
+    //Return query result here
     return serverPomodoro.data;
   }, [
     serverPomodoro.loading,
@@ -227,55 +232,8 @@ export function PomodoroProvider({ children }) {
     user,
   ]);
 
-  //Favicon, title and sound
-  //TODO: Move somewhere else
-  const favicon = document.getElementById('favicon');
+  // Refresh reducer state every second
   useEffect(() => {
-    let title = '';
-    let faviconHref = '';
-    if (
-      state.timerState === timerStates.idle ||
-      state.timerState === timerStates.offline
-    ) {
-      title = 'Idle - Team Pomodori';
-      faviconHref = '/grey-tomato.svg';
-    } else if (state.remainingSeconds < 0) {
-      title =
-        '(' +
-        convertSecondsToMinutesSting(state.remainingSeconds) +
-        ') ' +
-        getPomodoroComponent(state.position).label +
-        ' - ' +
-        'Team Pomodori';
-      faviconHref = '/red-tomato.svg';
-
-      if (
-        state.remainingSeconds % 300 === 0 &&
-        state.timerState === timerStates.running
-      ) {
-        //play sound
-        play();
-      }
-    } else {
-      title = getPomodoroComponent(state.position).label + ' - Team Pomodori';
-      if (Object.is(state.remainingSeconds, +0)) {
-        //play sound
-        play();
-      }
-      if (
-        getPomodoroComponent(state.position).type === 2 ||
-        getPomodoroComponent(state.position).type === 3
-      ) {
-        faviconHref = '/yellow-tomato.svg';
-      } else {
-        faviconHref = '/green-tomato.svg';
-      }
-    }
-    favicon.href = faviconHref;
-    document.title = title;
-    //End of favicon, title and sound
-
-    //Refresh context every second
     if (
       state.timerState === timerStates.idle ||
       state.timerState === timerStates.paused ||
@@ -286,14 +244,9 @@ export function PomodoroProvider({ children }) {
       dispatch({ type: GET_REMAINING_SECONDS });
     }, 1000);
     return () => clearTimeout(timer);
-  }, [
-    state.timerState,
-    state.remainingSeconds,
-    favicon.href,
-    play,
-    state.position,
-  ]);
+  }, [state.timerState, state.remainingSeconds, state.position]);
 
+  // Set reducer state to the pomodoro data received from the server
   useEffect(() => {
     if (cachedServerData !== null) {
       dispatch({
@@ -320,6 +273,7 @@ export function PomodoroProvider({ children }) {
         pauseControls: getPomodoroComponent(state.position).actions[
           state.timerState
         ].pauseControls?.icon,
+        taskName: state.taskName ?? '',
       }}
     >
       <PomodoroDispatchContext.Provider value={dispatch}>

@@ -1,6 +1,6 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
-import { gql, useQuery } from '@apollo/client';
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
   Container,
@@ -11,12 +11,16 @@ import {
   Hidden,
 } from '@material-ui/core';
 
-import { LeaveTeamButton, AddUserToTeam } from '../molecules';
-import { RefreshButton, TeamPageName } from 'src/atoms';
-import { Garden, SharedPomodoro } from '../organisms';
-import { useAuth } from '../utils/auth';
-import { ForbiddenPage } from '../pages/ForbiddenPage';
-
+import { LeaveTeamButton, AddUserToTeam, KickButton } from 'src/molecules';
+import { Loading, TeamPageName } from 'src/atoms';
+import { Garden, SharedPomodoro } from 'src/organisms';
+import { useAuth } from 'src/utils/auth';
+import { ForbiddenPage } from 'src/pages/ForbiddenPage';
+import { PageTitle } from 'src/utils/userNotification/PageTitle';
+import {
+  GET_TEAM_MEMBERS_POMODORO,
+  GET_LEADER,
+} from 'src/utils/serverSyncUtils';
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -27,98 +31,77 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const GET_TEAM_MEMBERS_POMODORO = gql`
-  query teamMembersPomodoro($team_id: Int!) {
-    teamMembersPomodoro(team_id: $team_id) {
-      share_id
-      email
-      display_name
-    }
-  }
-`;
-
 export function TeamDetailPageTemplate() {
   const { user } = useAuth();
   const classes = useStyles();
-  const location = useLocation();
-  const dataSet = !(location.data === null || location.data === undefined);
-  const name = dataSet ? location.data.name : 'No team set!';
-  const id = dataSet ? parseInt(location.data.id) : 0;
-  var beta = JSON.parse(window.localStorage.getItem('beta'));
+  const urlParams = useParams('teamId');
+  const teamId = parseInt(urlParams.teamId);
 
-  const onClick = () => {
-    teamMembers.refetch();
-  };
-
-  const teamMembers = useQuery(GET_TEAM_MEMBERS_POMODORO, {
+  const { loading, error, data } = useQuery(GET_TEAM_MEMBERS_POMODORO, {
     variables: {
-      team_id: id,
+      team_id: teamId,
     },
   });
-  const teamMembersSet = !(
-    teamMembers.data === null || teamMembers.data === undefined
-  );
+  const leader = useQuery(GET_LEADER, {
+    variables: {
+      team_id: teamId,
+    },
+  });
+  let beta = JSON.parse(window.localStorage.getItem('beta'));
 
-  if (teamMembers.data === undefined) {
-    return <div>loading...</div>;
-  }
+  if (error) return <div>Something went wrong. Please refresh the page.</div>;
 
-  if (!user) {
+  if (loading || leader.data === undefined)
+    return (
+      <Container component="main">
+        <Paper elevation={3}>
+          <Box p={3}>
+            <Grid
+              container
+              spacing={3}
+              direction="column"
+              alignItems="center"
+              className={classes.root}
+            >
+              <Grid item xs={12}>
+                <Typography align={'center'} variant={'h3'}>
+                  <Loading />
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
+        </Paper>
+      </Container>
+    );
+
+  const teamName = data ? data.teamMembersPomodoro[0]?.name : '';
+
+  if (
+    !user ||
+    !data.teamMembersPomodoro.some((e) => e.user_id === user.user_id)
+  )
     return <ForbiddenPage />;
-  }
-  return (
-    <Container component="main">
-      <Paper elevation={3}>
-        <Box p={3}>
-          {dataSet && teamMembersSet ? (
-            <div className={classes.root}>
-              <Grid
-                container
-                spacing={3}
-                direction="column"
-                alignItems="center"
-              >
-                <Grid item xs={12} style={{ textAlign: 'center' }}>
-                  <Typography align={'center'} variant={'h3'}>
-                    {dataSet ? name : 'No team selected!'}
-                  </Typography>
-                  <RefreshButton onClick={onClick} />
-                </Grid>
-                {/*                 <Grid item xs={12} md={4}>
-                  <UserPoints user_id={user.user_id} />
-                </Grid> */}
 
-                {beta && <Garden team_id={id} user_id={user.user_id} />}
-                <div
-                  style={{
-                    border: '1px solid ',
-                    borderColor: 'action',
-                    width: '100%',
-                    marginBottom: '20px',
-                  }}
-                ></div>
-                <Grid item container>
-                  <Grid container spacing={3} style={{ marginBottom: '20px' }}>
-                    <Hidden smDown>
-                      <Grid item xs={12} md={4}>
-                        <Typography className={classes.header}>Name</Typography>
-                      </Grid>
-                    </Hidden>
-                    <Hidden smDown>
-                      <Grid item xs={12} md={4}>
-                        <Typography className={classes.header}>
-                          State
-                        </Typography>
-                      </Grid>
-                    </Hidden>
-                    <Hidden smDown>
-                      <Grid item xs={12} md={4}>
-                        <Typography className={classes.header}>
-                          Timer
-                        </Typography>
-                      </Grid>
-                    </Hidden>
+  return (
+    <>
+      <PageTitle pageName={teamName} />
+      <Container component="main">
+        <Paper elevation={3}>
+          <Box p={3}>
+            {data ? (
+              <div className={classes.root}>
+                <Grid
+                  container
+                  spacing={3}
+                  direction="column"
+                  alignItems="center"
+                >
+                  <Grid item xs={12} /*style={{ textAlign: 'center' }}*/>
+                    <Typography align={'center'} variant={'h3'}>
+                      {teamName}
+                    </Typography>
                   </Grid>
+                  {beta && <Garden team_id={teamId} user_id={user.user_id} />}
                   <div
                     style={{
                       border: '1px solid ',
@@ -127,10 +110,44 @@ export function TeamDetailPageTemplate() {
                       marginBottom: '20px',
                     }}
                   ></div>
-                  {dataSet &&
-                    teamMembersSet &&
-                    teamMembers.data.teamMembersPomodoro.map(
-                      (pomodoro, index) => (
+                  <Grid item container>
+                    <Grid
+                      container
+                      spacing={3}
+                      style={{ marginBottom: '20px' }}
+                    >
+                      <Hidden smDown>
+                        <Grid item xs={12} md={4}>
+                          <Typography className={classes.header}>
+                            Name
+                          </Typography>
+                        </Grid>
+                      </Hidden>
+                      <Hidden smDown>
+                        <Grid item xs={12} md={4}>
+                          <Typography className={classes.header}>
+                            State
+                          </Typography>
+                        </Grid>
+                      </Hidden>
+                      <Hidden smDown>
+                        <Grid item xs={12} md={4}>
+                          <Typography className={classes.header}>
+                            Timer
+                          </Typography>
+                        </Grid>
+                      </Hidden>
+                    </Grid>
+                    <div
+                      style={{
+                        border: '1px solid ',
+                        borderColor: 'action',
+                        width: '100%',
+                        marginBottom: '20px',
+                      }}
+                    ></div>
+                    {data.teamMembersPomodoro.map(
+                      (teamMemberPomodoro, index) => (
                         <Grid
                           key={index}
                           container
@@ -148,13 +165,29 @@ export function TeamDetailPageTemplate() {
                             </Grid>
                           </Hidden>
                           <TeamPageName
-                            email={pomodoro.email}
-                            name={pomodoro.display_name}
+                            email={teamMemberPomodoro.email}
+                            name={teamMemberPomodoro.display_name}
+                            owner={
+                              leader.data.team.owner_id ===
+                              teamMemberPomodoro.user_id
+                            }
                           />
                           <SharedPomodoro
                             key={index}
-                            shareId={pomodoro.share_id}
+                            shareId={teamMemberPomodoro.share_id}
                           />
+                          <Grid
+                            item
+                            style={{
+                              margin: 'auto',
+                            }}
+                          >
+                            <KickButton
+                              user_id={teamMemberPomodoro.user_id}
+                              team_id={teamId}
+                              owner_id={leader.data.team.owner_id}
+                            />
+                          </Grid>
                           <div
                             style={{
                               border: '1px solid',
@@ -166,26 +199,35 @@ export function TeamDetailPageTemplate() {
                         </Grid>
                       ),
                     )}
+                  </Grid>
+                  <Grid item>
+                    <LeaveTeamButton
+                      team_id={teamId}
+                      owner={leader.data.team.owner_id === user.user_id}
+                      teamMembers={data.teamMembersPomodoro}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <AddUserToTeam
+                      team_id={teamId}
+                      team_name={teamName}
+                      teamMembers={data.teamMembersPomodoro}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <LeaveTeamButton team_id={id} />
-                </Grid>
-                <Grid item>
-                  <AddUserToTeam team_id={id} team_name={name} />
+              </div>
+            ) : (
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <Typography align={'center'} variant={'h3'}>
+                    No team selected!
+                  </Typography>
                 </Grid>
               </Grid>
-            </div>
-          ) : (
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Typography align={'center'} variant={'h3'}>
-                  {dataSet ? name : 'No team selected!'}
-                </Typography>
-              </Grid>
-            </Grid>
-          )}
-        </Box>
-      </Paper>
-    </Container>
+            )}
+          </Box>
+        </Paper>
+      </Container>
+    </>
   );
 }

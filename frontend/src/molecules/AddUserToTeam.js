@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -8,14 +8,9 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import { EmailField } from 'src/molecules';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { CreateTeamDialog } from 'src/molecules';
+import { ADD_USER } from 'src/utils/serverSyncUtils';
 
-const ADD_USER = gql`
-  mutation AddUserToTeam($team_id: Int!, $email: String!) {
-    AddUserToTeam(team_id: $team_id, email: $email)
-  }
-`;
-
-export function AddUserToTeam({ team_id, team_name }) {
+export function AddUserToTeam({ team_id, team_name, teamMembers }) {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [emailErrorText, updateEmailErrorText] = useState('');
@@ -25,7 +20,7 @@ export function AddUserToTeam({ team_id, team_name }) {
     email: '',
   });
   const [formData, updateFormData] = useState(initialFormData);
-  var email;
+  let email;
   const handleClickOpen = () => {
     updateFormData({
       email: '',
@@ -59,12 +54,17 @@ export function AddUserToTeam({ team_id, team_name }) {
     } else {
       email = true;
       updateEmailError(true);
-      updateEmailErrorText('Enter a valid email adress !');
+      updateEmailErrorText('Enter a valid email adress!');
     }
     if (!email) {
-      addUserToTeam({
-        variables: { team_id: team_id, email: formData.email },
-      });
+      if (teamMembers.some((e) => e.email === formData.email)) {
+        updateEmailError(true);
+        updateEmailErrorText('This user is already in the team!');
+      } else {
+        addUserToTeam({
+          variables: { team_id: team_id, email: formData.email },
+        });
+      }
     }
   };
 
@@ -94,14 +94,13 @@ export function AddUserToTeam({ team_id, team_name }) {
             handleChange={handleChange}
             formErrors={emailError}
             helperText={emailErrorText}
-            data={''}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary" variant="contained">
+          <Button onClick={handleClose} color="primary" variant="contained">
             Cancel
           </Button>
-          <Button onClick={handleSubmit} color="primary" variant="contained">
+          <Button onClick={handleSubmit} color="secondary" variant="contained">
             Add
           </Button>
         </DialogActions>

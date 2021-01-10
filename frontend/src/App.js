@@ -8,6 +8,8 @@ import { PomodoroProvider } from 'src/utils/PomodoroContext';
 import { EnhancedAppoloProvider } from 'src/utils/apollo';
 import { Routes } from 'src/Routes';
 import { CustomThemeProvider } from './utils/ThemeContext';
+import { Favicon } from './utils/userNotification/Favicon';
+import { AudioNotification } from './utils/userNotification/AudioNotification';
 
 export function App() {
   return (
@@ -17,6 +19,8 @@ export function App() {
           <EnhancedAppoloProvider>
             <PomodoroProvider>
               <CssBaseline />
+              <Favicon />
+              <AudioNotification />
               <ScrollToTop />
               <Routes />
             </PomodoroProvider>

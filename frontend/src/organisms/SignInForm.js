@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Paper, Avatar, Grid, Box } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
@@ -11,6 +11,7 @@ import { Copyright, EmailField, PasswordField, FormLink } from 'src/molecules';
 import { FormButton } from 'src/atoms';
 import { route } from 'src/Routes';
 import { useAuth } from 'src/utils/auth';
+import { SIGN_IN } from 'src/utils/serverSyncUtils';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -37,20 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SIGN_IN = gql`
-  mutation SignIn($email: String!, $password: String!) {
-    SignIn(email: $email, password: $password) {
-      user {
-        user_id
-        email
-        display_name
-      }
-      token
-    }
-  }
-`;
-
-export function SignInForm({ props }) {
+export function SignInForm() {
   const classes = useStyles();
   const auth = useAuth();
   const history = useHistory();
@@ -67,14 +55,12 @@ export function SignInForm({ props }) {
   const [error, updateError] = useState(false);
   const [signIn] = useMutation(SIGN_IN, {
     onCompleted: ({ SignIn: { user, token } }) => {
-      //console.log('good SignIn');
       updateErrorText('');
       updateError(false);
       auth.signin({ token, user });
       history.replace('/');
     },
     onError: () => {
-      //console.log('bad SignIn');
       updateErrorText(
         'Meh, we were unable to find you using these credentials.',
       );
@@ -84,7 +70,6 @@ export function SignInForm({ props }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // ... submit to API or something
     signIn({
       variables: { email: formData.email, password: formData.password },
     });
@@ -93,7 +78,6 @@ export function SignInForm({ props }) {
   const handleChange = (e) => {
     updateFormData({
       ...formData,
-      // Trimming any whitespace
       [e.target.name]: e.target.value.trim(),
     });
   };

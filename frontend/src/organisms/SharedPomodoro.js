@@ -12,7 +12,7 @@ import {
   SET_POMODORO_STATE,
 } from 'src/utils/pomodoroReducer';
 import { CircularPomodoroCountdown } from 'src/molecules';
-import { POMODORO_QUERY, timerStates } from 'src/utils/serverSync';
+import { POMODORO_QUERY, timerStates } from 'src/utils/serverSyncUtils';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,18 +72,10 @@ export function SharedPomodoro({ shareId }) {
         </Grid>
       </Hidden>
       <Grid item xs={10} md={4} style={{ textAlign: 'center' }}>
-        {
-          getTimerStateFriendlyName({
-            timerState: state.timerState,
-            position: state.position,
-          })
-
-          /*         state.timerState === timerStates.offline
-          ? 'Offline'
-          : state.timerState === timerStates.running
-          ? getPomodoroComponent(state.position).label
-          : 'Idle' */
-        }
+        {getTimerStateFriendlyName({
+          timerState: state.timerState,
+          position: state.position,
+        })}
       </Grid>
       <Hidden mdUp>
         <Grid item xs={2}>
@@ -101,48 +93,4 @@ export function SharedPomodoro({ shareId }) {
       </Grid>
     </>
   );
-
-  /*
-  return (
-    <>
-      <Box align="center" style={{ width: '33%', margin: 'auto' }}>
-        {state.isOffline
-          ? 'Offline'
-          : state.running
-          ? getPomodoroComponent(state.position).label
-          : 'Idle'}
-      </Box>
-      <Box align="center" style={{ width: '33%', margin: 'auto' }}>
-        <CircularPomodoroCountdown
-          remainingSeconds={state.remainingSeconds}
-          maxSeconds={getPomodoroComponent(state.position).seconds}
-          color={getPomodoroComponent(state.position).color}
-          timeSize="h5"
-          circleSize={150}
-        />
-      </Box>
-    </>
- <Container>
-      <Box>
-        <Grid container spacing={10} alignItems="center">
-          <Grid item>
-            {state.isOffline
-              ? 'Offline'
-              : state.running
-              ? getPomodoroComponent(state.position).label
-              : 'Idle'}
-          </Grid>
-          <Grid item xl={4} lg={4} xs={12} align="center">
-            <CircularPomodoroCountdown
-              remainingSeconds={state.remainingSeconds}
-              maxSeconds={getPomodoroComponent(state.position).seconds}
-              color={getPomodoroComponent(state.position).color}
-              timeSize="h5"
-              circleSize={150}
-            />
-          </Grid>
-        </Grid>
-      </Box>
-    </Container> 
-  );*/
 }

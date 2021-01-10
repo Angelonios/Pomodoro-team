@@ -8,3 +8,6 @@ export { ProfilePageForm } from './ProfilePageForm';
 export { PomodoroStatistics } from './PomodoroStatistics';
 export { Garden } from './Garden';
 export { PomodoroBot } from './PomodoroBot';
+export { LeaveTeamDialog } from './LeaveTeamDialog';
+export { DayStatisticsDialog } from './DayStatisticsDialog';
+export { TaskConfirmationDialog } from './TaskConfirmationDialog';

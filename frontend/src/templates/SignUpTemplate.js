@@ -2,6 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 
 import { SignUpForm, TopNavigation } from 'src/organisms';
+import { PageTitle } from 'src/utils/userNotification/PageTitle';
 
 export function SignUpTemplate() {
   const [emailError, updateEmailError] = useState(false);
@@ -10,6 +11,7 @@ export function SignUpTemplate() {
 
   return (
     <>
+      <PageTitle pageName="Sign up" />
       <TopNavigation />
       <SignUpForm
         emailError={emailError}

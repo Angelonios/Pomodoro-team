@@ -6,10 +6,12 @@ import {
   InputAdornment,
 } from '@material-ui/core';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
+import { usePomodoroState } from 'src/utils/PomodoroContext';
 
-export function ShareUrl({ shareUrl }) {
+export function ShareUrl() {
   const inputRef = useRef();
   const [copySuccess, setCopySuccess] = useState('Copy');
+  const state = usePomodoroState();
 
   const copyToClipboard = () => {
     inputRef.current.childNodes[1].children[0].select();
@@ -34,7 +36,7 @@ export function ShareUrl({ shareUrl }) {
           ),
         }}
         label="Share URL"
-        value={shareUrl || ''}
+        value={state.shareUrl || ''}
         ref={inputRef}
       />
     </FormControl>

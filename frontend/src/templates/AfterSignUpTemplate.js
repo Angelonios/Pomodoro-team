@@ -12,6 +12,8 @@ import { Copyright } from 'src/molecules';
 import { FormButton } from 'src/atoms';
 import { route } from 'src/Routes';
 
+import { PageTitle } from 'src/utils/userNotification/PageTitle';
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -45,23 +47,26 @@ export function AfterSignUpTemplate() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5" className={classes.paper}>
-          Your account has been successfully created. Please continue to
-          sign-in.
-        </Typography>
-        <form className={classes.form} noValidate>
-          <FormButton submit={handleSubmit}>continue to sign-in</FormButton>
-        </form>
-      </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
-    </Container>
+    <>
+      <PageTitle pageName="Welcome" />
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5" className={classes.paper}>
+            Your account has been successfully created. Please continue to
+            sign-in.
+          </Typography>
+          <form className={classes.form} noValidate>
+            <FormButton submit={handleSubmit}>continue to sign-in</FormButton>
+          </form>
+        </div>
+        <Box mt={5}>
+          <Copyright />
+        </Box>
+      </Container>
+    </>
   );
 }
