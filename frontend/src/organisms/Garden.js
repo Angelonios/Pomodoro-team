@@ -94,7 +94,11 @@ export function Garden({ team_id, user_id }) {
   const [actualPoints, setActualPoints] = useState(null);
   const [spendPoints] = useMutation(SPEND_POINTS);
   const [plantTree] = useMutation(PLANT_TREE, {
-    onCompleted: () => spendPoints({ variables: { user_id: user.user_id } }),
+    onCompleted: () => {
+      spendPoints({ variables: { user_id: user.user_id } });
+      setActualPoints(actualPoints - 10);
+    },
+    onError: () => setOpen(true),
   });
   const points = useQuery(GET_USER_POINTS, {
     variables: { user_id: user_id },
@@ -172,7 +176,6 @@ export function Garden({ team_id, user_id }) {
           },
         });
         setPlanting(!planting);
-        setActualPoints(actualPoints - 10);
         gardenSquares.refetch();
       }
     }

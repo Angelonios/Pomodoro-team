@@ -57,12 +57,20 @@ export const PlantTree = async (
   { team_id, user_id, display_name, row, col },
   { dbConnection },
 ) => {
-  const PlantTree = await dbConnection.query(
-    `INSERT INTO garden (team_id, user_id, display_name, row, col) VALUES (?, ?, ?, ?, ?)`,
-    [team_id, user_id, display_name, row, col],
+  const hasTree = await dbConnection.query(
+    `SELECT * FROM garden WHERE team_id = ? AND row = ? AND col = ?`,
+    [team_id, row, col],
   );
 
-  return PlantTree.warningStatus === 0;
+  if (hasTree[0]) {
+    throw new Error('Position already has tree!');
+  } else {
+    const PlantTree = await dbConnection.query(
+      `INSERT INTO garden (team_id, user_id, display_name, row, col) VALUES (?, ?, ?, ?, ?)`,
+      [team_id, user_id, display_name, row, col],
+    );
+    return PlantTree.warningStatus === 0;
+  }
 };
 
 export const SetNewTeamOwner = async (
