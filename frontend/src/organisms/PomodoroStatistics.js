@@ -6,8 +6,8 @@ import { TablePaginationActions } from 'src/molecules/TablePaginationActions';
 import { StatisticsTable } from 'src/molecules/StatisticsTable';
 import { Container } from '@material-ui/core';
 import { POMODORO_STATISTICS } from 'src/utils/serverSync';
-import { useAuth } from '../utils/auth';
-import { PrepareWeeks } from '../utils/DateHelper';
+import { useAuth } from 'src/utils/auth';
+import { PrepareWeeks } from 'src/utils/DateHelper';
 
 export function PomodoroStatistics() {
   const ROWS_PER_PAGE = 7;

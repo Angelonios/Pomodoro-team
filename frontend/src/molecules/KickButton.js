@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { gql, useMutation } from '@apollo/client';
-import { useAuth } from '../utils/auth';
+import { useAuth } from 'src/utils/auth';
 
 const LEAVE_TEAM = gql`
   mutation LeaveTeam($team_id: Int!, $user_id: Int!) {

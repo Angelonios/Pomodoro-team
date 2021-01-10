@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { NameField, CreateTeamDialog } from 'src/molecules';
 import { useAuth } from 'src/utils/auth';
-import { FormButton } from '../atoms';
+import { FormButton } from 'src/atoms';
 
 const NAME_CHANGE = gql`
   mutation NameChange($name: String!, $user_id: Int!) {

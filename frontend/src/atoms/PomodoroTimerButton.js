@@ -19,7 +19,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { usePomodoroState } from 'src/utils/PomodoroContext';
 
 import { timerStates } from 'src/utils/serverSync';
-import { useAuth } from '../utils/auth';
+import { useAuth } from 'src/utils/auth';
 
 export function PomodoroTimerButton({ text, size }) {
   const auth = useAuth();

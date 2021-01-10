@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import { gql, useMutation } from '@apollo/client';
-import { route } from '../Routes';
-import { useAuth } from '../utils/auth';
+import { route } from 'src/Routes';
+import { useAuth } from 'src/utils/auth';
 import { LeaveTeamDialog } from 'src/organisms';
 
 const LEAVE_TEAM = gql`

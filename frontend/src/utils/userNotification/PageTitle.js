@@ -1,6 +1,6 @@
 import { usePomodoroState } from 'src/utils/PomodoroContext';
 import { timerStates } from 'src/utils/serverSync';
-import { convertSecondsToMinutesString } from '../pomodoroUtils';
+import { convertSecondsToMinutesString } from 'src/utils/pomodoroUtils';
 
 export function PageTitle({ pageName }) {
   const state = usePomodoroState();

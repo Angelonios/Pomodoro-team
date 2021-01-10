@@ -8,7 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
-import { GetWeekNumberFromDate } from '../utils/DateHelper';
+import { GetWeekNumberFromDate } from 'src/utils/DateHelper';
 import { Box, Container, Grid, Typography } from '@material-ui/core';
 import { DayStatisticsDialog } from 'src/organisms';
 

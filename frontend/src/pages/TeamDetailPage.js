@@ -1,6 +1,6 @@
 import React from 'react';
-import { TopNavigation } from '../organisms';
-import { TeamDetailPageTemplate } from '../templates/TeamDetailPageTemplate';
+import { TopNavigation } from 'src/organisms';
+import { TeamDetailPageTemplate } from 'src/templates/TeamDetailPageTemplate';
 
 export function TeamDetailPage() {
   return (

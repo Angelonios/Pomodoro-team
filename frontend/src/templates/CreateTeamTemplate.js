@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
-import { TopNavigation } from '../organisms';
-import { CreateTeamForm } from '../organisms/CreateTeamForm';
+import { TopNavigation } from 'src/organisms';
+import { CreateTeamForm } from 'src/organisms/CreateTeamForm';
 import { PageTitle } from 'src/utils/userNotification/PageTitle';
 
 export function CreateTeamTemplate() {

@@ -9,7 +9,7 @@ import {
   TextField,
 } from '@material-ui/core';
 
-import { useAuth } from '../utils/auth';
+import { useAuth } from 'src/utils/auth';
 
 export function TaskConfirmationDialog({
   open,

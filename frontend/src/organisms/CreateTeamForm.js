@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { Copyright, TeamNameField, CreateTeamDialog } from 'src/molecules';
 import { useAuth } from 'src/utils/auth';
-import { FormButton } from '../atoms';
+import { FormButton } from 'src/atoms';
 
 //TODO: CREATE_TEAM
 const CREATE_TEAM = gql`
