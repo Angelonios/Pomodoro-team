@@ -14,6 +14,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import PlayArrowTwoToneIcon from '@material-ui/icons/PlayArrowTwoTone';
 import FlagIcon from '@material-ui/icons/Flag';
 import FreeBreakfastTwoToneIcon from '@material-ui/icons/FreeBreakfastTwoTone';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 import { usePomodoroState } from 'src/utils/PomodoroContext';
 
@@ -76,32 +77,43 @@ export function PomodoroTimerButton({ text, size }) {
 
   return (
     <>
-      <ButtonGroup
-        variant="contained"
-        color={state.color}
-        ref={anchorRef}
-        size={size}
-        aria-label="split button"
-      >
+      {auth.user !== null && state.taskName.length === 0 ? (
         <Button
-          startIcon={getStartIcon()}
-          disabled={auth.user === null ? false : state.taskName.length === 0}
-          onClick={() => state.performAction({ type: 'primary' })}
+          startIcon={<KeyboardArrowUpIcon />}
+          endIcon={<KeyboardArrowUpIcon />}
+          disabled={true}
+          variant="contained"
         >
-          {buttonText}
+          Please type the name of your task
         </Button>
-        <Button
-          size="small"
-          aria-controls={open ? 'split-button-menu' : undefined}
-          aria-expanded={open ? 'true' : undefined}
-          aria-label="select merge strategy"
-          aria-haspopup="menu"
-          disabled={auth.user === null ? false : state.taskName.length === 0}
-          onClick={handleToggle}
+      ) : (
+        <ButtonGroup
+          variant="contained"
+          color={state.color}
+          ref={anchorRef}
+          size={size}
+          aria-label="split button"
         >
-          <ArrowDropDownIcon />
-        </Button>
-      </ButtonGroup>
+          <Button
+            startIcon={getStartIcon()}
+            onClick={() => state.performAction({ type: 'primary' })}
+          >
+            {buttonText}
+          </Button>
+          <Button
+            size="small"
+            aria-controls={open ? 'split-button-menu' : undefined}
+            aria-expanded={open ? 'true' : undefined}
+            aria-label="pomodoro button"
+            aria-haspopup="menu"
+            disabled={auth.user === null ? false : state.taskName.length === 0}
+            onClick={handleToggle}
+          >
+            <ArrowDropDownIcon />
+          </Button>
+        </ButtonGroup>
+      )}
+
       <Popper
         open={open}
         anchorEl={anchorRef.current}
