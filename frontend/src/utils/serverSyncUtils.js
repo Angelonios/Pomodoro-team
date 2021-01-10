@@ -98,8 +98,8 @@ export const GET_LEADER = gql`
 `;
 
 export const SAVE_TASK = gql`
-  mutation saveTask($user_id: Int!, $task_description: String!) {
-    saveTask(user_id: $user_id, task_description: $task_description)
+  mutation saveTask($user_id: Int!, $task_description: String!, $date: String) {
+    saveTask(user_id: $user_id, task_description: $task_description, date: $date)
   }
 `;
 

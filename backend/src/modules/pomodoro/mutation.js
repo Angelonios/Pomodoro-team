@@ -147,14 +147,15 @@ async function updatePomodoroDuration(
  * from a given user in one day.
  * @param dbConnection - database connection object
  * @param user_id - user identification in database
- * @param duration - the duration from users client
+ * @param date
  * @returns {Promise<*>}
  */
 async function insertPomodoroDuration(
   dbConnection,
   user_id,
+  date = new Date(),
 ) {
-  const date = new Date();
+  // const date = new Date();
   const INITIAL_DURATION = 0;
 
   const result = await dbConnection.query(
@@ -169,22 +170,35 @@ async function insertPomodoroDuration(
 
 export const saveTask = async (
   _,
-  { user_id, task_description },
+  { user_id, task_description, date },
   { dbConnection },
 ) => {
-  const hasPomodoroToday = await getTodaysPomodoro(dbConnection, user_id);
+  const hasPomodoro = await getUsersPomodoro(dbConnection, user_id, date);
 
-  if (hasPomodoroToday.length > 0) {
-    return await addTask(dbConnection, user_id, task_description, hasPomodoroToday[0].id);
+  if (hasPomodoro.length > 0) {
+    return await addTask(dbConnection, user_id, task_description, hasPomodoro[0].id);
   }
 
-  return await createPomodoroAndAddTask(dbConnection, user_id, task_description);
+  return await createPomodoroAndAddTask(dbConnection, user_id, task_description, date);
 };
 
-async function getTodaysPomodoro(
+async function getUsersPomodoro(
   dbConnection,
   user_id,
+  date = null
 ) {
+  if(date){
+    const result = await dbConnection.query(
+      `SELECT * FROM pomodoro_statistics
+     WHERE
+      user_id = ? 
+      AND finished_at = ?;`,
+      [user_id, date],
+    );
+
+    return result;
+  }
+
   const result = await dbConnection.query(
     `SELECT * FROM pomodoro_statistics
      WHERE
@@ -200,7 +214,17 @@ async function createPomodoroAndAddTask(
   dbConnection,
   user_id,
   task_description,
+  date = null,
 ) {
+  if (date) {
+    const newPomodoroId = await insertPomodoroDuration(dbConnection, user_id, date);
+
+    return await insertTask(
+      dbConnection,
+      newPomodoroId,
+      task_description,
+    );
+  }
   const newPomodoroId = await insertPomodoroDuration(dbConnection, user_id);
 
   return await insertTask(
@@ -213,7 +237,7 @@ async function createPomodoroAndAddTask(
 const addTask = async (dbConnection, user_id, newTask, pomodoroStatisticId) => {
   const tasksToday = await getTodaysTasks(dbConnection, user_id);
 
-  if(tasksToday.length === 0){
+  if (tasksToday.length === 0) {
     return await insertTask(dbConnection, pomodoroStatisticId, newTask);
   }
 
@@ -364,18 +388,18 @@ export const editTask = async (
       `UPDATE tasks 
        SET task_description=? 
        WHERE task_id = ?`,
-      [task_description, taskExists[0].task_id]
+      [task_description, taskExists[0].task_id],
     );
-    return 'task updated'
+    return 'task updated';
   }
 
-  return 'task does not exists'
+  return 'task does not exists';
 };
 
 async function existingTaskFromUser(
   dbConnection,
   user_id,
-  task_id){
+  task_id) {
   const result = await dbConnection.query(
     `SELECT 
       tasks.task_id AS task_id, 

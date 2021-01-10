@@ -5,6 +5,7 @@ import { usePomodoroDispatch } from 'src/utils/PomodoroContext';
 import { SET_TASK_NAME } from 'src/utils/pomodoroReducer';
 import { GET_CURRENT_TASK, SAVE_TASK } from 'src/utils/serverSyncUtils';
 import { useMutation, useQuery } from '@apollo/client';
+import { FormatDate } from '../utils/DateHelper';
 
 export function TaskForm() {
   const auth = useAuth();
@@ -27,6 +28,7 @@ export function TaskForm() {
   const [saveTask] = useMutation(SAVE_TASK);
 
   const handleTaskFormEdit = () => {
+    debugger;
     if (task.trim().length === 0) {
       setTask(
         data !== undefined || data.getCurrentTask !== null
@@ -40,6 +42,7 @@ export function TaskForm() {
       variables: {
         user_id: auth.user.user_id,
         task_description: task,
+        date: null,
       },
     });
   };
