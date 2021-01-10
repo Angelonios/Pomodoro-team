@@ -18,3 +18,4 @@ export { SquareInRow } from './SquareInRow';
 export { GardenRow } from './GardenRow';
 export { UserPoints } from './UserPoints';
 export { KickButton } from './KickButton';
+export { GardenDialog } from './GardenDialog';
