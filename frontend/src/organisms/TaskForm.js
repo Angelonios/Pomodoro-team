@@ -47,19 +47,26 @@ export function TaskForm() {
   return (
     <>
       {auth.user && (
-        <TextField
-          id="task_input"
-          label="What are you working on?"
-          onChange={(e) => {
+        <form
+          onSubmit={(e) => {
+            handleTaskFormEdit();
             e.preventDefault();
-            setTask(e.target.value);
           }}
-          value={!loading ? task : 'Loading...'}
-          onBlur={() => handleTaskFormEdit()}
-          fullWidth
-          inputProps={{ style: { fontSize: '2rem', textAlign: 'center' } }}
-          InputLabelProps={{ style: { textAlign: 'center' } }}
-        />
+        >
+          <TextField
+            id="task_input"
+            label="What are you working on?"
+            onChange={(e) => {
+              e.preventDefault();
+              setTask(e.target.value);
+            }}
+            value={!loading ? task : 'Loading...'}
+            onBlur={() => handleTaskFormEdit()}
+            fullWidth
+            inputProps={{ style: { fontSize: '2rem', textAlign: 'center' } }}
+            InputLabelProps={{ style: { textAlign: 'center' } }}
+          />
+        </form>
       )}
     </>
   );
