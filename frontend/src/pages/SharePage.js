@@ -12,7 +12,7 @@ import {
   SET_POMODORO_STATE,
 } from 'src/utils/pomodoroReducer';
 import { CircularPomodoroCountdown, ShareUrl } from 'src/molecules';
-import { POMODORO_QUERY, timerStates } from 'src/utils/serverSync';
+import { POMODORO_QUERY, timerStates } from 'src/utils/serverSyncUtils';
 import { PageTitle } from 'src/utils/userNotification/PageTitle';
 
 export function SharePage() {

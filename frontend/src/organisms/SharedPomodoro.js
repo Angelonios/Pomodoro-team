@@ -12,7 +12,7 @@ import {
   SET_POMODORO_STATE,
 } from 'src/utils/pomodoroReducer';
 import { CircularPomodoroCountdown } from 'src/molecules';
-import { POMODORO_QUERY, timerStates } from 'src/utils/serverSync';
+import { POMODORO_QUERY, timerStates } from 'src/utils/serverSyncUtils';
 
 const useStyles = makeStyles((theme) => ({
   root: {

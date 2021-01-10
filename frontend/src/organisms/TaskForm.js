@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import { useAuth } from 'src/utils/auth';
 import { usePomodoroDispatch } from 'src/utils/PomodoroContext';
 import { SET_TASK_NAME } from 'src/utils/pomodoroReducer';
-import { GET_CURRENT_TASK, SAVE_TASK } from 'src/utils/serverSync';
+import { GET_CURRENT_TASK, SAVE_TASK } from 'src/utils/serverSyncUtils';
 import { useMutation, useQuery } from '@apollo/client';
 
 export function TaskForm() {

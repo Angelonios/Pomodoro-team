@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { usePomodoroState } from 'src/utils/PomodoroContext';
-import { timerStates, timerComponents } from 'src/utils/serverSync';
+import { timerStates, timerComponents } from 'src/utils/serverSyncUtils';
 
 export function Favicon() {
   const state = usePomodoroState();

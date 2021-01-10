@@ -1,5 +1,5 @@
 import { getPomodoroComponent, getNextIndex } from 'src/utils/pomodoroCycle';
-import { timerStates } from 'src/utils/serverSync';
+import { timerStates } from 'src/utils/serverSyncUtils';
 
 export const CLICK_MAIN_BUTTON = 'CLICK_MAIN_BUTTON';
 export const GET_REMAINING_SECONDS = 'GET_REMAINING_SECONDS';

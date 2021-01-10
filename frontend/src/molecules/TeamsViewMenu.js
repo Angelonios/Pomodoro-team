@@ -6,7 +6,7 @@ import { useQuery } from '@apollo/client';
 import { useHistory } from 'react-router-dom';
 import { route } from 'src/Routes';
 import { MenuItems } from 'src/atoms';
-import { USER_TEAMS } from 'src/utils/serverSync';
+import { USER_TEAMS } from 'src/utils/serverSyncUtils';
 
 export function TeamsViewMenu({ user_id, anchor, setAnchor }) {
   const [anchorEl, setAnchorEl] = useState(null);

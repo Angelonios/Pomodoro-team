@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import { EmailField } from 'src/molecules';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { CreateTeamDialog } from 'src/molecules';
-import { ADD_USER } from 'src/utils/serverSync';
+import { ADD_USER } from 'src/utils/serverSyncUtils';
 
 export function AddUserToTeam({ team_id, team_name, teamMembers }) {
   const [open, setOpen] = useState(false);

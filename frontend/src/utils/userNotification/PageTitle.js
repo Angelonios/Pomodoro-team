@@ -1,5 +1,5 @@
 import { usePomodoroState } from 'src/utils/PomodoroContext';
-import { timerStates } from 'src/utils/serverSync';
+import { timerStates } from 'src/utils/serverSyncUtils';
 import { convertSecondsToMinutesString } from 'src/utils/pomodoroUtils';
 
 export function PageTitle({ pageName }) {

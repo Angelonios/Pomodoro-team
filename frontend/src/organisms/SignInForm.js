@@ -11,7 +11,7 @@ import { Copyright, EmailField, PasswordField, FormLink } from 'src/molecules';
 import { FormButton } from 'src/atoms';
 import { route } from 'src/Routes';
 import { useAuth } from 'src/utils/auth';
-import { SIGN_IN } from 'src/utils/serverSync';
+import { SIGN_IN } from 'src/utils/serverSyncUtils';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
