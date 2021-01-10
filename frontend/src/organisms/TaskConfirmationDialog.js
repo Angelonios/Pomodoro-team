@@ -22,35 +22,43 @@ export function TaskConfirmationDialog({
   editTask,
   addTask,
   date,
+  textFieldError,
+  setTextFieldError,
 }) {
   const auth = useAuth();
-  const [textFieldValue, setTextFieldValue] = useState(taskName);
+  const [textFieldValue, setTextFieldValue] = useState(taskName || '');
 
   const handleConfirm = () => {
-    setOpen(false);
     switch (type) {
       case 'DELETE':
         deleteTask({
           variables: { task_id: taskId, user_id: auth.user.user_id },
         });
+        setOpen(false);
         break;
       case 'EDIT':
-        editTask({
-          variables: {
-            task_id: taskId,
-            user_id: auth.user.user_id,
-            task_description: textFieldValue,
-          },
-        });
+        if (textFieldValue.trim() !== '') {
+          editTask({
+            variables: {
+              task_id: taskId,
+              user_id: auth.user.user_id,
+              task_description: textFieldValue,
+            },
+          });
+          setOpen(false);
+        } else setTextFieldError('Task name cannot be empty!');
         break;
       case 'ADD':
-        addTask({
-          variables: {
-            user_id: auth.user.user_id,
-            task_description: textFieldValue,
-            date: FormatDate(date),
-          },
-        });
+        if (textFieldValue.trim() !== '') {
+          addTask({
+            variables: {
+              user_id: auth.user.user_id,
+              task_description: textFieldValue,
+              date: FormatDate(date),
+            },
+          });
+          setOpen(false);
+        } else setTextFieldError('Task name cannot be empty!');
         break;
 
       default:
@@ -93,6 +101,8 @@ export function TaskConfirmationDialog({
         )}
         {type !== 'DELETE' ? (
           <TextField
+            error={textFieldError}
+            helperText={textFieldError}
             autoFocus
             margin="dense"
             id="name"

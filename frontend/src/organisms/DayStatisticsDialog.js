@@ -21,7 +21,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
 import { DELETE_TASK, EDIT_TASK, ADD_TASK } from 'src/utils/serverSyncUtils';
 
@@ -43,6 +43,7 @@ export function DayStatisticsDialog({
   ] = useState();
   const [confirmationDialogTaskId, setConfirmationDialogTaskId] = useState();
   const [confirmationDialogType, setConfirmationDialogType] = useState();
+  const [textFieldError, setTextFieldError] = useState(null);
 
   const [deleteTask] = useMutation(DELETE_TASK, {
     onCompleted() {
@@ -85,12 +86,14 @@ export function DayStatisticsDialog({
     setConfirmationDialogTaskName(taskName);
     setConfirmationDialogTaskId(taskId);
     setConfirmationDialogType('EDIT');
+    setTextFieldError(null);
   };
   const handleAddTask = () => {
     setConfirmationDialogOpen(true);
     setConfirmationDialogTaskName('');
     setConfirmationDialogTaskId(null);
     setConfirmationDialogType('ADD');
+    setTextFieldError(null);
   };
 
   if (!pages[currentPage]) return '';
@@ -202,6 +205,8 @@ export function DayStatisticsDialog({
         deleteTask={deleteTask}
         editTask={editTask}
         addTask={addTask}
+        textFieldError={textFieldError}
+        setTextFieldError={setTextFieldError}
       />
     </>
   );
