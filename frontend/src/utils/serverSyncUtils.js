@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { gql } from '@apollo/client';
 
+// Queries and mutations
+
 export const POMODORO_QUERY = gql`
   query Pomodoro($shareId: String!) {
     pomodoro(shareId: $shareId) {
@@ -99,7 +101,11 @@ export const GET_LEADER = gql`
 
 export const SAVE_TASK = gql`
   mutation saveTask($user_id: Int!, $task_description: String!, $date: String) {
-    saveTask(user_id: $user_id, task_description: $task_description, date: $date)
+    saveTask(
+      user_id: $user_id
+      task_description: $task_description
+      date: $date
+    )
   }
 `;
 

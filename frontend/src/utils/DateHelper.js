@@ -12,7 +12,7 @@ export function GetWeekNumberFromDate(dt) {
   const firstThursday = tdt.valueOf();
   tdt.setMonth(0, 1);
   if (tdt.getDay() !== 4) {
-    tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
+    tdt.setMonth(0, 1 + ((4 - tdt.getDay() + 7) % 7));
   }
   return 1 + Math.ceil((firstThursday - tdt) / 604800000);
 }
@@ -34,10 +34,8 @@ const addMonths = (input, months) => {
   date.setDate(
     Math.min(
       input.getDate(),
-      getDaysInMonth(
-        date.getFullYear(),
-        date.getMonth() + 1)
-    )
+      getDaysInMonth(date.getFullYear(), date.getMonth() + 1),
+    ),
   );
 
   return date;
@@ -60,7 +58,7 @@ const addMonths = (input, months) => {
 const CreateDateRange = (start, end) => {
   let dates = [];
   let currentDate = new Date(start);
-  if(start > end){
+  if (start > end) {
     while (currentDate >= end) {
       dates = [...dates, new Date(currentDate)];
       currentDate.setDate(currentDate.getDate() - 1);
@@ -72,12 +70,9 @@ const CreateDateRange = (start, end) => {
     dates = [...dates, new Date(currentDate)];
     currentDate.setDate(currentDate.getDate() + 1);
   }
-  dates.sort((d1, d2) => (
-    d1 < d2 ? 1 : -1
-  ));
+  dates.sort((d1, d2) => (d1 < d2 ? 1 : -1));
   return dates;
 };
-
 
 export const GetDatesForLastSixMonths = () => {
   const start = new Date();
@@ -91,7 +86,7 @@ export const GroupDatesIntoWeeks = (dates) => {
   let weeks = [];
   let currentWeekNumber = GetWeekNumberFromDate(new Date(dates[0]));
   let currentWeek = [];
-  dates.forEach(date => {
+  dates.forEach((date) => {
     if (GetWeekNumberFromDate(date) !== currentWeekNumber) {
       weeks.push(currentWeek);
       currentWeek = [];
@@ -108,7 +103,7 @@ export const GetFirstDayOfWeekFromDate = (date) => {
   let diffToMonday = weekDay.getDate() - day + (day === 0 ? -6 : 1);
   let monday = new Date();
   const firstDayOfTheWeek = new Date(monday.setDate(diffToMonday));
-  firstDayOfTheWeek.setHours(0,0,0,0);
+  firstDayOfTheWeek.setHours(0, 0, 0, 0);
   return firstDayOfTheWeek;
 };
 
@@ -118,7 +113,7 @@ export const GetLastDayOfWeekFromDate = (date) => {
   let diffToSunday = weekDay.getDate() + (7 - day);
   let sunday = new Date();
   const lastDayOfTheWeek = new Date(sunday.setDate(diffToSunday));
-  lastDayOfTheWeek.setHours(0,0,0,0);
+  lastDayOfTheWeek.setHours(0, 0, 0, 0);
   return lastDayOfTheWeek;
 };
 
@@ -132,17 +127,17 @@ export const FillWeekWithMissingDates = (week) => {
 export const PrepareWeeks = () => {
   let dates = GetDatesForLastSixMonths();
   let weeks = GroupDatesIntoWeeks(dates);
-  if(weeks[0].length < 7){
+  if (weeks[0].length < 7) {
     weeks[0] = FillWeekWithMissingDates(weeks[0]);
   }
   return weeks;
-}
+};
 
-export const FormatDate = (date2) => {
-  const date = new Date();
+export const FormatDate = (customDate) => {
+  const date = customDate || new Date();
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const day = date.getDate();
 
   return year + '-' + month + '-' + day;
-}
+};

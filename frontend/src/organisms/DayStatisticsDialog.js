@@ -23,13 +23,9 @@ import EditIcon from '@material-ui/icons/Edit';
 
 import { useMutation } from '@apollo/client';
 
+import { DELETE_TASK, EDIT_TASK, ADD_TASK } from 'src/utils/serverSyncUtils';
+
 import { TaskConfirmationDialog } from './TaskConfirmationDialog';
-import { DELETE_TASK, EDIT_TASK } from 'src/utils/serverSyncUtils';
-/* const SAVE_TASK = gql`
-  mutation SaveTask($user_id: Int!, $task_desc: Int!) {
-    saveTask(user_id: $user_id, task_description: String!): String!
-  }
-`; */
 
 export function DayStatisticsDialog({
   open,
@@ -39,6 +35,7 @@ export function DayStatisticsDialog({
   currentPage,
   refetch,
 }) {
+  // States
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [
@@ -47,7 +44,9 @@ export function DayStatisticsDialog({
   ] = useState();
   const [confirmationDialogTaskId, setConfirmationDialogTaskId] = useState();
   const [confirmationDialogType, setConfirmationDialogType] = useState();
+  const [textFieldError, setTextFieldError] = useState(null);
 
+  // Mutations
   const [deleteTask] = useMutation(DELETE_TASK, {
     onCompleted() {
       refetch();
@@ -58,7 +57,13 @@ export function DayStatisticsDialog({
       refetch();
     },
   });
+  const [addTask] = useMutation(ADD_TASK, {
+    onCompleted() {
+      refetch();
+    },
+  });
 
+  // Set filtered day index on change of date, pages or currentPage
   useEffect(() => {
     if (pages[currentPage] && date) {
       let filteredDayIndex = pages[currentPage].findIndex(
@@ -68,23 +73,34 @@ export function DayStatisticsDialog({
     }
   }, [date, pages, currentPage]);
 
+  // Handle close of DayStatisticsDialog
   const handleClose = () => {
     setOpen(false);
   };
+
+  // Prepare confirmation dialog by type
   const handleDeleteTask = (taskId, taskName) => {
     setConfirmationDialogOpen(true);
     setConfirmationDialogTaskName(taskName);
     setConfirmationDialogTaskId(taskId);
     setConfirmationDialogType('DELETE');
-
-    //deleteTask({ variables: { task_id: taskId, user_id: auth.user.user_id } });
   };
+
   const handleEditTask = (taskId, taskName) => {
     setConfirmationDialogOpen(true);
     setConfirmationDialogTaskName(taskName);
     setConfirmationDialogTaskId(taskId);
     setConfirmationDialogType('EDIT');
+    setTextFieldError(null);
   };
+  const handleAddTask = () => {
+    setConfirmationDialogOpen(true);
+    setConfirmationDialogTaskName('');
+    setConfirmationDialogTaskId(null);
+    setConfirmationDialogType('ADD');
+    setTextFieldError(null);
+  };
+
   if (!pages[currentPage]) return '';
 
   return (
@@ -130,16 +146,7 @@ export function DayStatisticsDialog({
           )}
           <List component="nav">
             {pages[currentPage][selectedDayIndex].tasks.map((task) => (
-              <ListItem
-                key={task.task_id}
-                divider={true}
-                //button
-                //selected={selectedUserId === teamMember.user_id}
-                /* onClick={
-                (event) => alert('Click')
-                //handleListItemClick(event, teamMember.user_id)
-              } */
-              >
+              <ListItem key={task.task_id} divider={true}>
                 <Grid container>
                   <Grid item>
                     <ListItemText
@@ -183,7 +190,7 @@ export function DayStatisticsDialog({
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => alert('New task')}
+            onClick={() => handleAddTask()}
             color="secondary"
             variant="contained"
             fullWidth
@@ -199,8 +206,12 @@ export function DayStatisticsDialog({
         taskName={confirmationDialogTaskName}
         taskId={confirmationDialogTaskId}
         type={confirmationDialogType}
+        date={date}
         deleteTask={deleteTask}
         editTask={editTask}
+        addTask={addTask}
+        textFieldError={textFieldError}
+        setTextFieldError={setTextFieldError}
       />
     </>
   );
