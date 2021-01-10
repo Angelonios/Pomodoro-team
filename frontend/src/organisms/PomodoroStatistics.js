@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { TablePaginationActions } from 'src/molecules/TablePaginationActions';
 import { StatisticsTable } from 'src/molecules/StatisticsTable';
 import { Container } from '@material-ui/core';
-import { POMODORO_STATISTICS } from 'src/utils/serverSync';
+import { POMODORO_STATISTICS } from 'src/utils/serverSyncUtils';
 import { useAuth } from 'src/utils/auth';
 import { PrepareWeeks } from 'src/utils/DateHelper';
 

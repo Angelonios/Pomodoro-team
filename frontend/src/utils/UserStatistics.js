@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useAuth } from 'src/utils/auth';
 
 import { usePomodoroState } from 'src/utils/PomodoroContext';
-import { POMODORO_STATISTICS } from 'src/utils/serverSync';
+import { POMODORO_STATISTICS } from 'src/utils/serverSyncUtils';
 
 function UserStatistics({ type }) {
   const auth = useAuth();

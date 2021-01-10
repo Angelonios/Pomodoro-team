@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { usePomodoroState } from 'src/utils/PomodoroContext';
-import { timerStates } from 'src/utils/serverSync';
+import { timerStates } from 'src/utils/serverSyncUtils';
 import sound1 from 'src/assets/nuclear.mp3';
 import useSound from 'use-sound';
 

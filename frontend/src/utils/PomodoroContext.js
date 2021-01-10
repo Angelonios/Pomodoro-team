@@ -14,7 +14,8 @@ import {
   GET_USER_POMODORO_IDS,
   SAVE_POMODORO_DURATION,
   timerStates,
-} from 'src/utils/serverSync';
+  calcDuration,
+} from 'src/utils/serverSyncUtils';
 import {
   pomodoroReducer,
   CLICK_MAIN_BUTTON,
@@ -105,17 +106,6 @@ export function PomodoroProvider({ children }) {
     }
   };
 
-  function calcDuration() {
-    const remainingSeconds = state.remainingSeconds;
-    const pomodoroDuration = getPomodoroComponent(state.position).seconds;
-    const DURATION_LIMIT = -1200;
-    const MAX_DURATION = 2700;
-    if (remainingSeconds <= DURATION_LIMIT) {
-      return MAX_DURATION;
-    }
-    return pomodoroDuration - remainingSeconds;
-  }
-
   const performAction = ({ type, index }) => {
     let newTimerState;
     let newPosition;
@@ -133,7 +123,11 @@ export function PomodoroProvider({ children }) {
             savePomodoroDuration({
               variables: {
                 user_id: user.user_id,
-                duration: calcDuration(),
+                duration: calcDuration({
+                  remainingSeconds: state.remainingSeconds,
+                  pomodoroDuration: getPomodoroComponent(state.position)
+                    .seconds,
+                }),
               },
             });
         } else {

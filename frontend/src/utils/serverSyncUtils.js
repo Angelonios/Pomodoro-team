@@ -167,3 +167,12 @@ export const initServerCommunication = (
     }
   }
 };
+
+export const calcDuration = ({ remainingSeconds, pomodoroDuration }) => {
+  const DURATION_LIMIT = -1200;
+  const MAX_DURATION = 2700;
+  if (remainingSeconds <= DURATION_LIMIT) {
+    return MAX_DURATION;
+  }
+  return pomodoroDuration - remainingSeconds;
+};

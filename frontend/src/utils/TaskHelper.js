@@ -8,16 +8,16 @@ const CURRENT_TASK = 'CURRENT_TASK';
  * @param newTask
  */
 export const addTask = (newTask, auth, saveTaskMutation) => {
-  const currentTask = localStorage.getItem(CURRENT_TASK)
+  const currentTask = localStorage.getItem(CURRENT_TASK);
 
-  if (currentTask === null){
+  if (currentTask === null) {
     localStorage.setItem(CURRENT_TASK, newTask);
 
     return true;
   }
 
   if (!areTasksSimilar(currentTask, newTask)) {
-    localStorage.setItem('task-' + (new Date()).getTime(), currentTask);
+    localStorage.setItem('task-' + new Date().getTime(), currentTask);
     localStorage.setItem(CURRENT_TASK, newTask);
     persistTask(newTask, auth, saveTaskMutation);
 
@@ -28,8 +28,8 @@ export const addTask = (newTask, auth, saveTaskMutation) => {
 };
 
 export const GetCurrentTask = () => {
-  return localStorage.getItem(CURRENT_TASK) ?? "";
-}
+  return localStorage.getItem(CURRENT_TASK) ?? '';
+};
 
 /**
  * This function compares two tasks and determines if they are similar.
@@ -53,11 +53,13 @@ const areTasksSimilar = (task1, task2) => {
 
   if (wordCountTask1 !== wordCountTask2) return false;
 
-  const similarWords = wordsInTask1.map((word1, index) => {
-    const word2 = wordsInTask2[index];
-    const editDistance = getDistanceBetweenStrings(word1, word2);
-    return !(editDistance > 1);
-  }).filter(Boolean).length;
+  const similarWords = wordsInTask1
+    .map((word1, index) => {
+      const word2 = wordsInTask2[index];
+      const editDistance = getDistanceBetweenStrings(word1, word2);
+      return !(editDistance > 1);
+    })
+    .filter(Boolean).length;
 
   if (similarWords === wordCountTask1) {
     return true;
@@ -98,6 +100,6 @@ const persistTask = (task, auth, saveTaskMutation) => {
       user_id: auth.user.user_id,
       task_description: task,
     },
-  })
-    // .catch((err) => logger.error(err));
+  });
+  // .catch((err) => logger.error(err));
 };

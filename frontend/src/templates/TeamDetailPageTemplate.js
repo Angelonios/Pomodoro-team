@@ -17,8 +17,10 @@ import { Garden, SharedPomodoro } from 'src/organisms';
 import { useAuth } from 'src/utils/auth';
 import { ForbiddenPage } from 'src/pages/ForbiddenPage';
 import { PageTitle } from 'src/utils/userNotification/PageTitle';
-import { GET_TEAM_MEMBERS_POMODORO, GET_LEADER } from 'src/utils/serverSync';
-
+import {
+  GET_TEAM_MEMBERS_POMODORO,
+  GET_LEADER,
+} from 'src/utils/serverSyncUtils';
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',

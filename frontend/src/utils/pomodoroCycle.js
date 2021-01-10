@@ -1,4 +1,4 @@
-import { timerStates } from 'src/utils/serverSync';
+import { timerStates } from 'src/utils/serverSyncUtils';
 
 const actions = {
   switchToNext: { label: 'Finish', icon: 'flag' },
