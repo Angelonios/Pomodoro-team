@@ -1,4 +1,4 @@
-# 4IT580: Backend
+# 4IT580: Team Pomodori Backend App
 
 ## Setup ENV Variables
 
