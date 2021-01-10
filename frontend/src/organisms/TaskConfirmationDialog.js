@@ -26,8 +26,10 @@ export function TaskConfirmationDialog({
   setTextFieldError,
 }) {
   const auth = useAuth();
+
   const [textFieldValue, setTextFieldValue] = useState(taskName || '');
 
+  // Handle confirm by type of the dialog
   const handleConfirm = () => {
     switch (type) {
       case 'DELETE':
@@ -66,6 +68,7 @@ export function TaskConfirmationDialog({
     }
   };
 
+  // Handle confirmation dialog close.
   const handleClose = () => {
     setOpen(false);
   };

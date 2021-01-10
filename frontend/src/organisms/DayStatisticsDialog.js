@@ -35,6 +35,7 @@ export function DayStatisticsDialog({
   currentPage,
   refetch,
 }) {
+  // States
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [
@@ -45,6 +46,7 @@ export function DayStatisticsDialog({
   const [confirmationDialogType, setConfirmationDialogType] = useState();
   const [textFieldError, setTextFieldError] = useState(null);
 
+  // Mutations
   const [deleteTask] = useMutation(DELETE_TASK, {
     onCompleted() {
       refetch();
@@ -61,6 +63,7 @@ export function DayStatisticsDialog({
     },
   });
 
+  // Set filtered day index on change of date, pages or currentPage
   useEffect(() => {
     if (pages[currentPage] && date) {
       let filteredDayIndex = pages[currentPage].findIndex(
@@ -70,17 +73,19 @@ export function DayStatisticsDialog({
     }
   }, [date, pages, currentPage]);
 
+  // Handle close of DayStatisticsDialog
   const handleClose = () => {
     setOpen(false);
   };
+
+  // Prepare confirmation dialog by type
   const handleDeleteTask = (taskId, taskName) => {
     setConfirmationDialogOpen(true);
     setConfirmationDialogTaskName(taskName);
     setConfirmationDialogTaskId(taskId);
     setConfirmationDialogType('DELETE');
-
-    //deleteTask({ variables: { task_id: taskId, user_id: auth.user.user_id } });
   };
+
   const handleEditTask = (taskId, taskName) => {
     setConfirmationDialogOpen(true);
     setConfirmationDialogTaskName(taskName);
