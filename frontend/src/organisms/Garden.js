@@ -122,6 +122,14 @@ export function Garden({ team_id, user_id }) {
           tree.col === plantingPosition.column
         );
       });
+      if (
+        plantingPosition.column > 7 ||
+        plantingPosition.row > 7 ||
+        plantingPosition.column < 1 ||
+        plantingPosition.row < 1
+      ) {
+        return false;
+      }
       if (planted) {
         setPlanting(!planting);
         setOpen(true);
