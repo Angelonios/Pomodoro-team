@@ -149,13 +149,15 @@ export const PLANT_TREE = gql`
     $team_id: Int!
     $user_id: Int!
     $display_name: String!
-    $position: String!
+    $row: Int!
+    $col: Int!
   ) {
     PlantTree(
       team_id: $team_id
       user_id: $user_id
       display_name: $display_name
-      position: $position
+      row: $row
+      col: $col
     )
   }
 `;
