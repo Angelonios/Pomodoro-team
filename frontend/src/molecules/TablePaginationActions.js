@@ -17,7 +17,7 @@ export function TablePaginationActions(paginationData) {
   const classes = tableActionsStyle();
   const theme = useTheme();
 
-  const { count, page, rowsPerPage, onChangePage } = paginationData;
+  const { page, onChangePage } = paginationData;
   const handleFirstPageButtonClick = (event) => {
     onChangePage(event, 0);
   };
@@ -28,10 +28,6 @@ export function TablePaginationActions(paginationData) {
 
   const handleNextButtonClick = (event) => {
     onChangePage(event, page + 1);
-  };
-
-  const handleLastPageButtonClick = (event) => {
-    onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
 
   return (

@@ -208,9 +208,7 @@ export function PomodoroProvider({ children }) {
       });
       return null;
     }
-    if (user && serverPomodoro.data.pomodoro === null) {
-      //If backend returns null for a logged in user, it means error. TODO: handle error
-      console.log('Error fetching pomodoro data for logged in user.');
+    if (user && serverPomodoro.data?.pomodoro === null) {
       return null;
     }
     //return query result here
@@ -265,7 +263,7 @@ export function PomodoroProvider({ children }) {
         pauseControls: getPomodoroComponent(state.position).actions[
           state.timerState
         ].pauseControls?.icon,
-        taskName: state.taskName ?? "",
+        taskName: state.taskName ?? '',
       }}
     >
       <PomodoroDispatchContext.Provider value={dispatch}>

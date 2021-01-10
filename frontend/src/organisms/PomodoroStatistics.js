@@ -34,7 +34,7 @@ export function PomodoroStatistics() {
           if (day.date.getTime() === workDay.finished_at.getTime()) {
             day.work = workDay.duration;
             day.tasks = workDay.tasks;
-            console.log('mapped work to day: ' + day);
+            //console.log('mapped work to day: ' + day);
           }
         }
       }

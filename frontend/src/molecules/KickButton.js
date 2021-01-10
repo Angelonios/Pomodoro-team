@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -7,7 +6,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { gql, useMutation } from '@apollo/client';
-import { route } from '../Routes';
 import { useAuth } from '../utils/auth';
 
 const LEAVE_TEAM = gql`
@@ -18,7 +16,6 @@ const LEAVE_TEAM = gql`
 
 export function KickButton({ user_id, team_id, owner_id }) {
   const { user } = useAuth();
-  const history = useHistory();
   const [leaveTeam] = useMutation(LEAVE_TEAM, {
     onCompleted: () => {
       window.location.reload(false);

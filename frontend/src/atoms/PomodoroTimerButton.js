@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import {
   Button,
@@ -15,9 +15,7 @@ import PlayArrowTwoToneIcon from '@material-ui/icons/PlayArrowTwoTone';
 import FlagIcon from '@material-ui/icons/Flag';
 import FreeBreakfastTwoToneIcon from '@material-ui/icons/FreeBreakfastTwoTone';
 
-import {
-  usePomodoroState,
-} from 'src/utils/PomodoroContext';
+import { usePomodoroState } from 'src/utils/PomodoroContext';
 
 import { timerStates } from 'src/utils/serverSync';
 import { useAuth } from '../utils/auth';
@@ -87,11 +85,7 @@ export function PomodoroTimerButton({ text, size }) {
       >
         <Button
           startIcon={getStartIcon()}
-          disabled={
-            (auth.user === null)
-              ? false
-              : state.taskName.length === 0
-          }
+          disabled={auth.user === null ? false : state.taskName.length === 0}
           onClick={() => state.performAction({ type: 'primary' })}
         >
           {buttonText}
@@ -102,9 +96,7 @@ export function PomodoroTimerButton({ text, size }) {
           aria-expanded={open ? 'true' : undefined}
           aria-label="select merge strategy"
           aria-haspopup="menu"
-          disabled={(auth.user === null)
-            ? false
-            : state.taskName.length === 0}
+          disabled={auth.user === null ? false : state.taskName.length === 0}
           onClick={handleToggle}
         >
           <ArrowDropDownIcon />
