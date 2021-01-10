@@ -8,10 +8,10 @@ export function PomodoroTimer() {
   const state = usePomodoroState();
   return (
     <>
-      <Box p={1} pt={6}>
+      <Box p={1}>
         <Grid
           container
-          spacing={10}
+          spacing={6}
           direction="row"
           alignItems="center"
           justify="center"
@@ -33,7 +33,6 @@ export function PomodoroTimer() {
               direction="column"
               justify="center"
               alignItems="center"
-              spacing={2}
             >
               <Grid item>
                 <PomodoroTimerButton />

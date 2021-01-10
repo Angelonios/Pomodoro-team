@@ -18,7 +18,7 @@ export function HomeTemplate() {
             <TaskForm />
           </Box>
           <PomodoroTimer />
-          <Box p={7}>
+          <Box p={4}>
             <PomodoroBot />
           </Box>
           <Box p={7}>
