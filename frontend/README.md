@@ -1,4 +1,10 @@
-# 4IT580: Frontend
+# 4IT580: Team Pomodori Frontend App
+
+## ENV Variables setup
+
+Add `REACT_APP_GRAPHQL_API` variable with URL of your GraphQL server.
+
+## About
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
