@@ -11,6 +11,7 @@ import Gravatar from 'react-gravatar';
 import trava from 'src/assets/trava.png';
 import tree4 from 'src/assets/tree4.png';
 import { Loading } from 'src/atoms';
+import { GardenDialog } from 'src/molecules';
 import { useAuth } from 'src/utils/auth';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: 'contain',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'bottom',
+    WebkitFilter: 'drop-shadow(25px 25px 20px rgba(0,0,0,0.3))',
   },
   root: {
     flexGrow: 1,
@@ -79,26 +81,6 @@ const SPEND_POINTS = gql`
   }
 `;
 
-function getSquarePosition(row, column) {
-  return {
-    top: (row - 1) * 20 + 20 * 9 - (column - 1) * 20,
-    left: (column - 1) * 40 + (row - 1) * 40,
-  };
-}
-
-function getMousePosition(left, top) {
-  left = left + 15;
-  top = top + 15;
-  return {
-    row: Math.round((-180 + left / 2 + top) / 40 - 1.5) + 1,
-    column: Math.round(left / 40 - (-180 + left / 2 + top) / 40 + 0.5) + 1,
-  };
-  /*
-overColumn = Math.round(left / 40 - ((-180 + left / 2 + top) / 40) + 0.5);
-overRow = Math.round((-180 + left / 2 + top) / 40 - 1.5);
-  */
-}
-
 export function Garden({ team_id, user_id }) {
   const abcd = useRef();
   const classes = useStyles();
@@ -106,6 +88,7 @@ export function Garden({ team_id, user_id }) {
   const ROW_COUNT = 7;
   const COLUMN_COUNT = 7;
   const squares = [];
+  const [open, setOpen] = useState(false);
   const [planting, setPlanting] = useState(false);
   const [hoveredSquare, setHoveredSquare] = useState(null);
   const [actualPoints, setActualPoints] = useState(null);
@@ -126,6 +109,22 @@ export function Garden({ team_id, user_id }) {
     gardenSquares.data === null || gardenSquares.data === undefined
   );
 
+  const getSquarePosition = (row, column) => {
+    return {
+      top: (row - 1) * 20 + 20 * 9 - (column - 1) * 20,
+      left: (column - 1) * 40 + (row - 1) * 40,
+    };
+  };
+
+  const getMousePosition = (left, top) => {
+    left = left + 15;
+    top = top + 15;
+    return {
+      row: Math.round((-180 + left / 2 + top) / 40 - 1.5) + 1,
+      column: Math.round(left / 40 - (-180 + left / 2 + top) / 40 + 0.5) + 1,
+    };
+  };
+
   const handleClick = () => {
     setPlanting(!planting);
   };
@@ -144,7 +143,6 @@ export function Garden({ team_id, user_id }) {
     setHoveredSquare(
       getMousePosition(e.pageX - park.offsetLeft, e.pageY - park.offsetTop),
     );
-    //console.log(hoveredSquare);
   };
 
   const handleGardenClick = (e) => {
@@ -161,7 +159,8 @@ export function Garden({ team_id, user_id }) {
         );
       });
       if (planted) {
-        console.log('Zde už je zasazený strom!');
+        setPlanting(!planting);
+        setOpen(true);
       } else {
         plantTree({
           variables: {
@@ -172,14 +171,6 @@ export function Garden({ team_id, user_id }) {
             col: plantingPosition.column,
           },
         });
-        /*  console.log(
-          `Sázíme na ${JSON.stringify(
-            getMousePosition(
-              e.pageX - park.offsetLeft,
-              e.pageY - park.offsetTop,
-            ),
-          )}`,
-        ); */
         setPlanting(!planting);
         setActualPoints(actualPoints - 10);
         gardenSquares.refetch();
@@ -187,7 +178,7 @@ export function Garden({ team_id, user_id }) {
     }
   };
 
-  function drawPark(plantedTrees) {
+  const drawPark = (plantedTrees) => {
     for (let row = 1; row <= ROW_COUNT; row++) {
       for (let column = COLUMN_COUNT; column >= 1; column--) {
         const { top, left } = getSquarePosition(row, column);
@@ -198,7 +189,6 @@ export function Garden({ team_id, user_id }) {
         const planted = plantedTrees.data.gardenSquares.find((tree) => {
           return tree.row === row && tree.col === column;
         });
-        //console.log(row + ' X ' + column);
         if (planted) {
           if (planting) {
             squares.push(
@@ -292,8 +282,16 @@ export function Garden({ team_id, user_id }) {
         }
       }
     }
+    squares.push(
+      <GardenDialog
+        open={open}
+        setOpen={setOpen}
+        setPlanting={setPlanting}
+        key="dialog"
+      />,
+    );
     return squares;
-  }
+  };
 
   return (
     <>
