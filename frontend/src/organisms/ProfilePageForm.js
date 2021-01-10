@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
   },
 }));
-export function ProfilePageForm({ email }) {
+export function ProfilePageForm() {
   const { user } = useAuth();
   const classes = useStyles();
 

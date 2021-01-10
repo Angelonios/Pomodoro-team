@@ -6,7 +6,7 @@ import { CustomThemeContext } from 'src/utils/ThemeContext';
 
 export function ThemeChange() {
   const { currentTheme, setTheme } = useContext(CustomThemeContext);
-  var isDark = currentTheme === 'dark';
+  let isDark = currentTheme === 'dark';
 
   const handleThemeChange = () => {
     if (isDark) {

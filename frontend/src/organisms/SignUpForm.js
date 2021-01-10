@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Avatar, Grid, Box, Paper } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
@@ -12,6 +12,7 @@ import { FormButton } from 'src/atoms';
 import { route } from 'src/Routes';
 
 import { usePomodoroState } from 'src/utils/PomodoroContext';
+import { SIGN_UP } from 'src/utils/serverSyncUtils';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -33,27 +34,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SIGN_UP = gql`
-  mutation SignUp(
-    $email: String!
-    $password: String!
-    $communicationId: String!
-  ) {
-    SignUp(
-      email: $email
-      password: $password
-      communicationId: $communicationId
-    ) {
-      user {
-        user_id
-        email
-        display_name
-      }
-      token
-    }
-  }
-`;
-
 export function SignUpForm({
   emailError,
   updateEmailError,
@@ -62,18 +42,6 @@ export function SignUpForm({
   rePasswordError,
   updateRePasswordError,
 }) {
-  /*
-  const {
-    emailError,
-    updateEmailError,
-    passwordError,
-    updatePasswordError,
-    rePasswordError,
-    updateRePasswordError,
-  } = props;
-
-  props.emailError
-*/
 
   const classes = useStyles();
 
@@ -83,10 +51,6 @@ export function SignUpForm({
     rePassword: '',
   });
 
-  /*
-    Zde to bude chtít asi vymyslet lepší řešení, bohužel se mi nic lepšího
-    npeodařilo. Open for improvement.
-  */
   const [formData, updateFormData] = useState(initialFormData);
   const [emailErrorText, updateEmailErrorText] = useState('');
   const [passwordErrorText, updatePasswordErrorText] = useState('');
@@ -98,7 +62,6 @@ export function SignUpForm({
   const pomodoroState = usePomodoroState();
   const [signUp] = useMutation(SIGN_UP, {
     onCompleted: ({ SignUp: { user, token } }) => {
-      //console.log('good SignUp');
       //auth.signin({ token, user });
       history.push({
         pathname: route.afterSignUp(),
@@ -106,7 +69,6 @@ export function SignUpForm({
       });
     },
     onError: () => {
-      //console.log('bad SignUp');
       updateEmailError(true);
       updateEmailErrorText('This email adress already exists !');
       //routeChange(route.signUp());
@@ -115,7 +77,6 @@ export function SignUpForm({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // ... submit to API or something
     if (
       /^[a-zA-Z0-9.]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]{2,4}$/.test(formData.email)
     ) {

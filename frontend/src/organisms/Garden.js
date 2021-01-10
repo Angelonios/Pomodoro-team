@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -13,6 +13,7 @@ import tree4 from 'src/assets/tree4.png';
 import { Loading } from 'src/atoms';
 import { GardenDialog } from 'src/molecules';
 import { useAuth } from 'src/utils/auth';
+import { GET_GARDEN_SQUARES, GET_LESAPAN, GET_USER_POINTS, PLANT_TREE, SPEND_POINTS } from '../utils/serverSyncUtils';
 
 const useStyles = makeStyles((theme) => ({
   board: {
@@ -32,54 +33,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
 }));
-
-const GET_GARDEN_SQUARES = gql`
-  query gardenSquares($team_id: Int!) {
-    gardenSquares(team_id: $team_id) {
-      row
-      col
-      display_name
-    }
-  }
-`;
-const GET_USER_POINTS = gql`
-  query userPoints($user_id: Int!) {
-    userPoints(user_id: $user_id)
-  }
-`;
-
-const GET_LESAPAN = gql`
-  query lesaPan($team_id: Int!) {
-    lesaPan(team_id: $team_id) {
-      email
-      display_name
-    }
-  }
-`;
-
-const PLANT_TREE = gql`
-  mutation PlantTree(
-    $team_id: Int!
-    $user_id: Int!
-    $display_name: String!
-    $row: Int!
-    $col: Int!
-  ) {
-    PlantTree(
-      team_id: $team_id
-      user_id: $user_id
-      display_name: $display_name
-      row: $row
-      col: $col
-    )
-  }
-`;
-
-const SPEND_POINTS = gql`
-  mutation SpendPoints($user_id: Int!) {
-    SpendPoints(user_id: $user_id)
-  }
-`;
 
 export function Garden({ team_id, user_id }) {
   const abcd = useRef();
@@ -139,7 +92,7 @@ export function Garden({ team_id, user_id }) {
   }
 
   const handleMouseMove = (e) => {
-    var park = document.getElementById('park');
+    let park = document.getElementById('park');
     setHoveredSquare(
       getMousePosition(e.pageX - park.offsetLeft, e.pageY - park.offsetTop),
     );
@@ -147,7 +100,7 @@ export function Garden({ team_id, user_id }) {
 
   const handleGardenClick = (e) => {
     if (planting) {
-      var park = document.getElementById('park');
+      let park = document.getElementById('park');
       const plantingPosition = getMousePosition(
         e.pageX - park.offsetLeft,
         e.pageY - park.offsetTop,

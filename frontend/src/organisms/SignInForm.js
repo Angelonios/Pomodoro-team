@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function SignInForm({ props }) {
+export function SignInForm() {
   const classes = useStyles();
   const auth = useAuth();
   const history = useHistory();
@@ -55,14 +55,12 @@ export function SignInForm({ props }) {
   const [error, updateError] = useState(false);
   const [signIn] = useMutation(SIGN_IN, {
     onCompleted: ({ SignIn: { user, token } }) => {
-      //console.log('good SignIn');
       updateErrorText('');
       updateError(false);
       auth.signin({ token, user });
       history.replace('/');
     },
     onError: () => {
-      //console.log('bad SignIn');
       updateErrorText(
         'Meh, we were unable to find you using these credentials.',
       );
@@ -72,7 +70,6 @@ export function SignInForm({ props }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // ... submit to API or something
     signIn({
       variables: { email: formData.email, password: formData.password },
     });
@@ -81,7 +78,6 @@ export function SignInForm({ props }) {
   const handleChange = (e) => {
     updateFormData({
       ...formData,
-      // Trimming any whitespace
       [e.target.name]: e.target.value.trim(),
     });
   };

@@ -20,7 +20,7 @@ export function AddUserToTeam({ team_id, team_name, teamMembers }) {
     email: '',
   });
   const [formData, updateFormData] = useState(initialFormData);
-  var email;
+  let email;
   const handleClickOpen = () => {
     updateFormData({
       email: '',
@@ -94,7 +94,6 @@ export function AddUserToTeam({ team_id, team_name, teamMembers }) {
             handleChange={handleChange}
             formErrors={emailError}
             helperText={emailErrorText}
-            data={''}
           />
         </DialogContent>
         <DialogActions>

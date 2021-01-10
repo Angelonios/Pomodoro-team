@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Paper, Avatar, Grid, Box, Container } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
@@ -10,16 +10,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Copyright, TeamNameField, CreateTeamDialog } from 'src/molecules';
 import { useAuth } from 'src/utils/auth';
 import { FormButton } from 'src/atoms';
+import { CREATE_TEAM } from 'src/utils/serverSyncUtils';
 
-//TODO: CREATE_TEAM
-const CREATE_TEAM = gql`
-  mutation CreateTeam($teamName: String!, $owner_id: Int!) {
-    CreateTeam(teamName: $teamName, owner_id: $owner_id) {
-      team_id
-      name
-    }
-  }
-`;
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -52,7 +44,7 @@ export function CreateTeamForm({ teamNameError, setTeamNameError }) {
   const [open, setOpen] = useState(false);
   const [formData, updateFormData] = useState(initialFormData);
   const [teamNameErrorText, setTeamNameErrorText] = useState('');
-  var teamName;
+  let teamName;
 
   const [createTeam] = useMutation(CREATE_TEAM, {
     onCompleted: ({ CreateTeam: { teamName, owner_id } }) => {},

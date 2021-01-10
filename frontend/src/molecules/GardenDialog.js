@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -23,7 +23,7 @@ export function GardenDialog({ open, setOpen, setPlanting }) {
         <DialogTitle id="alert-dialog-title">{'INFO'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Zde už je zasazený strom! Zvolte jiné pole.
+            A tree is already planted here! Choose another field.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

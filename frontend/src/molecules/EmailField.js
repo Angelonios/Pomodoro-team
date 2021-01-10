@@ -7,7 +7,6 @@ export function EmailField({
   handleChange,
   formErrors,
   helperText,
-  data,
 }) {
   return (
     <Grid item xs={12}>

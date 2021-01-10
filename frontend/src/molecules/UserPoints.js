@@ -1,19 +1,11 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
 
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
+import { GET_DATA_FOR_USER_POINTS } from '../utils/serverSyncUtils';
 
 export function UserPoints({ user_id }) {
-  const GET_DATA_FOR_USER_POINTS = gql`
-    query Points($user_id: Int!) {
-      user(user_id: $user_id) {
-        used_points
-      }
-      pomodoroStatistics(user_id: $user_id) {
-        duration
-      }
-    }
-  `;
+
 
   const { loading, data } = useQuery(GET_DATA_FOR_USER_POINTS, {
     variables: {

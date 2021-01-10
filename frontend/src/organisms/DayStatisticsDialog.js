@@ -21,35 +21,15 @@ import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
 import { TaskConfirmationDialog } from './TaskConfirmationDialog';
-
-const DELETE_TASK = gql`
-  mutation DeleteTask($user_id: Int!, $task_id: Int!) {
-    deleteTask(user_id: $user_id, task_id: $task_id)
-  }
-`;
-
+import { DELETE_TASK, EDIT_TASK } from 'src/utils/serverSyncUtils';
 /* const SAVE_TASK = gql`
   mutation SaveTask($user_id: Int!, $task_desc: Int!) {
     saveTask(user_id: $user_id, task_description: String!): String!
   }
 `; */
-
-const EDIT_TASK = gql`
-  mutation EditTask(
-    $user_id: Int!
-    $task_id: Int!
-    $task_description: String!
-  ) {
-    editTask(
-      user_id: $user_id
-      task_id: $task_id
-      task_description: $task_description
-    )
-  }
-`;
 
 export function DayStatisticsDialog({
   open,

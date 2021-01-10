@@ -1,10 +1,11 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Tooltip } from '@material-ui/core';
 
 import tree3 from 'src/assets/tree3.png';
 import { useAuth } from 'src/utils/auth';
+import { PLANT_TREE, SPEND_POINTS } from 'src/utils/serverSyncUtils';
 
 const useStyles = makeStyles((theme) => ({
   square: {
@@ -33,28 +34,6 @@ const useStyles = makeStyles((theme) => ({
     float: 'left',
   },
 }));
-
-const PLANT_TREE = gql`
-  mutation PlantTree(
-    $team_id: Int!
-    $user_id: Int!
-    $display_name: String!
-    $position: String!
-  ) {
-    PlantTree(
-      team_id: $team_id
-      user_id: $user_id
-      display_name: $display_name
-      position: $position
-    )
-  }
-`;
-
-const SPEND_POINTS = gql`
-  mutation SpendPoints($user_id: Int!) {
-    SpendPoints(user_id: $user_id)
-  }
-`;
 
 export function SquareInRow({
   rowNum,
