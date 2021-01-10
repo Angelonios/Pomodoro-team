@@ -109,7 +109,6 @@ export function SignUpForm({
       updateRePasswordErrorText('The passwords do not match !');
     }
     if (!(email || password || rePassword)) {
-      //console.log(formData);
       signUp({
         variables: {
           email: formData.email,

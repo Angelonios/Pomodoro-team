@@ -27,7 +27,6 @@ export function TaskForm() {
   const [saveTask] = useMutation(SAVE_TASK);
 
   const handleTaskFormEdit = () => {
-    debugger;
     if (task.trim().length === 0) {
       setTask(
         data !== undefined || data.getCurrentTask !== null

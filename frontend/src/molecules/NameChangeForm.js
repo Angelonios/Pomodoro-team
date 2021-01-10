@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { NameField, CreateTeamDialog } from 'src/molecules';
 import { useAuth } from 'src/utils/auth';
 import { FormButton } from 'src/atoms';
-import { NAME_CHANGE } from '../utils/serverSyncUtils';
+import { NAME_CHANGE } from 'src/utils/serverSyncUtils';
 
 const useStyles = makeStyles((theme) => ({
   paper: {

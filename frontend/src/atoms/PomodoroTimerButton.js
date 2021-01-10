@@ -22,7 +22,6 @@ import { timerStates } from 'src/utils/serverSyncUtils';
 import { useAuth } from 'src/utils/auth';
 
 export function PomodoroTimerButton() {
-  debugger;
   const auth = useAuth();
   const state = usePomodoroState();
 

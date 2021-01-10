@@ -13,7 +13,7 @@ import tree4 from 'src/assets/tree4.png';
 import { Loading } from 'src/atoms';
 import { GardenDialog } from 'src/molecules';
 import { useAuth } from 'src/utils/auth';
-import { GET_GARDEN_SQUARES, GET_LESAPAN, GET_USER_POINTS, PLANT_TREE, SPEND_POINTS } from '../utils/serverSyncUtils';
+import { GET_GARDEN_SQUARES, GET_LESAPAN, GET_USER_POINTS, PLANT_TREE, SPEND_POINTS } from 'src/utils/serverSyncUtils';
 
 const useStyles = makeStyles((theme) => ({
   board: {
