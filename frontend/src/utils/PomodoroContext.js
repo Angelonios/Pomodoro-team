@@ -15,6 +15,7 @@ import {
   SAVE_POMODORO_DURATION,
   timerStates,
   calcDuration,
+  timerComponents,
 } from 'src/utils/serverSyncUtils';
 import {
   pomodoroReducer,
@@ -30,15 +31,25 @@ const PomodoroStateContext = createContext();
 const PomodoroDispatchContext = createContext();
 
 export function PomodoroProvider({ children }) {
+  // States
   const [communicationId, setCommunicationId] = useState('');
   const [shareId, setShareId] = useState('');
   const [shareUrl, setShareUrl] = useState();
+  const [userId, setUserId] = useState(0);
+  const { user } = useAuth();
+
+  // Queries
   const serverPomodoro = useQuery(POMODORO_QUERY, { variables: { shareId } });
+  const userPomodoroIds = useQuery(GET_USER_POMODORO_IDS, {
+    variables: { user_id: userId },
+    skip: !user,
+  });
+
+  // Mutations
   const [updateMutation] = useMutation(UPDATE_POMODORO_MUTATION);
   const [savePomodoroDuration] = useMutation(SAVE_POMODORO_DURATION);
-  const { user } = useAuth();
-  const [userId, setUserId] = useState(0);
 
+  // Main reducer
   const [state, dispatch] = useReducer(pomodoroReducer, {
     remainingSeconds: 1500,
     secondsSinceStart: 0,
@@ -48,11 +59,7 @@ export function PomodoroProvider({ children }) {
     taskName: GetCurrentTask(),
   });
 
-  const userPomodoroIds = useQuery(GET_USER_POMODORO_IDS, {
-    variables: { user_id: userId },
-    skip: !user,
-  });
-
+  // Set communication and share IDs (used for communication with server)
   useEffect(() => {
     if (!userPomodoroIds.loading && !userPomodoroIds.error && user) {
       const ids = initServerCommunication(
@@ -70,12 +77,14 @@ export function PomodoroProvider({ children }) {
     }
   }, [userPomodoroIds, user]);
 
+  // Set userId after login
   useEffect(() => {
     if (user) {
       setUserId(user.user_id);
     }
   }, [user]);
 
+  // Determine what to do when user selects a secondary action (in dropdown submenu of the main button).
   const handleSecondaryActions = (index) => {
     let newTimerState = state.timerState;
     let newPosition = state.position;
@@ -106,6 +115,11 @@ export function PomodoroProvider({ children }) {
     }
   };
 
+  // Perform action after user's button click based on action type and current pomodoro component
+  // Types:
+  //    primary: main button,
+  //    secondary: items in dropdown submenu of the main button,
+  //    pause: pause button
   const performAction = ({ type, index }) => {
     let newTimerState;
     let newPosition;
@@ -117,8 +131,9 @@ export function PomodoroProvider({ children }) {
           state.timerState !== timerStates.offline
         ) {
           newTimerState = timerStates.idle;
-          //statistics
-          getPomodoroComponent(state.position).type === 1 &&
+          //Save pomodoro duration to statistics if component type is pomodoro and user is logged in
+          getPomodoroComponent(state.position).type ===
+            timerComponents.pomodoro &&
             user &&
             savePomodoroDuration({
               variables: {
@@ -186,12 +201,13 @@ export function PomodoroProvider({ children }) {
     });
   };
 
+  // Memoized pomodoro data from server
   const cachedServerData = useMemo(() => {
     if (serverPomodoro.loading || serverPomodoro.error) {
       return null;
     }
     if (!user && serverPomodoro.data.pomodoro === null) {
-      //If backend returns null, then we have to send mutation with new share and communication ids
+      //If backend returns null, then we have to send mutation with new share and communication ids in order to create a new entry in DB
       updateMutation({
         variables: {
           state: timerStates.idle,
@@ -205,7 +221,7 @@ export function PomodoroProvider({ children }) {
     if (user && serverPomodoro.data?.pomodoro === null) {
       return null;
     }
-    //return query result here
+    //Return query result here
     return serverPomodoro.data;
   }, [
     serverPomodoro.loading,
@@ -217,8 +233,8 @@ export function PomodoroProvider({ children }) {
     user,
   ]);
 
+  // Refresh reducer state every second
   useEffect(() => {
-    //Refresh context every second
     if (
       state.timerState === timerStates.idle ||
       state.timerState === timerStates.paused ||
@@ -231,6 +247,7 @@ export function PomodoroProvider({ children }) {
     return () => clearTimeout(timer);
   }, [state.timerState, state.remainingSeconds, state.position]);
 
+  // Set reducer state to the pomodoro data received from the server
   useEffect(() => {
     if (cachedServerData !== null) {
       dispatch({
