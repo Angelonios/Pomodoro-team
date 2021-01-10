@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -119,9 +120,10 @@ export function DayStatisticsDialog({
             container
             alignItems="center"
             justify="space-between"
-            spacing={4}
+            spacing={2}
+            direction="row"
           >
-            <Grid item>
+            <Grid item xs={10}>
               {date?.toLocaleString('en-us', {
                 year: 'numeric',
                 month: 'long',
@@ -129,10 +131,12 @@ export function DayStatisticsDialog({
                 weekday: 'long',
               })}
             </Grid>
-            <Grid item>
-              <IconButton aria-label="close" onClick={handleClose}>
-                <CloseIcon />
-              </IconButton>
+            <Grid item xs={2}>
+              <Box textAlign="right">
+                <IconButton aria-label="close" onClick={handleClose}>
+                  <CloseIcon />
+                </IconButton>
+              </Box>
             </Grid>
           </Grid>
         </DialogTitle>
