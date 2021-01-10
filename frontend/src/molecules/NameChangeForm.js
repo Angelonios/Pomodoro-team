@@ -1,18 +1,13 @@
 import React from 'react';
 import { useState } from 'react';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { NameField, CreateTeamDialog } from 'src/molecules';
 import { useAuth } from 'src/utils/auth';
 import { FormButton } from 'src/atoms';
-
-const NAME_CHANGE = gql`
-  mutation NameChange($name: String!, $user_id: Int!) {
-    NameChange(name: $name, user_id: $user_id)
-  }
-`;
+import { NAME_CHANGE } from 'src/utils/serverSyncUtils';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,7 +31,7 @@ export function NameChangeForm({ name }) {
   const [open, setOpen] = useState(false);
   const [formData, updateFormData] = useState(initialFormData);
   const [nameErrorText, setNameErrorText] = useState('');
-  var nameErr;
+  let nameErr;
   const [nameError, setNameError] = useState(false);
 
   const [changeName] = useMutation(NAME_CHANGE, {
@@ -60,7 +55,7 @@ export function NameChangeForm({ name }) {
       changeName({
         variables: { name: formData.name.trim(), user_id: user.user_id },
       });
-      var storage = JSON.parse(window.localStorage.getItem('app-auth'));
+      let storage = JSON.parse(window.localStorage.getItem('app-auth'));
       storage.user.display_name = formData.name.trim();
       window.localStorage.setItem('app-auth', JSON.stringify(storage));
     }
@@ -69,7 +64,6 @@ export function NameChangeForm({ name }) {
   const handleChange = (e) => {
     updateFormData({
       ...formData,
-      // Trimming any whitespace
       [e.target.name]: e.target.value.trim(),
     });
   };

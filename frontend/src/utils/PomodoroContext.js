@@ -23,7 +23,6 @@ import {
   GET_REMAINING_SECONDS,
   SET_POMODORO_STATE,
 } from 'src/utils/pomodoroReducer';
-import { GetCurrentTask } from './TaskHelper';
 
 import { useAuth } from 'src/utils/auth';
 
@@ -56,7 +55,7 @@ export function PomodoroProvider({ children }) {
     finalTime: 0,
     position: 0,
     timerState: timerStates.idle,
-    taskName: GetCurrentTask(),
+    taskName: '',
   });
 
   // Set communication and share IDs (used for communication with server)

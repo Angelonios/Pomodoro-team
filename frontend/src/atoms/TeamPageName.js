@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Typography, Tooltip } from '@material-ui/core';
 
-import { TeamDetailAvatar } from 'src/atoms/';
+import { TeamDetailAvatar } from 'src/atoms/TeamDetailAvatar';
 
 export function TeamPageName({ email, name, owner }) {
   return (

@@ -1,22 +1,11 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { route } from 'src/Routes';
 import { useAuth } from 'src/utils/auth';
 import { LeaveTeamDialog } from 'src/organisms';
-
-const LEAVE_TEAM = gql`
-  mutation LeaveTeam($team_id: Int!, $user_id: Int!) {
-    LeaveTeam(team_id: $team_id, user_id: $user_id)
-  }
-`;
-
-const SET_NEW_TEAM_OWNER = gql`
-  mutation SetNewTeamOwner($team_id: Int!, $new_owner_user_id: Int!) {
-    SetNewTeamOwner(new_owner_user_id: $new_owner_user_id, team_id: $team_id)
-  }
-`;
+import { LEAVE_TEAM, SET_NEW_TEAM_OWNER } from 'src/utils/serverSyncUtils';
 
 export function LeaveTeamButton({ team_id, owner, teamMembers }) {
   const { user } = useAuth();

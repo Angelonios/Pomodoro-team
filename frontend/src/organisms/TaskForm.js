@@ -40,6 +40,7 @@ export function TaskForm() {
       variables: {
         user_id: auth.user.user_id,
         task_description: task,
+        date: null,
       },
     });
   };

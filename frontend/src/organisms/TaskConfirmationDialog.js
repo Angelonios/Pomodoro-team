@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 
 import { useAuth } from 'src/utils/auth';
+import { FormatDate } from 'src/utils/DateHelper';
 
 export function TaskConfirmationDialog({
   open,
@@ -19,26 +20,47 @@ export function TaskConfirmationDialog({
   type,
   deleteTask,
   editTask,
+  addTask,
+  date,
+  textFieldError,
+  setTextFieldError,
 }) {
   const auth = useAuth();
-  const [textFieldValue, setTextFieldValue] = useState(taskName);
 
+  const [textFieldValue, setTextFieldValue] = useState(taskName || '');
+
+  // Handle confirm by type of the dialog
   const handleConfirm = () => {
-    setOpen(false);
     switch (type) {
       case 'DELETE':
         deleteTask({
           variables: { task_id: taskId, user_id: auth.user.user_id },
         });
+        setOpen(false);
         break;
       case 'EDIT':
-        editTask({
-          variables: {
-            task_id: taskId,
-            user_id: auth.user.user_id,
-            task_description: textFieldValue,
-          },
-        });
+        if (textFieldValue.trim() !== '') {
+          editTask({
+            variables: {
+              task_id: taskId,
+              user_id: auth.user.user_id,
+              task_description: textFieldValue,
+            },
+          });
+          setOpen(false);
+        } else setTextFieldError('Task name cannot be empty!');
+        break;
+      case 'ADD':
+        if (textFieldValue.trim() !== '') {
+          addTask({
+            variables: {
+              user_id: auth.user.user_id,
+              task_description: textFieldValue,
+              date: FormatDate(date),
+            },
+          });
+          setOpen(false);
+        } else setTextFieldError('Task name cannot be empty!');
         break;
 
       default:
@@ -46,6 +68,7 @@ export function TaskConfirmationDialog({
     }
   };
 
+  // Handle confirmation dialog close.
   const handleClose = () => {
     setOpen(false);
   };
@@ -63,7 +86,13 @@ export function TaskConfirmationDialog({
           ? 'Are you sure?'
           : type === 'EDIT'
           ? 'Edit task'
-          : 'Add new task'}
+          : `Add new task on ${date?.toLocaleString('en-us', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              weekday: 'long',
+            })}
+          `}
       </DialogTitle>
       <DialogContent>
         {type === 'DELETE' ? (
@@ -75,6 +104,8 @@ export function TaskConfirmationDialog({
         )}
         {type !== 'DELETE' ? (
           <TextField
+            error={textFieldError}
+            helperText={textFieldError}
             autoFocus
             margin="dense"
             id="name"
@@ -91,10 +122,10 @@ export function TaskConfirmationDialog({
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="secondary">
+        <Button onClick={handleClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={handleConfirm} color="primary" autoFocus>
+        <Button onClick={handleConfirm} color="secondary" autoFocus>
           {type === 'DELETE'
             ? 'Yes, delete!'
             : type === 'EDIT'

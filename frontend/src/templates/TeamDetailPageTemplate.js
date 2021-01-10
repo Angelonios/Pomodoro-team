@@ -101,11 +101,6 @@ export function TeamDetailPageTemplate() {
                       {teamName}
                     </Typography>
                   </Grid>
-                  {/*
-                <Grid item xs={12} md={4}>
-                  <UserPoints user_id={user.user_id} />
-                </Grid>
-              */}
                   {beta && <Garden team_id={teamId} user_id={user.user_id} />}
                   <div
                     style={{
@@ -191,7 +186,7 @@ export function TeamDetailPageTemplate() {
                               user_id={teamMemberPomodoro.user_id}
                               team_id={teamId}
                               owner_id={leader.data.team.owner_id}
-                            ></KickButton>
+                            />
                           </Grid>
                           <div
                             style={{

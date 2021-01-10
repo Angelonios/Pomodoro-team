@@ -1,5 +1,3 @@
-import { user, userPomodoroIds } from '../user/query';
-
 export const pomodoro = async (_, { shareId }, { dbConnection }) => {
   if (shareId !== '' && shareId !== undefined) {
     const pomodoro = await getPomodoro({ shareId, dbConnection });

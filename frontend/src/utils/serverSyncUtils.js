@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { gql } from '@apollo/client';
 
+// Queries and mutations
+
 export const POMODORO_QUERY = gql`
   query Pomodoro($shareId: String!) {
     pomodoro(shareId: $shareId) {
@@ -98,8 +100,12 @@ export const GET_LEADER = gql`
 `;
 
 export const SAVE_TASK = gql`
-  mutation saveTask($user_id: Int!, $task_description: String!) {
-    saveTask(user_id: $user_id, task_description: $task_description)
+  mutation saveTask($user_id: Int!, $task_description: String!, $date: String) {
+    saveTask(
+      user_id: $user_id
+      task_description: $task_description
+      date: $date
+    )
   }
 `;
 
@@ -116,6 +122,142 @@ export const GET_CURRENT_TASK = gql`
       user_id
       pomodoro_statistic_id
       task_description
+    }
+  }
+`;
+
+export const LEAVE_TEAM = gql`
+  mutation LeaveTeam($team_id: Int!, $user_id: Int!) {
+    LeaveTeam(team_id: $team_id, user_id: $user_id)
+  }
+`;
+
+export const SET_NEW_TEAM_OWNER = gql`
+  mutation SetNewTeamOwner($team_id: Int!, $new_owner_user_id: Int!) {
+    SetNewTeamOwner(new_owner_user_id: $new_owner_user_id, team_id: $team_id)
+  }
+`;
+
+export const NAME_CHANGE = gql`
+  mutation NameChange($name: String!, $user_id: Int!) {
+    NameChange(name: $name, user_id: $user_id)
+  }
+`;
+
+export const PLANT_TREE = gql`
+  mutation PlantTree(
+    $team_id: Int!
+    $user_id: Int!
+    $display_name: String!
+    $position: String!
+  ) {
+    PlantTree(
+      team_id: $team_id
+      user_id: $user_id
+      display_name: $display_name
+      position: $position
+    )
+  }
+`;
+
+export const SPEND_POINTS = gql`
+  mutation SpendPoints($user_id: Int!) {
+    SpendPoints(user_id: $user_id)
+  }
+`;
+
+export const GET_DATA_FOR_USER_POINTS = gql`
+  query Points($user_id: Int!) {
+    user(user_id: $user_id) {
+      used_points
+    }
+    pomodoroStatistics(user_id: $user_id) {
+      duration
+    }
+  }
+`;
+
+export const CREATE_TEAM = gql`
+  mutation CreateTeam($teamName: String!, $owner_id: Int!) {
+    CreateTeam(teamName: $teamName, owner_id: $owner_id) {
+      team_id
+      name
+    }
+  }
+`;
+
+export const EDIT_TASK = gql`
+  mutation EditTask(
+    $user_id: Int!
+    $task_id: Int!
+    $task_description: String!
+  ) {
+    editTask(
+      user_id: $user_id
+      task_id: $task_id
+      task_description: $task_description
+    )
+  }
+`;
+
+export const DELETE_TASK = gql`
+  mutation DeleteTask($user_id: Int!, $task_id: Int!) {
+    deleteTask(user_id: $user_id, task_id: $task_id)
+  }
+`;
+
+export const ADD_TASK = gql`
+  mutation SaveTask($user_id: Int!, $task_description: String!, $date: String) {
+    saveTask(
+      user_id: $user_id
+      task_description: $task_description
+      date: $date
+    )
+  }
+`;
+
+export const GET_GARDEN_SQUARES = gql`
+  query gardenSquares($team_id: Int!) {
+    gardenSquares(team_id: $team_id) {
+      row
+      col
+      display_name
+    }
+  }
+`;
+
+export const GET_USER_POINTS = gql`
+  query userPoints($user_id: Int!) {
+    userPoints(user_id: $user_id)
+  }
+`;
+
+export const GET_LESAPAN = gql`
+  query lesaPan($team_id: Int!) {
+    lesaPan(team_id: $team_id) {
+      email
+      display_name
+    }
+  }
+`;
+
+export const SIGN_UP = gql`
+  mutation SignUp(
+    $email: String!
+    $password: String!
+    $communicationId: String!
+  ) {
+    SignUp(
+      email: $email
+      password: $password
+      communicationId: $communicationId
+    ) {
+      user {
+        user_id
+        email
+        display_name
+      }
+      token
     }
   }
 `;

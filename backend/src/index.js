@@ -129,7 +129,7 @@ const typeDefs = gql`
 
     SetNewTeamOwner(team_id: Int!, new_owner_user_id: Int!): Boolean
 
-    saveTask(user_id: Int!, task_description: String!): String!
+    saveTask(user_id: Int!, task_description: String!, date: String): String!
 
     deleteTask(user_id: Int!, task_id: Int!): String!
     

@@ -5,14 +5,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useAuth } from 'src/utils/auth';
-
-const LEAVE_TEAM = gql`
-  mutation LeaveTeam($team_id: Int!, $user_id: Int!) {
-    LeaveTeam(team_id: $team_id, user_id: $user_id)
-  }
-`;
+import { LEAVE_TEAM } from 'src/utils/serverSyncUtils';
 
 export function KickButton({ user_id, team_id, owner_id }) {
   const { user } = useAuth();
@@ -38,7 +33,7 @@ export function KickButton({ user_id, team_id, owner_id }) {
       },
     });
   };
-  //console.log(user_id, owner_id, user.user_id);
+
   if (user_id === owner_id) {
     return '';
   } else if (user.user_id === owner_id) {

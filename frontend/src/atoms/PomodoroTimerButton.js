@@ -21,7 +21,7 @@ import { usePomodoroState } from 'src/utils/PomodoroContext';
 import { timerStates } from 'src/utils/serverSyncUtils';
 import { useAuth } from 'src/utils/auth';
 
-export function PomodoroTimerButton({ text, size }) {
+export function PomodoroTimerButton() {
   const auth = useAuth();
   const state = usePomodoroState();
 
@@ -47,11 +47,11 @@ export function PomodoroTimerButton({ text, size }) {
 
   const dropDownOptions = state.actions.secondary;
 
-  let buttonText = '';
-  state.pomodoroTimerState === timerStates.running ||
-  state.pomodoroTimerState === timerStates.paused
-    ? (buttonText = 'Finish')
-    : (buttonText = state.buttonText);
+  const buttonText =
+    state.pomodoroTimerState === timerStates.running ||
+    state.pomodoroTimerState === timerStates.paused
+      ? 'Finish'
+      : state.buttonText;
 
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -91,7 +91,6 @@ export function PomodoroTimerButton({ text, size }) {
           variant="contained"
           color={state.color}
           ref={anchorRef}
-          size={size}
           aria-label="split button"
         >
           <Button

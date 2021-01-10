@@ -52,11 +52,7 @@ export function TablePaginationActions(paginationData) {
         )}
       </IconButton>
 
-      <IconButton
-        onClick={handleNextButtonClick}
-        // disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="next page"
-      >
+      <IconButton onClick={handleNextButtonClick} aria-label="next page">
         {theme.direction === 'rtl' ? (
           <KeyboardArrowLeft />
         ) : (
