@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { gql } from '@apollo/client';
 
+// Queries and mutations
+
 export const POMODORO_QUERY = gql`
   query Pomodoro($shareId: String!) {
     pomodoro(shareId: $shareId) {
@@ -99,7 +101,11 @@ export const GET_LEADER = gql`
 
 export const SAVE_TASK = gql`
   mutation saveTask($user_id: Int!, $task_description: String!, $date: String) {
-    saveTask(user_id: $user_id, task_description: $task_description, date: $date)
+    saveTask(
+      user_id: $user_id
+      task_description: $task_description
+      date: $date
+    )
   }
 `;
 
@@ -117,6 +123,36 @@ export const GET_CURRENT_TASK = gql`
       pomodoro_statistic_id
       task_description
     }
+  }
+`;
+
+export const DELETE_TASK = gql`
+  mutation DeleteTask($user_id: Int!, $task_id: Int!) {
+    deleteTask(user_id: $user_id, task_id: $task_id)
+  }
+`;
+
+export const ADD_TASK = gql`
+  mutation SaveTask($user_id: Int!, $task_description: String!, $date: String) {
+    saveTask(
+      user_id: $user_id
+      task_description: $task_description
+      date: $date
+    )
+  }
+`;
+
+export const EDIT_TASK = gql`
+  mutation EditTask(
+    $user_id: Int!
+    $task_id: Int!
+    $task_description: String!
+  ) {
+    editTask(
+      user_id: $user_id
+      task_id: $task_id
+      task_description: $task_description
+    )
   }
 `;
 

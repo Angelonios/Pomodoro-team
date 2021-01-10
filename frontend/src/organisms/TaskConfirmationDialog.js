@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 
 import { useAuth } from 'src/utils/auth';
+import { FormatDate } from 'src/utils/DateHelper';
 
 export function TaskConfirmationDialog({
   open,
@@ -19,6 +20,8 @@ export function TaskConfirmationDialog({
   type,
   deleteTask,
   editTask,
+  addTask,
+  date,
 }) {
   const auth = useAuth();
   const [textFieldValue, setTextFieldValue] = useState(taskName);
@@ -37,6 +40,15 @@ export function TaskConfirmationDialog({
             task_id: taskId,
             user_id: auth.user.user_id,
             task_description: textFieldValue,
+          },
+        });
+        break;
+      case 'ADD':
+        addTask({
+          variables: {
+            user_id: auth.user.user_id,
+            task_description: textFieldValue,
+            date: FormatDate(date),
           },
         });
         break;
@@ -63,7 +75,13 @@ export function TaskConfirmationDialog({
           ? 'Are you sure?'
           : type === 'EDIT'
           ? 'Edit task'
-          : 'Add new task'}
+          : `Add new task on ${date?.toLocaleString('en-us', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              weekday: 'long',
+            })}
+          `}
       </DialogTitle>
       <DialogContent>
         {type === 'DELETE' ? (

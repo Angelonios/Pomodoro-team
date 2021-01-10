@@ -23,33 +23,9 @@ import EditIcon from '@material-ui/icons/Edit';
 
 import { gql, useMutation } from '@apollo/client';
 
+import { DELETE_TASK, EDIT_TASK, ADD_TASK } from 'src/utils/serverSyncUtils';
+
 import { TaskConfirmationDialog } from './TaskConfirmationDialog';
-
-const DELETE_TASK = gql`
-  mutation DeleteTask($user_id: Int!, $task_id: Int!) {
-    deleteTask(user_id: $user_id, task_id: $task_id)
-  }
-`;
-
-/* const SAVE_TASK = gql`
-  mutation SaveTask($user_id: Int!, $task_desc: Int!) {
-    saveTask(user_id: $user_id, task_description: String!): String!
-  }
-`; */
-
-const EDIT_TASK = gql`
-  mutation EditTask(
-    $user_id: Int!
-    $task_id: Int!
-    $task_description: String!
-  ) {
-    editTask(
-      user_id: $user_id
-      task_id: $task_id
-      task_description: $task_description
-    )
-  }
-`;
 
 export function DayStatisticsDialog({
   open,
@@ -74,6 +50,11 @@ export function DayStatisticsDialog({
     },
   });
   const [editTask] = useMutation(EDIT_TASK, {
+    onCompleted() {
+      refetch();
+    },
+  });
+  const [addTask] = useMutation(ADD_TASK, {
     onCompleted() {
       refetch();
     },
@@ -105,6 +86,13 @@ export function DayStatisticsDialog({
     setConfirmationDialogTaskId(taskId);
     setConfirmationDialogType('EDIT');
   };
+  const handleAddTask = () => {
+    setConfirmationDialogOpen(true);
+    setConfirmationDialogTaskName('');
+    setConfirmationDialogTaskId(null);
+    setConfirmationDialogType('ADD');
+  };
+
   if (!pages[currentPage]) return '';
 
   return (
@@ -150,16 +138,7 @@ export function DayStatisticsDialog({
           )}
           <List component="nav">
             {pages[currentPage][selectedDayIndex].tasks.map((task) => (
-              <ListItem
-                key={task.task_id}
-                divider={true}
-                //button
-                //selected={selectedUserId === teamMember.user_id}
-                /* onClick={
-                (event) => alert('Click')
-                //handleListItemClick(event, teamMember.user_id)
-              } */
-              >
+              <ListItem key={task.task_id} divider={true}>
                 <Grid container>
                   <Grid item>
                     <ListItemText
@@ -203,7 +182,7 @@ export function DayStatisticsDialog({
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => alert('New task')}
+            onClick={() => handleAddTask()}
             color="secondary"
             variant="contained"
             fullWidth
@@ -219,8 +198,10 @@ export function DayStatisticsDialog({
         taskName={confirmationDialogTaskName}
         taskId={confirmationDialogTaskId}
         type={confirmationDialogType}
+        date={date}
         deleteTask={deleteTask}
         editTask={editTask}
+        addTask={addTask}
       />
     </>
   );
