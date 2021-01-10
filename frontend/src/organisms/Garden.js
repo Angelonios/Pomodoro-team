@@ -81,26 +81,6 @@ const SPEND_POINTS = gql`
   }
 `;
 
-function getSquarePosition(row, column) {
-  return {
-    top: (row - 1) * 20 + 20 * 9 - (column - 1) * 20,
-    left: (column - 1) * 40 + (row - 1) * 40,
-  };
-}
-
-function getMousePosition(left, top) {
-  left = left + 15;
-  top = top + 15;
-  return {
-    row: Math.round((-180 + left / 2 + top) / 40 - 1.5) + 1,
-    column: Math.round(left / 40 - (-180 + left / 2 + top) / 40 + 0.5) + 1,
-  };
-  /*
-overColumn = Math.round(left / 40 - ((-180 + left / 2 + top) / 40) + 0.5);
-overRow = Math.round((-180 + left / 2 + top) / 40 - 1.5);
-  */
-}
-
 export function Garden({ team_id, user_id }) {
   const abcd = useRef();
   const classes = useStyles();
@@ -129,6 +109,22 @@ export function Garden({ team_id, user_id }) {
     gardenSquares.data === null || gardenSquares.data === undefined
   );
 
+  const getSquarePosition = (row, column) => {
+    return {
+      top: (row - 1) * 20 + 20 * 9 - (column - 1) * 20,
+      left: (column - 1) * 40 + (row - 1) * 40,
+    };
+  };
+
+  const getMousePosition = (left, top) => {
+    left = left + 15;
+    top = top + 15;
+    return {
+      row: Math.round((-180 + left / 2 + top) / 40 - 1.5) + 1,
+      column: Math.round(left / 40 - (-180 + left / 2 + top) / 40 + 0.5) + 1,
+    };
+  };
+
   const handleClick = () => {
     setPlanting(!planting);
   };
@@ -147,7 +143,6 @@ export function Garden({ team_id, user_id }) {
     setHoveredSquare(
       getMousePosition(e.pageX - park.offsetLeft, e.pageY - park.offsetTop),
     );
-    //console.log(hoveredSquare);
   };
 
   const handleGardenClick = (e) => {
@@ -183,7 +178,7 @@ export function Garden({ team_id, user_id }) {
     }
   };
 
-  function drawPark(plantedTrees) {
+  const drawPark = (plantedTrees) => {
     for (let row = 1; row <= ROW_COUNT; row++) {
       for (let column = COLUMN_COUNT; column >= 1; column--) {
         const { top, left } = getSquarePosition(row, column);
@@ -194,7 +189,6 @@ export function Garden({ team_id, user_id }) {
         const planted = plantedTrees.data.gardenSquares.find((tree) => {
           return tree.row === row && tree.col === column;
         });
-        //console.log(row + ' X ' + column);
         if (planted) {
           if (planting) {
             squares.push(
@@ -297,7 +291,7 @@ export function Garden({ team_id, user_id }) {
       />,
     );
     return squares;
-  }
+  };
 
   return (
     <>
