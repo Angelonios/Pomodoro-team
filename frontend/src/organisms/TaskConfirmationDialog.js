@@ -109,10 +109,10 @@ export function TaskConfirmationDialog({
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="secondary">
+        <Button onClick={handleClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={handleConfirm} color="primary" autoFocus>
+        <Button onClick={handleConfirm} color="secondary" autoFocus>
           {type === 'DELETE'
             ? 'Yes, delete!'
             : type === 'EDIT'
